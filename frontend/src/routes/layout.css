@@ -14,7 +14,7 @@ body {
 }
 
 .home-content {
-  @apply flex flex-col gap-4 h-screen justify-center items-baseline text-center ml-128;
+  @apply flex flex-col gap-4 h-screen justify-baseline items-baseline text-center ml-96 mt-56;
 }
 
 .home-title {
@@ -27,4 +27,16 @@ body {
 
 .home-searchbar {
   @apply bg-card border-1 rounded-4xl px-4;
+}
+
+.navigation-bar {
+  @apply relative flex flex-row justify-center items-center text-3xl gap-24 mt-12 pb-3;
+}
+
+.navigation-bar a {
+  @apply no-underline text-inherit;
+}
+
+.nav-indicator {
+  @apply absolute bottom-0 h-[3px] bg-current transition-all duration-300 ease-in-out;
 }
