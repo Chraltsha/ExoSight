@@ -5,5 +5,10 @@
 	let { children } = $props();
 </script>
 
+<!--TODO: Implement navigation on top-->
+
 <svelte:head><link rel="icon" href={favicon} /></svelte:head>
-{@render children()}
+<div class="relative w-full">
+	{@render children()}
+</div>
+

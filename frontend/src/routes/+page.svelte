@@ -1,2 +1,11 @@
-<h1>Welcome to SvelteKit</h1>
-<p>Visit <a href="https://svelte.dev/docs/kit">svelte.dev/docs/kit</a> to read the documentation</p>
+<script> 
+</script>
+
+<div class="home-content">
+  <h1 class="home-title">ExoSight</h1>
+  <h3 class="home-subtitle">See beyond our solar system, one exoplanet at a time.</h3>
+
+  <div>
+    <input class="home-searchbar" placeholder="Search for Exoplanets     🔍︎"/>
+  </div>
+</div>

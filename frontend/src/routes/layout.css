@@ -1,3 +1,30 @@
 @import 'tailwindcss';
 @plugin '@tailwindcss/forms';
 @plugin '@tailwindcss/typography';
+
+@theme {
+  --color-background: #1A1C20;
+  --color-card: #222222;
+  --color-text-color: #FDFDFD;
+  --color-accent: #D9A4D9;
+}
+
+body {
+  @apply text-text-color bg-background;
+}
+
+.home-content {
+  @apply flex flex-col gap-4 h-screen justify-center items-baseline text-center ml-128;
+}
+
+.home-title {
+  @apply text-8xl
+}
+
+.home-subtitle{
+  @apply text-2xl;
+}
+
+.home-searchbar {
+  @apply bg-card border-1 rounded-4xl px-4;
+}
