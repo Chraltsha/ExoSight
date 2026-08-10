@@ -1,52 +1,55 @@
 <script>
-  import './layout.css';
-  import favicon from '$lib/assets/favicon.svg';
+	import './layout.css';
+	import favicon from '$lib/assets/favicon.svg';
   import { resolve } from '$app/paths';
-  import { page } from '$app/state';
-  import { fly } from 'svelte/transition';
+	import { page } from '$app/state';
+	import { fly } from 'svelte/transition';
+	
+	let { children } = $props();
 
-  let { children } = $props();
-
-  const links = [
-    { href: '/', label: 'Home' },
-    { href: '/search', label: 'Search' },
-    { href: '/about', label: 'About' }
-  ];
-
+	const routes = ['/home', '/friends', '/events'];
   let direction = $state(1);
-  let navEl = $state();
-  let indicatorStyle = $state('');
 
-  const resolvedHrefs = links.map(l => resolve(l.href));
-  const activeIndex = $derived.by(() => {
-    const i = resolvedHrefs.indexOf(page.url.pathname);
-    return i === -1 ? 0 : i;
-  });
+  function updateDirection(targetRoute) {
+    const currentPath = page.url.pathname;
+    const resolvedRoutes = routes.map(r => resolve(r));
+    const currentIndex = resolvedRoutes.indexOf(currentPath);
+    const targetIndex = resolvedRoutes.indexOf(resolve(targetRoute));
 
-  function goTo(i) {
-    direction = i > activeIndex ? 1 : -1;
+    if (currentIndex !== -1 && targetIndex !== -1) {
+      direction = targetIndex > currentIndex ? 1 : -1;
+    }
   }
-
-  $effect(() => {
-    activeIndex;
-    if (!navEl) return;
-    const el = navEl.querySelectorAll('a')[activeIndex];
-    if (el) indicatorStyle = `width:${el.offsetWidth}px; transform: translateX(${el.offsetLeft}px);`;
-  });
 </script>
 
-<nav class="navigation-bar" bind:this={navEl}>
-  {#each links as link, i (link.href)}
-    <a href={resolve(link.href)} class:active={activeIndex === i} onclick={() => goTo(i)}>
-      {link.label}
-    </a>
-  {/each}
-  <div class="nav-indicator" style={indicatorStyle}></div>
+<nav class="navigation-bar">
+	<a href={resolve("/")}
+		class:active={page.url.pathname === resolve('/')}
+		onclick={() => updateDirection('/')}
+	>
+		Home
+	</a>
+	<a href={resolve('/search')}
+		class:active={page.url.pathname === resolve('/search')}
+		onclick={() => updateDirection('/search')}
+	>
+		Search
+	</a>
+	<a href={resolve('/about')}
+		class:active={page.url.pathname === resolve('/about')}
+		onclick={() => updateDirection('/about')}
+	>
+		About
+	</a>
 </nav>
 
-<hr class="mt-px mb-0 border-t border-current" />
+<hr/>
 
 <svelte:head><link rel="icon" href={favicon} /></svelte:head>
-<div in:fly={{ x: direction * 300, duration: 300, delay: 150 }} out:fly={{ x: direction * -300, duration: 300 }}>
-  {@render children()}
+<div 
+	in:fly={{ x: direction * 300, duration: 300, delay: 150 }} 
+	out:fly={{ x: direction * -300, duration: 300 }}
+>
+	{@render children()}
 </div>
+
