@@ -14,7 +14,7 @@ body {
 }
 
 .home-content {
-  @apply flex flex-col gap-4 h-screen justify-baseline items-baseline text-center ml-96 mt-56;
+  @apply flex flex-col gap-4 justify-baseline items-baseline text-center ml-96 mt-56;
 }
 
 .home-title {

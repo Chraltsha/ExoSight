@@ -1,55 +1,47 @@
 <script>
 	import './layout.css';
 	import favicon from '$lib/assets/favicon.svg';
-  import { resolve } from '$app/paths';
+	import { resolve } from '$app/paths';
 	import { page } from '$app/state';
+	import { afterNavigate } from '$app/navigation';
 	import { fly } from 'svelte/transition';
-	
+
 	let { children } = $props();
 
-	const routes = ['/home', '/friends', '/events'];
-  let direction = $state(1);
+	const NAV_LINKS = [
+		{ href: '/', label: 'Home' },
+		{ href: '/search', label: 'Search' },
+		{ href: '/about', label: 'About' }
+	];
 
-  function updateDirection(targetRoute) {
-    const currentPath = page.url.pathname;
-    const resolvedRoutes = routes.map(r => resolve(r));
-    const currentIndex = resolvedRoutes.indexOf(currentPath);
-    const targetIndex = resolvedRoutes.indexOf(resolve(targetRoute));
+	const resolvedRoutes = NAV_LINKS.map((link) => resolve(link.href));
 
-    if (currentIndex !== -1 && targetIndex !== -1) {
-      direction = targetIndex > currentIndex ? 1 : -1;
-    }
-  }
+	let direction = $state(1);
+
+	afterNavigate(({ from, to }) => {
+		if (!from?.url || !to?.url) return;
+		const fromIndex = resolvedRoutes.indexOf(from.url.pathname);
+		const toIndex = resolvedRoutes.indexOf(to.url.pathname);
+		if (fromIndex !== -1 && toIndex !== -1) {
+			direction = toIndex > fromIndex ? 1 : -1;
+		}
+	});
 </script>
 
+<svelte:head>
+	<link rel="icon" href={favicon} />
+</svelte:head>
+
 <nav class="navigation-bar">
-	<a href={resolve("/")}
-		class:active={page.url.pathname === resolve('/')}
-		onclick={() => updateDirection('/')}
-	>
-		Home
-	</a>
-	<a href={resolve('/search')}
-		class:active={page.url.pathname === resolve('/search')}
-		onclick={() => updateDirection('/search')}
-	>
-		Search
-	</a>
-	<a href={resolve('/about')}
-		class:active={page.url.pathname === resolve('/about')}
-		onclick={() => updateDirection('/about')}
-	>
-		About
-	</a>
+	{#each NAV_LINKS as link (link.href)}
+		<a href={resolve(link.href)} class:active={page.url.pathname === resolve(link.href)}>
+			{link.label}
+		</a>
+	{/each}
 </nav>
 
-<hr/>
+<hr />
 
-<svelte:head><link rel="icon" href={favicon} /></svelte:head>
-<div 
-	in:fly={{ x: direction * 300, duration: 300, delay: 150 }} 
-	out:fly={{ x: direction * -300, duration: 300 }}
->
+<div in:fly={{ x: direction * 300, duration: 300, delay: 150 }} out:fly={{ x: direction * -300, duration: 300 }}>
 	{@render children()}
 </div>
-
