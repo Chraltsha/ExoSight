@@ -42,3 +42,157 @@ body {
   @apply absolute bottom-0 h-[3px] bg-current transition-all duration-300 ease-in-out;
   /* width/position now set inline via measured offsetWidth/offsetLeft, not calc() */
 }
+
+/* ============================================================
+   Search page — layout
+   ============================================================ */
+
+.search-page {
+  @apply relative flex h-[calc(100vh-theme(spacing.24))] overflow-hidden;
+}
+
+.search-main {
+  @apply flex flex-1 flex-col overflow-hidden;
+}
+
+/* ============================================================
+   Search page — idle state
+   ============================================================ */
+
+.idle-view {
+  @apply flex flex-1 flex-col items-center justify-center gap-6 px-8;
+}
+
+.idle-heading {
+  @apply text-3xl text-text-color;
+}
+
+.idle-searchbar {
+  @apply w-full max-w-2xl rounded-4xl border border-card bg-card px-6 py-3 text-text-color placeholder-[#888] outline-none focus:border-accent;
+}
+
+.surprise-btn {
+  @apply rounded-full border border-accent bg-transparent px-6 py-2 text-accent transition-colors duration-200 hover:bg-accent hover:text-background;
+}
+
+/* ============================================================
+   Search page — chat view
+   ============================================================ */
+
+.chat-view {
+  @apply flex flex-1 flex-col overflow-hidden;
+}
+
+.message-list {
+  @apply flex flex-1 flex-col gap-3 overflow-y-auto px-6 py-4;
+}
+
+/* ============================================================
+   Chat bubbles
+   ============================================================ */
+
+.bubble-row {
+  @apply flex w-full;
+}
+
+.bubble-row--user {
+  @apply justify-end;
+}
+
+.bubble-row--bot {
+  @apply justify-start;
+}
+
+.bubble {
+  @apply max-w-[70%] rounded-2xl px-4 py-2 text-sm leading-relaxed;
+}
+
+.bubble--user {
+  @apply bg-accent text-background;
+}
+
+.bubble--bot {
+  @apply bg-card text-text-color;
+}
+
+/* ============================================================
+   Typing indicator (pulsing dots)
+   ============================================================ */
+
+.typing-indicator {
+  @apply flex items-center gap-1 py-3;
+}
+
+.dot {
+  @apply h-2 w-2 rounded-full bg-text-color opacity-40;
+  animation: pulse-dot 1.2s ease-in-out infinite;
+}
+
+.dot:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.dot:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+@keyframes pulse-dot {
+  0%, 80%, 100% { opacity: 0.2; transform: scale(0.9); }
+  40%           { opacity: 1;   transform: scale(1.2); }
+}
+
+/* ============================================================
+   Message input bar
+   ============================================================ */
+
+.message-input-bar {
+  @apply flex items-center gap-3 border-t border-card bg-background px-6 py-3;
+}
+
+.message-input {
+  @apply flex-1 rounded-4xl border border-card bg-card px-5 py-2 text-text-color placeholder-[#888] outline-none focus:border-accent disabled:opacity-50;
+}
+
+.send-btn {
+  @apply rounded-full border border-accent bg-transparent px-5 py-2 text-accent transition-colors duration-200 hover:bg-accent hover:text-background disabled:cursor-not-allowed disabled:opacity-40;
+}
+
+/* ============================================================
+   Sidebar
+   ============================================================ */
+
+.sidebar-hover-zone {
+  @apply fixed left-0 top-0 z-40 flex h-full w-3 cursor-pointer items-center justify-start;
+}
+
+.pull-tab {
+  @apply flex h-10 w-5 items-center justify-center rounded-r-lg bg-card text-text-color opacity-0 transition-opacity duration-200;
+}
+
+.pull-tab--visible {
+  @apply opacity-100;
+}
+
+.sidebar-panel {
+  @apply fixed left-0 top-0 z-50 flex h-full w-72 flex-col border-r border-card bg-background pt-24 shadow-lg;
+}
+
+.sidebar-header {
+  @apply flex items-center justify-between border-b border-card px-5 pb-4;
+}
+
+.sidebar-title {
+  @apply text-lg font-semibold text-text-color;
+}
+
+.sidebar-close {
+  @apply text-2xl leading-none text-[#888] transition-colors hover:text-text-color;
+}
+
+.sidebar-content {
+  @apply flex-1 overflow-y-auto px-5 py-4;
+}
+
+.sidebar-placeholder {
+  @apply text-sm text-[#888];
+}
