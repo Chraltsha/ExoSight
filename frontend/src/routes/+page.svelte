@@ -1,11 +1,14 @@
-<script> 
+<script>
+	import PageTransition from '$lib/components/PageTransition.svelte';
 </script>
 
-<div class="home-content">
-  <h1 class="home-title">ExoSight</h1>
-  <h3 class="home-subtitle">See beyond our solar system, one exoplanet at a time.</h3>
+<PageTransition>
+  <div class="home-content">
+    <h1 class="home-title">ExoSight</h1>
+    <h3 class="home-subtitle">See beyond our solar system, one exoplanet at a time.</h3>
 
-  <div>
-    <input class="home-searchbar" placeholder="Search for Exoplanets     🔍︎"/>
+    <div>
+      <input class="home-searchbar" placeholder="Search for Exoplanets     🔍︎"/>
+    </div>
   </div>
-</div>
+</PageTransition>

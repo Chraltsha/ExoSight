@@ -10,7 +10,7 @@
 }
 
 body {
-  @apply text-text-color bg-background;
+  @apply text-text-color bg-background overflow-x-hidden h-screen flex flex-col;
 }
 
 .home-content {
@@ -44,11 +44,19 @@ body {
 }
 
 /* ============================================================
+   Page transition wrapper
+   ============================================================ */
+
+.page-transition-wrapper {
+  @apply relative flex-1 overflow-hidden;
+}
+
+/* ============================================================
    Search page — layout
    ============================================================ */
 
 .search-page {
-  @apply relative flex h-[calc(100vh-theme(spacing.24))] overflow-hidden;
+  @apply relative flex h-full overflow-hidden;
 }
 
 .search-main {

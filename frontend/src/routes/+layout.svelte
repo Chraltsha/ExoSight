@@ -3,8 +3,8 @@
 	import favicon from '$lib/assets/favicon.svg';
 	import { resolve } from '$app/paths';
 	import { page } from '$app/state';
-	import { afterNavigate } from '$app/navigation';
-	import { fly } from 'svelte/transition';
+	import { onNavigate } from '$app/navigation';
+	import { transitionState } from '$lib/transitionState.svelte.js';
 
 	let { children } = $props();
 
@@ -16,15 +16,14 @@
 
 	const resolvedRoutes = NAV_LINKS.map((link) => resolve(link.href));
 
-	let direction = $state(1);
-
-	afterNavigate(({ from, to }) => {
+	onNavigate(({ from, to }) => {
 		if (!from?.url || !to?.url) return;
 		const fromIndex = resolvedRoutes.indexOf(from.url.pathname);
 		const toIndex = resolvedRoutes.indexOf(to.url.pathname);
 		if (fromIndex !== -1 && toIndex !== -1) {
-			direction = toIndex > fromIndex ? 1 : -1;
+			transitionState.direction = toIndex > fromIndex ? 1 : -1;
 		}
+		return new Promise((resolve) => setTimeout(resolve, 220));
 	});
 </script>
 
@@ -42,6 +41,6 @@
 
 <hr />
 
-<div in:fly={{ x: direction * 300, duration: 300, delay: 150 }} out:fly={{ x: direction * -300, duration: 300 }}>
+<div class="page-transition-wrapper">
 	{@render children()}
 </div>
