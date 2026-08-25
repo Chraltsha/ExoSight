@@ -50,18 +50,20 @@
 			<IdleView onSubmit={startChat} />
 		{:else}
 			<div class="chat-view">
-				<div class="message-list" bind:this={messageListEl}>
-					{#each chatState.messages as message (message)}
-						<ChatBubble role={message.role} text={message.text} />
-					{/each}
-
-					{#if chatState.isLoading}
-						<TypingIndicator />
-					{/if}
+					<div class="chat-window">
+						<div class="message-list" bind:this={messageListEl}>
+							{#each chatState.messages as message (message)}
+								<ChatBubble role={message.role} text={message.text} />
+							{/each}
+	
+							{#if chatState.isLoading}
+								<TypingIndicator />
+							{/if}
+						</div>
+	
+						<MessageInput onSend={handleUserMessage} disabled={chatState.isLoading} />
+					</div>
 				</div>
-
-				<MessageInput onSend={handleUserMessage} disabled={chatState.isLoading} />
-			</div>
 		{/if}
 	</div>
 </div>

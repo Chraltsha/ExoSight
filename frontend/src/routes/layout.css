@@ -64,15 +64,15 @@ body {
 }
 
 .idle-heading {
-  @apply text-3xl text-text-color;
+  @apply text-8xl text-text-color;
 }
 
 .idle-searchbar {
-  @apply w-full max-w-2xl rounded-4xl border border-card bg-card px-6 py-3 text-text-color placeholder-[#888] outline-none focus:border-accent;
+  @apply w-full max-w-2xl rounded-4xl border border-card bg-card px-6 py-4 text-2xl text-text-color placeholder-[#888] outline-none focus:border-accent;
 }
 
 .surprise-btn {
-  @apply rounded-full border border-accent bg-transparent px-6 py-2 text-accent transition-colors duration-200 hover:bg-accent hover:text-background;
+  @apply bg-transparent text-accent underline underline-offset-4 transition-colors duration-200 hover:text-text-color;
 }
 
 /* ============================================================
@@ -80,7 +80,11 @@ body {
    ============================================================ */
 
 .chat-view {
-  @apply flex flex-1 flex-col overflow-hidden;
+  @apply flex flex-1 flex-col items-center py-6 px-4 overflow-hidden;
+}
+
+.chat-window {
+  @apply flex flex-col w-full max-w-2xl flex-1 overflow-hidden rounded-2xl border border-card bg-card;
 }
 
 .message-list {
@@ -146,7 +150,7 @@ body {
    ============================================================ */
 
 .message-input-bar {
-  @apply flex items-center gap-3 border-t border-card bg-background px-6 py-3;
+  @apply flex items-center gap-3 border-t border-card bg-card px-6 py-3 rounded-b-2xl;
 }
 
 .message-input {
@@ -162,15 +166,15 @@ body {
    ============================================================ */
 
 .sidebar-hover-zone {
-  @apply fixed left-0 top-0 z-40 flex h-full w-3 cursor-pointer items-center justify-start;
+  @apply fixed left-0 top-0 z-40 flex h-full w-10 cursor-pointer items-center justify-start;
 }
 
 .pull-tab {
-  @apply flex h-10 w-5 items-center justify-center rounded-r-lg bg-card text-text-color opacity-0 transition-opacity duration-200;
+  @apply flex h-20 w-7 items-center justify-center rounded-r-xl bg-card text-text-color transition-transform duration-200;
 }
 
-.pull-tab--visible {
-  @apply opacity-100;
+.sidebar-hover-zone:hover .pull-tab {
+  @apply translate-x-2 bg-accent text-background;
 }
 
 .sidebar-panel {
