@@ -10,6 +10,7 @@
 }
 
 body {
+  /* bg-background kept as fallback while the avif loads */
   @apply text-text-color bg-background overflow-x-hidden h-screen flex flex-col;
 }
 
