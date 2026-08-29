@@ -28,7 +28,7 @@ class ObserverLocation(BaseModel):
     longitude: float
     elevation: float
 
-
+    
 class ObservationTarget(BaseModel):
     ra: float | None = None
     dec: float | None = None
@@ -60,5 +60,5 @@ class SatellitePrediction(BaseModel):
 
 class PredictionResponse(BaseModel):
     obstructed: bool
-
     satellites: list[SatellitePrediction]
+    interpretation: str

@@ -1,7 +1,7 @@
 from skyfield.api import load
 from skyfield.api import EarthSatellite
-from propagation import propagate_satellite
-from backend.app.services.celestrak_service import load_satellites
+from app.astronomy.propagation import propagate_satellite
+from app.services.celestrak_service import load_satellites
 
 def get_satellite_positions(
     observer,

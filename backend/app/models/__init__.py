@@ -1,1 +1,1 @@
-from backend.app.models.prediction import PredictionRequest
+from app.models.prediction import PredictionRequest

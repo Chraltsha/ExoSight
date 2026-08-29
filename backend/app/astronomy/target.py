@@ -1,10 +1,10 @@
 from astropy.coordinates import SkyCoord
 import astropy.units as u
 
-from app.models.prediction import Target
+from app.models.prediction import ObservationTarget
 
 
-def get_target_coordinate(target: Target) -> SkyCoord:
+def get_target_coordinate(target: ObservationTarget) -> SkyCoord:
     """
     Convert the user's target into an Astropy SkyCoord.
 
