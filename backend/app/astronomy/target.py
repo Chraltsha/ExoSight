@@ -12,18 +12,22 @@ def get_target_coordinate(target: ObservationTarget) -> SkyCoord:
     - Right Ascension + Declination
 
     Future support:
-    - Object name lookup (e.g. "M31", "Jupiter")
+    - Object name lookup
     """
 
-    # User supplied RA/Dec
-    if target.ra is not None and target.dec is not None:
+    if target.ra is not None or target.dec is not None:
+
+        if target.ra is None or target.dec is None:
+            raise ValueError(
+                "Both RA and Dec must be provided."
+            )
+
         return SkyCoord(
             ra=target.ra * u.deg,
             dec=target.dec * u.deg,
             frame="icrs",
         )
 
-    # User supplied object name
     if target.object_name is not None:
         raise NotImplementedError(
             "Object name lookup has not been implemented."
