@@ -2,20 +2,18 @@ from astropy.coordinates import SkyCoord
 import astropy.units as u
 
 from app.models.prediction import ObservationTarget
+from app.services.exoplanet_service import resolve_exoplanet
 
 
 def get_target_coordinate(target: ObservationTarget) -> SkyCoord:
     """
     Convert the user's target into an Astropy SkyCoord.
 
-    Supports:
-    - Right Ascension + Declination
-
-    Future support:
-    - Object name lookup (e.g. "M31", "Jupiter")
+    Accepts either explicit RA/Dec or an exoplanet name that is
+    resolved via the NASA Exoplanet Archive TAP service.
     """
 
-    # User supplied RA/Dec
+    # User supplied RA/Dec directly
     if target.ra is not None and target.dec is not None:
         return SkyCoord(
             ra=target.ra * u.deg,
@@ -23,10 +21,13 @@ def get_target_coordinate(target: ObservationTarget) -> SkyCoord:
             frame="icrs",
         )
 
-    # User supplied object name
+    # Resolve object name through NASA TAP
     if target.object_name is not None:
-        raise NotImplementedError(
-            "Object name lookup has not been implemented."
+        result = resolve_exoplanet(target.object_name)
+        return SkyCoord(
+            ra=result.ra * u.deg,
+            dec=result.dec * u.deg,
+            frame="icrs",
         )
 
     raise ValueError(
