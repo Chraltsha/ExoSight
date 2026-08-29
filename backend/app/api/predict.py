@@ -4,15 +4,7 @@ from app.models.prediction import (
     PredictionRequest,
     PredictionResponse,
 )
-
-from app.services.prediction_service import (
-    predict as predict_service,
-)
-
-from app.services.gpt_service import (
-    interpret_prediction,
-)
-
+from app.services.prediction_service import predict as predict_service
 
 router = APIRouter(
     prefix="/predict",
@@ -25,15 +17,4 @@ router = APIRouter(
     response_model=PredictionResponse,
 )
 def predict(request: PredictionRequest):
-
-    # Perform the actual astronomy calculations.
-    result = predict_service(request)
-
-    # Let GPT explain the calculated result.
-    interpretation = interpret_prediction(
-        result["satellites"]
-    )
-
-    result["interpretation"] = interpretation
-
-    return result
+    return predict_service(request)
