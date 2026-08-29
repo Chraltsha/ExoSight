@@ -1,8 +1,57 @@
 # API Reference
 
-Base URL (dev): `http://127.0.0.1:8000`  
-All routes are prefixed with `/api`.  
+Base URL (dev): `http://127.0.0.1:8000`
+All routes are prefixed with `/api`.
 Interactive docs: `http://127.0.0.1:8000/docs`
+
+---
+
+## GET /api/exoplanets/search
+
+Search for exoplanets by name substring. Uses cursor-based pagination.
+Queries the `pscomppars` table (one composite row per confirmed planet — no duplicates).
+
+**Query parameters**
+
+| Parameter | Type   | Required | Default | Description                              |
+|-----------|--------|----------|---------|------------------------------------------|
+| `q`       | string | yes      | —       | Substring to match against planet names (min 2 chars) |
+| `limit`   | int    | no       | 20      | Results per page (1–100)                 |
+| `cursor`  | string | no       | null    | `next_cursor` value from a previous response |
+
+**Example request**
+```
+GET /api/exoplanets/search?q=kepler&limit=20
+```
+
+**200 OK**
+```json
+{
+  "items": [
+    {
+      "name": "Kepler-10 b",
+      "hostname": "Kepler-10",
+      "ra": 285.679,
+      "dec": 50.241
+    }
+  ],
+  "next_cursor": "Kepler-19 c",
+  "has_more": true
+}
+```
+
+**Pagination**
+
+Pass `next_cursor` from the previous response as `cursor` to get the next page.
+When `has_more` is `false`, you are on the last page.
+`cursor` values are planet names — do not construct them manually.
+
+**Error responses**
+
+| Status | Reason                                     |
+|--------|--------------------------------------------|
+| 422    | `q` is missing or shorter than 2 characters |
+| 502    | NASA TAP service returned an error         |
 
 ---
 
