@@ -1,6 +1,8 @@
 # Python
+__pycache__/
+*.py[cod]
+*$py.class
 backend/.venv/
-backend/__pycache__/
 backend/.env
 
 # Node

@@ -1,16 +1,15 @@
-import os
+from pathlib import Path
 
 from dotenv import load_dotenv
 from openai import OpenAI
 
-load_dotenv()
+BACKEND_DIR = Path(__file__).resolve().parents[2] # backend dir
+load_dotenv(BACKEND_DIR / ".env") # only load .env of backend, specify
 
-client = OpenAI(
-    api_key=os.getenv("OPENAI_API_KEY")
-)
+client = OpenAI() # automatic read of openai_api_key
 
 
-def interpret_prediction(satellites) -> str:
+def interpret_prediction(satellites: list[object]) -> str:
 
     prompt = f"""
 You are an astronomy assistant.
