@@ -378,3 +378,46 @@ body {
 	width: 100%;
 	@apply overflow-hidden rounded-xl border border-card;
 }
+
+/* ============================================================
+   New search page — top-level container
+   ============================================================ */
+
+.search-new-page {
+	@apply mx-auto flex w-full max-w-[700px] flex-col gap-6 px-4 py-10;
+}
+
+.search-page-heading {
+	@apply text-2xl font-semibold text-text-color;
+}
+
+/* Planet name input — full width inside its section */
+.planet-autocomplete-wrapper {
+	@apply relative w-full;
+}
+
+.planet-name-input {
+	@apply w-full;
+}
+
+/* ============================================================
+   Exosight output box
+   ============================================================ */
+
+.exosight-output-box {
+	@apply min-h-[120px] rounded-xl bg-background px-5 py-4 text-sm leading-relaxed text-text-color;
+	font-family: 'Iosevka Charon Regular', 'Iosevka Charon', monospace;
+	white-space: pre-wrap;
+}
+
+.exosight-placeholder {
+	@apply text-sm text-[#888];
+}
+
+/* ============================================================
+   Search submit button
+   ============================================================ */
+
+.search-submit-btn {
+	@apply w-full cursor-pointer rounded-2xl border border-accent bg-transparent px-6 py-4 text-lg font-semibold text-accent transition-colors duration-200 hover:bg-accent hover:text-background disabled:cursor-not-allowed disabled:opacity-50;
+}

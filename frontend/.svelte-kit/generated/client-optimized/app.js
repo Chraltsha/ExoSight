@@ -3,6 +3,9 @@
 // (including user hooks) evaluates. In build it's inert.
 import.meta.hot;
 
+
+
+
 export { matchers } from './matchers.js';
 
 export const nodes = [
@@ -10,32 +13,26 @@ export const nodes = [
 	() => import('./nodes/1'),
 	() => import('./nodes/2'),
 	() => import('./nodes/3'),
-	() => import('./nodes/4'),
+	() => import('./nodes/4')
 ];
 
 export const server_loads = [];
 
 export const dictionary = {
-	'/': [2],
-	'/about': [3],
-	'/search': [4],
-};
+		"/": [2],
+		"/about": [3],
+		"/search": [4]
+	};
 
 export const hooks = {
-	handleError: ({ error }) => {
-		console.error(error);
-	},
-
-	reroute: () => {},
-	transport: {},
+	handleError: (({ error }) => { console.error(error) }),
+	
+	reroute: (() => {}),
+	transport: {}
 };
 
-export const decoders = Object.fromEntries(
-	Object.entries(hooks.transport).map(([k, v]) => [k, v.decode]),
-);
-export const encoders = Object.fromEntries(
-	Object.entries(hooks.transport).map(([k, v]) => [k, v.encode]),
-);
+export const decoders = Object.fromEntries(Object.entries(hooks.transport).map(([k, v]) => [k, v.decode]));
+export const encoders = Object.fromEntries(Object.entries(hooks.transport).map(([k, v]) => [k, v.encode]));
 
 export const hash = false;
 
@@ -43,5 +40,4 @@ export const decode = (type, value) => decoders[type](value);
 
 export { default as root } from '../root.js';
 
-export const get_error_template = () =>
-	import('../shared/error-template.js').then((m) => m.default);
+export const get_error_template = () => import('../shared/error-template.js').then(m => m.default);

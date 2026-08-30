@@ -1,5 +1,5 @@
-import './server.js';
-import './transitionState.svelte.js';
+import "./server.js";
+import "./transitionState.svelte.js";
 //#region src/lib/components/PageTransition.svelte
 function PageTransition($$renderer, $$props) {
 	$$renderer.component(($$renderer) => {

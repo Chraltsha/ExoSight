@@ -1,11 +1,8 @@
-var e = ({ status: e, message: t }) =>
-	`<!doctype html>
+var e=({status:e,message:t})=>`<!doctype html>
 <html lang="en">
 	<head>
 		<meta charset="utf-8" />
-		<title>` +
-	t +
-	`</title>
+		<title>`+t+`</title>
 
 		<style>
 			body {
@@ -74,16 +71,11 @@ var e = ({ status: e, message: t }) =>
 	</head>
 	<body>
 		<div class="error">
-			<span class="status">` +
-	e +
-	`</span>
+			<span class="status">`+e+`</span>
 			<div class="message">
-				<h1>` +
-	t +
-	`</h1>
+				<h1>`+t+`</h1>
 			</div>
 		</div>
 	</body>
 </html>
-`;
-export { e as default };
+`;export{e as default};
