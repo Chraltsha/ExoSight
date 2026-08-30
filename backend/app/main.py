@@ -1,5 +1,7 @@
 from fastapi import FastAPI
 from app.api.predict import router as predict_router
+from app.api.targets import router as targets_router
+from app.api.exoplanets import router as exoplanets_router
 
 app = FastAPI(
     title="Satellite Obstruction Prediction API",
@@ -8,7 +10,9 @@ app = FastAPI(
 )
 
 # Register API routes
-app.include_router(predict_router)
+app.include_router(predict_router, prefix="/api")
+app.include_router(targets_router, prefix="/api")
+app.include_router(exoplanets_router, prefix="/api")
 
 
 @app.get("/")
