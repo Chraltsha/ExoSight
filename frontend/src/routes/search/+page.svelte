@@ -86,61 +86,61 @@
 
 <PageTransition>
 	<main class="search-new-page">
-		<!-- TOP ROW: heading + planet autocomplete -->
-		<div class="search-top-row">
-			<h2 class="search-page-heading">What exoplanet are we looking for?</h2>
-			<div class="planet-autocomplete-wrapper">
-				<input
-					type="text"
-					class="search-field-input planet-name-input"
-					placeholder="e.g. Kepler-22 b"
-					bind:value={planetName}
-					oninput={handlePlanetInput}
-					onfocus={() => {
-						if (searchState.results.length > 0) {
-							showDropdown = true;
-						}
-					}}
-					autocomplete="off"
-				/>
-
-				{#if showDropdown && (searchState.results.length > 0 || searchState.isLoading)}
-					<div class="search-results">
-						<ul class="search-results-list">
-							{#if searchState.isLoading && searchState.results.length === 0}
-								<li class="search-result-item" style="cursor: default; pointer-events: none;">
-									<span class="result-name">Searching…</span>
-								</li>
-							{/if}
-							{#each searchState.results as item (item.name)}
-								<li>
-									<button class="search-result-item" onclick={() => selectResult(item)}>
-										<span class="result-name">{item.name}</span>
-										<span class="result-host">{item.hostname}</span>
-									</button>
-								</li>
-							{/each}
-						</ul>
-						{#if searchState.hasMore}
-							<div class="search-results-footer">
-								<button
-									class="load-more-btn"
-									onclick={handleLoadMore}
-									disabled={searchState.isLoading}
-								>
-									{searchState.isLoading ? 'Loading…' : 'Load more'}
-								</button>
-							</div>
-						{/if}
-					</div>
-				{/if}
-			</div>
-		</div>
-
-		<!-- BODY ROW: left inputs + right output -->
+		<!-- BODY ROW: left column (heading + autocomplete + 3 panels + button) + right output -->
 		<div class="search-body-row">
-			<!-- LEFT: three-column input sections + search button -->
+			<!-- LEFT column -->
 			<div class="search-inputs-col">
+				<!-- Heading + autocomplete stacked at top of left col -->
+				<h2 class="search-page-heading">What exoplanet are we looking for?</h2>
+
+				<div class="planet-autocomplete-wrapper">
+					<input
+						type="text"
+						class="search-field-input planet-name-input"
+						placeholder="e.g. Kepler-22 b"
+						bind:value={planetName}
+						oninput={handlePlanetInput}
+						onfocus={() => {
+							if (searchState.results.length > 0) {
+								showDropdown = true;
+							}
+						}}
+						autocomplete="off"
+					/>
+
+					{#if showDropdown && (searchState.results.length > 0 || searchState.isLoading)}
+						<div class="search-results">
+							<ul class="search-results-list">
+								{#if searchState.isLoading && searchState.results.length === 0}
+									<li class="search-result-item" style="cursor: default; pointer-events: none;">
+										<span class="result-name">Searching…</span>
+									</li>
+								{/if}
+								{#each searchState.results as item (item.name)}
+									<li>
+										<button class="search-result-item" onclick={() => selectResult(item)}>
+											<span class="result-name">{item.name}</span>
+											<span class="result-host">{item.hostname}</span>
+										</button>
+									</li>
+								{/each}
+							</ul>
+							{#if searchState.hasMore}
+								<div class="search-results-footer">
+									<button
+										class="load-more-btn"
+										onclick={handleLoadMore}
+										disabled={searchState.isLoading}
+									>
+										{searchState.isLoading ? 'Loading…' : 'Load more'}
+									</button>
+								</div>
+							{/if}
+						</div>
+					{/if}
+				</div>
+
+				<!-- Three settings panels -->
 				<div class="search-three-col">
 					<TelescopeSettings bind:hFov bind:vFov />
 					<DateTimeSettings bind:date bind:time bind:observationLength />

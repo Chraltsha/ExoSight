@@ -64,9 +64,9 @@ function _page($$renderer, $$props) {
 		function $$render_inner($$renderer) {
 			PageTransition($$renderer, {
 				children: ($$renderer) => {
-					$$renderer.push(`<main class="search-new-page"><div class="search-top-row"><h2 class="search-page-heading">What exoplanet are we looking for?</h2> <div class="planet-autocomplete-wrapper"><input type="text" class="search-field-input planet-name-input" placeholder="e.g. Kepler-22 b"${attr("value", planetName)} autocomplete="off"/> `);
+					$$renderer.push(`<main class="search-new-page"><div class="search-body-row"><div class="search-inputs-col"><h2 class="search-page-heading">What exoplanet are we looking for?</h2> <div class="planet-autocomplete-wrapper"><input type="text" class="search-field-input planet-name-input" placeholder="e.g. Kepler-22 b"${attr("value", planetName)} autocomplete="off"/> `);
 					$$renderer.push("<!--[-1-->");
-					$$renderer.push(`<!--]--></div></div> <div class="search-body-row"><div class="search-inputs-col"><div class="search-three-col">`);
+					$$renderer.push(`<!--]--></div> <div class="search-three-col">`);
 					TelescopeSettings($$renderer, {
 						get hFov() {
 							return hFov;

@@ -36,7 +36,7 @@ html {
 
 body {
 	/* bg-background kept as fallback while the avif loads */
-	@apply flex h-screen flex-col overflow-x-hidden bg-background text-text-color;
+	@apply flex min-h-screen flex-col overflow-x-hidden bg-background text-text-color;
 }
 
 .home-content {
@@ -107,7 +107,7 @@ body {
    ============================================================ */
 
 .page-transition-wrapper {
-	@apply relative flex-1 overflow-hidden;
+	@apply relative flex-1 overflow-x-hidden overflow-y-auto;
 }
 
 /* ============================================================
@@ -205,8 +205,11 @@ body {
 }
 
 .search-field-input {
-	@apply rounded-lg border border-card bg-background px-3 py-2 text-text-color transition-colors duration-150 outline-none focus:border-accent;
-	min-width: 160px;
+	@apply rounded-lg border border-[#333] px-3 py-2 text-text-color transition-colors duration-150 outline-none focus:border-accent;
+	background-color: #2c2c2c;
+	font-family: 'Iosevka Charon Regular', 'Iosevka Charon', monospace;
+	min-width: 0;
+	width: 100%;
 }
 
 /* Dark-theme overrides for native date / time / number pickers */
@@ -214,7 +217,7 @@ body {
 .search-field-input[type='time'],
 .search-field-input[type='number'] {
 	color-scheme: dark;
-	background-color: #222222;
+	background-color: #2c2c2c;
 	color: #fdfdfd;
 }
 
@@ -237,52 +240,53 @@ body {
    ============================================================ */
 
 .search-new-page {
-	@apply mx-auto flex w-full max-w-[1400px] flex-col gap-6 px-6 py-8;
-}
-
-/* TOP ROW: heading left, autocomplete right — side by side */
-.search-top-row {
-	@apply flex items-center justify-between gap-6;
+	@apply mx-auto w-full max-w-[1600px] px-8 py-8;
 }
 
 .search-page-heading {
-	@apply shrink-0 text-lg font-semibold text-text-color;
+	font-family: 'Iosevka Charon Light', 'Iosevka Charon', monospace;
+	font-size: 2.2rem;
+	font-weight: 300;
+	line-height: 1.2;
+	@apply text-text-color;
 }
 
-/* Planet name input — fixed width on the right of the top row */
+/* Planet name input — full width under the heading */
 .planet-autocomplete-wrapper {
-	@apply relative w-full max-w-[420px];
+	@apply relative w-full;
 }
 
 .planet-name-input {
 	@apply w-full;
 }
 
-/* BODY ROW: inputs on left, output on right */
+/* BODY ROW: left col fills remaining space, right col fixed */
 .search-body-row {
 	@apply flex gap-6;
 }
 
-/* LEFT column: three-col input grid + submit button */
+/* LEFT column: heading + autocomplete + three panels + button */
 .search-inputs-col {
-	@apply flex flex-1 flex-col gap-4;
+	@apply flex min-w-0 flex-1 flex-col gap-4;
 }
 
-/* Three equal-width input sections side by side */
+/* Three equal-width input panels */
 .search-three-col {
 	@apply grid gap-4;
 	grid-template-columns: repeat(3, 1fr);
 }
 
-/* RIGHT column: Exosight output — fixed width, full height */
+/* RIGHT column: Exosight output */
 .search-output-col {
-	width: 360px;
+	width: 400px;
 	flex-shrink: 0;
+	display: flex;
+	flex-direction: column;
 }
 
-/* Output section stretches to fill available height */
+/* Output section fills the right column height */
 .search-output-section {
-	@apply h-full;
+	flex: 1;
 }
 
 /* ============================================================
@@ -290,19 +294,25 @@ body {
    ============================================================ */
 
 .exosight-output-box {
-	@apply flex-1 rounded-xl bg-background px-5 py-4 text-sm leading-relaxed text-text-color;
+	flex: 1;
+	@apply rounded-xl px-5 py-4 leading-relaxed text-text-color;
+	background-color: #2c2c2c;
 	font-family: 'Iosevka Charon Regular', 'Iosevka Charon', monospace;
+	font-size: 0.95rem;
 	white-space: pre-wrap;
 	min-height: 120px;
 }
 
-/* Make the section itself a flex column so the output box can grow */
+/* Make the output section a flex column so the box grows to fill it */
 .search-output-section {
 	@apply flex flex-col;
+	height: 100%;
 }
 
 .exosight-placeholder {
-	@apply text-sm text-[#888];
+	font-family: 'Iosevka Charon Light Italic', 'Iosevka Charon Light', monospace;
+	font-style: italic;
+	@apply text-[#888];
 }
 
 /* ============================================================
@@ -310,5 +320,18 @@ body {
    ============================================================ */
 
 .search-submit-btn {
-	@apply w-full cursor-pointer rounded-2xl border border-accent bg-transparent px-6 py-4 text-lg font-semibold text-accent transition-colors duration-200 hover:bg-accent hover:text-background disabled:cursor-not-allowed disabled:opacity-50;
+	@apply w-full cursor-pointer rounded-2xl border border-accent bg-transparent px-6 py-4 text-accent transition-colors duration-200 hover:bg-accent hover:text-background disabled:cursor-not-allowed disabled:opacity-50;
+	font-family: 'Iosevka Charon Light Italic', 'Iosevka Charon Light', monospace;
+	font-style: italic;
+	font-size: 1.1rem;
+	flex-shrink: 0;
+}
+
+/* Section labels and field labels use the project font */
+.search-section-label {
+	font-family: 'Iosevka Charon Regular', 'Iosevka Charon', monospace;
+}
+
+.search-field-label {
+	font-family: 'Iosevka Charon Light', 'Iosevka Charon', monospace;
 }
