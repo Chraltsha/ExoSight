@@ -6,7 +6,7 @@ import { sveltekit } from '@sveltejs/kit/vite';
 export default defineConfig({
 	server: {
 		proxy: {
-			'/api': 'http://127.0.0.1:8000', // change if needed
+			'/api': 'https://exosight-xs-ight.vercel.app/', // change if needed
 		},
 	},
 	plugins: [
