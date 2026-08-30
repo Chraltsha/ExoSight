@@ -105,6 +105,7 @@ def propagate_satellites(
     observation_time,
     exposure_duration,
 ):
+    print("start of propogation")
     """
     Propagate all satellites throughout the observation.
 
@@ -145,4 +146,5 @@ def propagate_satellites(
 
             positions.append(position)
 
+    print("----end propagation-------")
     return positions
