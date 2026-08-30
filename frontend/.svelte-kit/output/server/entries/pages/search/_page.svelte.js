@@ -124,7 +124,7 @@ function _page($$renderer, $$props) {
 							$$settled = false;
 						}
 					});
-					$$renderer.push(`<!----></div> <button class="search-submit-btn"${attr("disabled", isLoading, true)}>${escape_html("Search")}</button></div> <div class="search-output-col"><div class="search-section search-output-section"><span class="search-section-label">Exosight says…</span> <div class="exosight-output-box">`);
+					$$renderer.push(`<!----></div> <button class="search-submit-btn"${attr("disabled", isLoading, true)}>${escape_html("Search")}</button></div> <div class="search-output-col"><div class="search-section search-output-section"><span class="exosight-label">Exosight says…</span> <div class="exosight-output-box">`);
 					$$renderer.push("<!--[-1-->");
 					$$renderer.push(`<span class="exosight-placeholder">Fill in the fields above and hit Search to get your observation report</span>`);
 					$$renderer.push(`<!--]--></div></div></div></div></main>`);

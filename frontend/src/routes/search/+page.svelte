@@ -155,7 +155,7 @@
 			<!-- RIGHT: Exosight output -->
 			<div class="search-output-col">
 				<div class="search-section search-output-section">
-					<span class="search-section-label">Exosight says…</span>
+					<span class="exosight-label">Exosight says…</span>
 					<div class="exosight-output-box">
 						{#if isLoading}
 							<div class="typing-indicator">
