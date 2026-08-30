@@ -36,12 +36,12 @@ pip install -r backend/requirements.txt
 
 ## Backend Architecture
 
-- **Two duplicate router files exist**: `backend/app/routers/prediction.py` and `backend/app/api/predict.py`. The `api/predict.py` version is the correct one (has `response_model`, proper prefix, tags). The `routers/` version is stale.
-- **`celestrak_service.py`** uses Skyfield's `load.tle_file()` which downloads and caches TLEs from CelesTrak live on first call. The older commented-out implementation using `requests` is obsolete.
-- **`propagation.py` has stub implementations** — both `propagate_satellite()` and `propagate_satellites()` have empty bodies. The observation pipeline is not yet functional end-to-end.
-- **`observation.py` has a broken import**: `from propagation import propagate_satellite` (missing `app.astronomy.` prefix). Fix before running.
-- **`target.py` imports `Target`** from `app.models.prediction` but the model is named `ObservationTarget`. The import will fail at runtime.
+- **TLE caching uses Vercel KV (Upstash Redis)** — [`celestrak_service.py`](backend/app/services/celestrak_service.py) calls `Redis.from_env()` which requires `UPSTASH_REDIS_REST_URL` and `UPSTASH_REDIS_REST_TOKEN`. These are injected automatically when you link a KV store in the Vercel dashboard. Without them the backend crashes at startup locally — set them in `backend/.env` for local dev.
+- **TLE cache TTL is 6 hours** — `CACHE_KEY = "active_satellites_tle"`. First request after expiry hits CelesTrak (~15s), all others are in-memory parses of the cached string.
+- **Vercel filesystem is read-only** — never use `load.tle_file(url)` or any disk-based Skyfield caching. Always go through the Redis cache.
+- **`routers/prediction.py` is deleted** — the only active router is `backend/app/api/predict.py`.
 - Models use Pydantic v2 (`pydantic==2.x`). Use `model_validator`, `field_validator`, etc. (not v1 `@validator`).
+- **`interpretation` in `PredictionResponse` is `str | None = None`** — `prediction_service.py` does not call GPT; the field will be `null` until wired up.
 
 ## Code Style
 

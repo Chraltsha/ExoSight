@@ -39,7 +39,7 @@
 
 
 
-from skyfield.api import EarthSatellite, load
+from skyfield.api import EarthSatellite, Loader
 
 ACTIVE_SATELLITES_URL = (
     "https://celestrak.org/NORAD/elements/gp.php"
@@ -55,6 +55,8 @@ def load_satellites() -> list[EarthSatellite]:
     Returns:
         list[EarthSatellite]
     """
+    load = Loader('/tmp')
+    
     try:
         stale = load.days_old('active_satellites.txt') > 3.0
     except FileNotFoundError:
