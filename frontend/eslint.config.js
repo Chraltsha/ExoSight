@@ -14,12 +14,12 @@ export default defineConfig([
 	prettier,
 	svelte.configs.prettier,
 	{
-		languageOptions: { globals: { ...globals.browser, ...globals.node } }
+		languageOptions: { globals: { ...globals.browser, ...globals.node } },
 	},
 
 	{
 		files: ['**/*.svelte', '**/*.svelte.js'],
-		languageOptions: { parserOptions: {} }
+		languageOptions: { parserOptions: {} },
 	},
 
 	{
@@ -30,6 +30,6 @@ export default defineConfig([
 			quotes: ['error', 'single'],
 			eqeqeq: ['error', 'always'],
 			curly: ['error', 'all'],
-		}
-	}
+		},
+	},
 ]);

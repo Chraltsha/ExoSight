@@ -7,17 +7,17 @@
 </script>
 
 <PageTransition>
-  <div class="home-content">
-    <img src={homePageLogo} alt="ExoSight" class="home-title" />
-    <h3 class="home-subtitle">
-      See beyond our solar system,
-      <span class="subtitle-break">one exoplanet at a time.</span>
-    </h3>
+	<div class="home-content">
+		<img src={homePageLogo} alt="ExoSight" class="home-title" />
+		<h3 class="home-subtitle">
+			See beyond our solar system,
+			<span class="subtitle-break">one exoplanet at a time.</span>
+		</h3>
 
-    <div>
-      <button class="home-searchbutton" onclick={navigateToSearch}>
-        Search for Exoplanets  🔍︎
-      </button>
-    </div>
-  </div>
+		<div>
+			<button class="home-searchbutton" onclick={navigateToSearch}>
+				Search for Exoplanets 🔍︎
+			</button>
+		</div>
+	</div>
 </PageTransition>

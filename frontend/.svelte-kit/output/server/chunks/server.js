@@ -1,5 +1,5 @@
-import * as devalue from "devalue";
-import { clsx } from "clsx";
+import * as devalue from 'devalue';
+import { clsx } from 'clsx';
 //#region node_modules/svelte/src/internal/shared/utils.js
 var is_array = Array.isArray;
 var index_of = Array.prototype.indexOf;
@@ -22,9 +22,9 @@ function run_all(arr) {
 	for (var i = 0; i < arr.length; i++) arr[i]();
 }
 /**
-* TODO replace with Promise.withResolvers once supported widely enough
-* @template [T=void]
-*/
+ * TODO replace with Promise.withResolvers once supported widely enough
+ * @template [T=void]
+ */
 function deferred() {
 	/** @type {(value: T) => void} */
 	var resolve;
@@ -36,7 +36,7 @@ function deferred() {
 			reject = rej;
 		}),
 		resolve,
-		reject
+		reject,
 	};
 }
 //#endregion
@@ -47,12 +47,14 @@ function equals(value) {
 	return value === this.v;
 }
 /**
-* @param {unknown} a
-* @param {unknown} b
-* @returns {boolean}
-*/
+ * @param {unknown} a
+ * @param {unknown} b
+ * @returns {boolean}
+ */
 function safe_not_equal(a, b) {
-	return a != a ? b == b : a !== b || a !== null && typeof a === "object" || typeof a === "function";
+	return a != a
+		? b == b
+		: a !== b || (a !== null && typeof a === 'object') || typeof a === 'function';
 }
 /** @type {Equals} */
 function safe_equals(value) {
@@ -68,132 +70,132 @@ var REACTION_RAN = 32768;
 /** Effect is in the process of getting destroyed. Can be observed in child teardown functions */
 var DESTROYING = 1 << 25;
 /**
-* 'Transparent' effects do not create a transition boundary.
-* This is on a block effect 99% of the time but may also be on a branch effect if its parent block effect was pruned
-*/
+ * 'Transparent' effects do not create a transition boundary.
+ * This is on a block effect 99% of the time but may also be on a branch effect if its parent block effect was pruned
+ */
 var EFFECT_TRANSPARENT = 65536;
 var EFFECT_PRESERVED = 1 << 19;
 var USER_EFFECT = 1 << 20;
 /**
-* Tells that we marked this derived and its reactions as visited during the "mark as (maybe) dirty"-phase.
-* Will be lifted during execution of the derived and during checking its dirty state (both are necessary
-* because a derived might be checked but not executed). This is a pure performance optimization flag and
-* should not be used for any other purpose!
-*/
+ * Tells that we marked this derived and its reactions as visited during the "mark as (maybe) dirty"-phase.
+ * Will be lifted during execution of the derived and during checking its dirty state (both are necessary
+ * because a derived might be checked but not executed). This is a pure performance optimization flag and
+ * should not be used for any other purpose!
+ */
 var WAS_MARKED = 65536;
 var REACTION_IS_UPDATING = 1 << 21;
 var ERROR_VALUE = 1 << 23;
-var STATE_SYMBOL = Symbol("$state");
-var LEGACY_PROPS = Symbol("legacy props");
-var ATTRIBUTES_CACHE = Symbol("attributes");
-var CLASS_CACHE = Symbol("class");
-var STYLE_CACHE = Symbol("style");
-var TEXT_CACHE = Symbol("text");
+var STATE_SYMBOL = Symbol('$state');
+var LEGACY_PROPS = Symbol('legacy props');
+var ATTRIBUTES_CACHE = Symbol('attributes');
+var CLASS_CACHE = Symbol('class');
+var STYLE_CACHE = Symbol('style');
+var TEXT_CACHE = Symbol('text');
 /** allow users to ignore aborted signal errors if `reason.name === 'StaleReactionError` */
-var STALE_REACTION = new class StaleReactionError extends Error {
-	name = "StaleReactionError";
-	message = "The reaction that called `getAbortSignal()` was re-run or destroyed";
-}();
+var STALE_REACTION = new (class StaleReactionError extends Error {
+	name = 'StaleReactionError';
+	message = 'The reaction that called `getAbortSignal()` was re-run or destroyed';
+})();
 globalThis.document?.contentType;
 //#endregion
 //#region node_modules/svelte/src/internal/shared/errors.js
 /**
-* Cannot use `%name%(...)` unless the `experimental.async` compiler option is `true`
-* @param {string} name
-* @returns {never}
-*/
+ * Cannot use `%name%(...)` unless the `experimental.async` compiler option is `true`
+ * @param {string} name
+ * @returns {never}
+ */
 function experimental_async_required(name) {
 	throw new Error(`https://svelte.dev/e/experimental_async_required`);
 }
 /**
-* `%name%(...)` can only be used during component initialisation
-* @param {string} name
-* @returns {never}
-*/
+ * `%name%(...)` can only be used during component initialisation
+ * @param {string} name
+ * @returns {never}
+ */
 function lifecycle_outside_component(name) {
 	throw new Error(`https://svelte.dev/e/lifecycle_outside_component`);
 }
 /**
-* Context was not set in a parent component
-* @returns {never}
-*/
+ * Context was not set in a parent component
+ * @returns {never}
+ */
 function missing_context() {
 	throw new Error(`https://svelte.dev/e/missing_context`);
 }
 /**
-* Maximum update depth exceeded. This typically indicates that an effect reads and writes the same piece of state
-* @returns {never}
-*/
+ * Maximum update depth exceeded. This typically indicates that an effect reads and writes the same piece of state
+ * @returns {never}
+ */
 function effect_update_depth_exceeded() {
 	throw new Error(`https://svelte.dev/e/effect_update_depth_exceeded`);
 }
 /**
-* Failed to hydrate the application
-* @returns {never}
-*/
+ * Failed to hydrate the application
+ * @returns {never}
+ */
 function hydration_failed() {
 	throw new Error(`https://svelte.dev/e/hydration_failed`);
 }
 /**
-* Property descriptors defined on `$state` objects must contain `value` and always be `enumerable`, `configurable` and `writable`.
-* @returns {never}
-*/
+ * Property descriptors defined on `$state` objects must contain `value` and always be `enumerable`, `configurable` and `writable`.
+ * @returns {never}
+ */
 function state_descriptors_fixed() {
 	throw new Error(`https://svelte.dev/e/state_descriptors_fixed`);
 }
 /**
-* Cannot set prototype of `$state` object
-* @returns {never}
-*/
+ * Cannot set prototype of `$state` object
+ * @returns {never}
+ */
 function state_prototype_fixed() {
 	throw new Error(`https://svelte.dev/e/state_prototype_fixed`);
 }
 /**
-* Updating state inside `$derived(...)`, `$inspect(...)` or a template expression is forbidden. If the value should not be reactive, declare it without `$state`
-* @returns {never}
-*/
+ * Updating state inside `$derived(...)`, `$inspect(...)` or a template expression is forbidden. If the value should not be reactive, declare it without `$state`
+ * @returns {never}
+ */
 function state_unsafe_mutation() {
 	throw new Error(`https://svelte.dev/e/state_unsafe_mutation`);
 }
 /**
-* A `<svelte:boundary>` `reset` function cannot be called while an error is still being handled
-* @returns {never}
-*/
+ * A `<svelte:boundary>` `reset` function cannot be called while an error is still being handled
+ * @returns {never}
+ */
 function svelte_boundary_reset_onerror() {
 	throw new Error(`https://svelte.dev/e/svelte_boundary_reset_onerror`);
 }
 //#endregion
 //#region node_modules/svelte/src/constants.js
 var HYDRATION_ERROR = {};
-var UNINITIALIZED = Symbol("uninitialized");
+var UNINITIALIZED = Symbol('uninitialized');
 /**
-* Reading a derived belonging to a now-destroyed effect may result in stale values
-*/
+ * Reading a derived belonging to a now-destroyed effect may result in stale values
+ */
 function derived_inert() {
 	console.warn(`https://svelte.dev/e/derived_inert`);
 }
 /**
-* Hydration failed because the initial UI does not match what was rendered on the server. The error occurred near %location%
-* @param {string | undefined | null} [location]
-*/
+ * Hydration failed because the initial UI does not match what was rendered on the server. The error occurred near %location%
+ * @param {string | undefined | null} [location]
+ */
 function hydration_mismatch(location) {
 	console.warn(`https://svelte.dev/e/hydration_mismatch`);
 }
 /**
-* Tried to unmount a component that was not mounted
-*/
+ * Tried to unmount a component that was not mounted
+ */
 function lifecycle_double_unmount() {
 	console.warn(`https://svelte.dev/e/lifecycle_double_unmount`);
 }
 /**
-* Tried to unmount a state proxy, rather than a component
-*/
+ * Tried to unmount a state proxy, rather than a component
+ */
 function state_proxy_unmount() {
 	console.warn(`https://svelte.dev/e/state_proxy_unmount`);
 }
 /**
-* A `<svelte:boundary>` `reset` function only resets the boundary the first time it is called
-*/
+ * A `<svelte:boundary>` `reset` function only resets the boundary the first time it is called
+ */
 function svelte_boundary_reset_noop() {
 	console.warn(`https://svelte.dev/e/svelte_boundary_reset_noop`);
 }
@@ -201,21 +203,21 @@ function svelte_boundary_reset_noop() {
 //#region node_modules/svelte/src/internal/client/dom/hydration.js
 /** @import { TemplateNode } from '#client' */
 /**
-* Use this variable to guard everything related to hydration code so it can be treeshaken out
-* if the user doesn't use the `hydrate` method and these code paths are therefore not needed.
-*/
+ * Use this variable to guard everything related to hydration code so it can be treeshaken out
+ * if the user doesn't use the `hydrate` method and these code paths are therefore not needed.
+ */
 var hydrating = false;
 /** @param {boolean} value */
 function set_hydrating(value) {
 	hydrating = value;
 }
 /**
-* The node that is currently being hydrated. This starts out as the first node inside the opening
-* <!--[--> comment, and updates each time a component calls `$.child(...)` or `$.sibling(...)`.
-* When entering a block (e.g. `{#if ...}`), `hydrate_node` is the block opening comment; by the
-* time we leave the block it is the closing comment, which serves as the block's anchor.
-* @type {TemplateNode}
-*/
+ * The node that is currently being hydrated. This starts out as the first node inside the opening
+ * <!--[--> comment, and updates each time a component calls `$.child(...)` or `$.sibling(...)`.
+ * When entering a block (e.g. `{#if ...}`), `hydrate_node` is the block opening comment; by the
+ * time we leave the block it is the closing comment, which serves as the block's anchor.
+ * @type {TemplateNode}
+ */
 var hydrate_node;
 /** @param {TemplateNode | null} node */
 function set_hydrate_node(node) {
@@ -223,7 +225,7 @@ function set_hydrate_node(node) {
 		hydration_mismatch();
 		throw HYDRATION_ERROR;
 	}
-	return hydrate_node = node;
+	return (hydrate_node = node);
 }
 function hydrate_next() {
 	return set_hydrate_node(/* @__PURE__ */ get_next_sibling(hydrate_node));
@@ -237,19 +239,24 @@ function next(count = 1) {
 	}
 }
 /**
-* Skips or removes (depending on {@link remove}) all nodes starting at `hydrate_node` up until the next hydration end comment
-* @param {boolean} remove
-*/
+ * Skips or removes (depending on {@link remove}) all nodes starting at `hydrate_node` up until the next hydration end comment
+ * @param {boolean} remove
+ */
 function skip_nodes(remove = true) {
 	var depth = 0;
 	var node = hydrate_node;
 	while (true) {
 		if (node.nodeType === 8) {
 			var data = node.data;
-			if (data === "]") {
+			if (data === ']') {
 				if (depth === 0) return node;
 				depth -= 1;
-			} else if (data === "[" || data === "[!" || data[0] === "[" && !isNaN(Number(data.slice(1)))) depth += 1;
+			} else if (
+				data === '[' ||
+				data === '[!' ||
+				(data[0] === '[' && !isNaN(Number(data.slice(1))))
+			)
+				depth += 1;
 		}
 		var next = /* @__PURE__ */ get_next_sibling(node);
 		if (remove) node.remove();
@@ -263,22 +270,23 @@ var async_mode_flag = false;
 /** True if we're not certain that we only have Svelte 5 code in the compilation */
 var legacy_mode_flag = false;
 /**
-* @returns {string[]}
-*/
+ * @returns {string[]}
+ */
 function get_stack() {
 	const limit = Error.stackTraceLimit;
 	Error.stackTraceLimit = Infinity;
-	const stack = (/* @__PURE__ */ new Error()).stack;
+	const stack = /* @__PURE__ */ new Error().stack;
 	Error.stackTraceLimit = limit;
 	if (!stack) return [];
-	const lines = stack.split("\n");
+	const lines = stack.split('\n');
 	const new_lines = [];
 	for (let i = 0; i < lines.length; i++) {
 		const line = lines[i];
-		const posixified = line.replaceAll("\\", "/");
-		if (line.trim() === "Error") continue;
-		if (line.includes("validate_each_keys")) return [];
-		if (posixified.includes("svelte/src/internal") || posixified.includes("node_modules/.vite")) continue;
+		const posixified = line.replaceAll('\\', '/');
+		if (line.trim() === 'Error') continue;
+		if (line.includes('validate_each_keys')) return [];
+		if (posixified.includes('svelte/src/internal') || posixified.includes('node_modules/.vite'))
+			continue;
 		new_lines.push(line);
 	}
 	return new_lines;
@@ -293,11 +301,11 @@ function set_component_context(context) {
 	component_context = context;
 }
 /**
-* @param {Record<string, unknown>} props
-* @param {any} runes
-* @param {Function} [fn]
-* @returns {void}
-*/
+ * @param {Record<string, unknown>} props
+ * @param {any} runes
+ * @param {Function} [fn]
+ * @returns {void}
+ */
 function push$1(props, runes = false, fn) {
 	component_context = {
 		p: component_context,
@@ -307,18 +315,21 @@ function push$1(props, runes = false, fn) {
 		s: props,
 		x: null,
 		r: active_effect,
-		l: legacy_mode_flag && !runes ? {
-			s: null,
-			u: null,
-			$: []
-		} : null
+		l:
+			legacy_mode_flag && !runes
+				? {
+						s: null,
+						u: null,
+						$: [],
+					}
+				: null,
 	};
 }
 /**
-* @template {Record<string, any>} T
-* @param {T} [component]
-* @returns {T}
-*/
+ * @template {Record<string, any>} T
+ * @param {T} [component]
+ * @returns {T}
+ */
 function pop$1(component) {
 	var context = component_context;
 	var effects = context.e;
@@ -333,7 +344,7 @@ function pop$1(component) {
 }
 /** @returns {boolean} */
 function is_runes() {
-	return !legacy_mode_flag || component_context !== null && component_context.l === null;
+	return !legacy_mode_flag || (component_context !== null && component_context.l === null);
 }
 //#endregion
 //#region node_modules/svelte/src/internal/client/dom/task.js
@@ -345,8 +356,8 @@ function run_micro_tasks() {
 	run_all(tasks);
 }
 /**
-* @param {() => void} fn
-*/
+ * @param {() => void} fn
+ */
 function queue_micro_task(fn) {
 	if (micro_tasks.length === 0 && !is_flushing_sync) {
 		var tasks = micro_tasks;
@@ -357,14 +368,14 @@ function queue_micro_task(fn) {
 	micro_tasks.push(fn);
 }
 /**
-* Synchronously run any queued tasks.
-*/
+ * Synchronously run any queued tasks.
+ */
 function flush_tasks() {
 	while (micro_tasks.length > 0) run_micro_tasks();
 }
 /**
-* @param {unknown} error
-*/
+ * @param {unknown} error
+ */
 function handle_error(error) {
 	var effect = active_effect;
 	if (effect === null) {
@@ -375,9 +386,9 @@ function handle_error(error) {
 	invoke_error_boundary(error, effect);
 }
 /**
-* @param {unknown} error
-* @param {Effect | null} effect
-*/
+ * @param {unknown} error
+ * @param {Effect | null} effect
+ */
 function invoke_error_boundary(error, effect) {
 	if (effect !== null && (effect.f & 16384) !== 0) return;
 	while (effect !== null) {
@@ -399,16 +410,16 @@ function invoke_error_boundary(error, effect) {
 /** @import { Derived, Signal } from '#client' */
 var STATUS_MASK = ~(DIRTY | MAYBE_DIRTY | CLEAN);
 /**
-* @param {Signal} signal
-* @param {number} status
-*/
+ * @param {Signal} signal
+ * @param {number} status
+ */
 function set_signal_status(signal, status) {
-	signal.f = signal.f & STATUS_MASK | status;
+	signal.f = (signal.f & STATUS_MASK) | status;
 }
 /**
-* Set a derived's status to CLEAN or MAYBE_DIRTY based on its connection state.
-* @param {Derived} derived
-*/
+ * Set a derived's status to CLEAN or MAYBE_DIRTY based on its connection state.
+ * @param {Derived} derived
+ */
 function update_derived_status(derived) {
 	if ((derived.f & 512) !== 0 || derived.deps === null) set_signal_status(derived, CLEAN);
 	else set_signal_status(derived, MAYBE_DIRTY);
@@ -417,8 +428,8 @@ function update_derived_status(derived) {
 //#region node_modules/svelte/src/internal/client/reactivity/utils.js
 /** @import { Derived, Effect, Value } from '#client' */
 /**
-* @param {Value[] | null} deps
-*/
+ * @param {Value[] | null} deps
+ */
 function clear_marked(deps) {
 	if (deps === null) return;
 	for (const dep of deps) {
@@ -426,15 +437,15 @@ function clear_marked(deps) {
 		dep.f ^= WAS_MARKED;
 		clear_marked(
 			/** @type {Derived} */
-			dep.deps
+			dep.deps,
 		);
 	}
 }
 /**
-* @param {Effect} effect
-* @param {Set<Effect>} dirty_effects
-* @param {Set<Effect>} maybe_dirty_effects
-*/
+ * @param {Effect} effect
+ * @param {Set<Effect>} dirty_effects
+ * @param {Set<Effect>} maybe_dirty_effects
+ */
 function defer_effect(effect, dirty_effects, maybe_dirty_effects) {
 	if ((effect.f & 2048) !== 0) dirty_effects.add(effect);
 	else if ((effect.f & 4096) !== 0) maybe_dirty_effects.add(effect);
@@ -444,16 +455,16 @@ function defer_effect(effect, dirty_effects, maybe_dirty_effects) {
 //#endregion
 //#region node_modules/svelte/src/internal/client/reactivity/store.js
 /**
-* We set this to `true` when updating a store so that we correctly
-* schedule effects if the update takes place inside a `$:` effect
-*/
+ * We set this to `true` when updating a store so that we correctly
+ * schedule effects if the update takes place inside a `$:` effect
+ */
 var legacy_is_updating_store = false;
 //#endregion
 //#region node_modules/svelte/src/internal/client/dom/elements/bindings/shared.js
 /**
-* @template T
-* @param {() => T} fn
-*/
+ * @template T
+ * @param {() => T} fn
+ */
 function without_reactive_context(fn) {
 	var previous_reaction = active_reaction;
 	var previous_effect = active_effect;
@@ -469,51 +480,51 @@ function without_reactive_context(fn) {
 //#endregion
 //#region node_modules/svelte/src/reactivity/create-subscriber.js
 /**
-* Returns a `subscribe` function that integrates external event-based systems with Svelte's reactivity.
-* It's particularly useful for integrating with web APIs like `MediaQuery`, `IntersectionObserver`, or `WebSocket`.
-*
-* If `subscribe` is called inside an effect (including indirectly, for example inside a getter),
-* the `start` callback will be called with an `update` function. Whenever `update` is called, the effect re-runs.
-*
-* If `start` returns a cleanup function, it will be called when the effect is destroyed.
-*
-* If `subscribe` is called in multiple effects, `start` will only be called once as long as the effects
-* are active, and the returned teardown function will only be called when all effects are destroyed.
-*
-* It's best understood with an example. Here's an implementation of [`MediaQuery`](https://svelte.dev/docs/svelte/svelte-reactivity#MediaQuery):
-*
-* ```js
-* import { createSubscriber } from 'svelte/reactivity';
-* import { on } from 'svelte/events';
-*
-* export class MediaQuery {
-* 	#query;
-* 	#subscribe;
-*
-* 	constructor(query) {
-* 		this.#query = window.matchMedia(`(${query})`);
-*
-* 		this.#subscribe = createSubscriber((update) => {
-* 			// when the `change` event occurs, re-run any effects that read `this.current`
-* 			const off = on(this.#query, 'change', update);
-*
-* 			// stop listening when all the effects are destroyed
-* 			return () => off();
-* 		});
-* 	}
-*
-* 	get current() {
-* 		// This makes the getter reactive, if read in an effect
-* 		this.#subscribe();
-*
-* 		// Return the current state of the query, whether or not we're in an effect
-* 		return this.#query.matches;
-* 	}
-* }
-* ```
-* @param {(update: () => void) => (() => void) | void} start
-* @since 5.7.0
-*/
+ * Returns a `subscribe` function that integrates external event-based systems with Svelte's reactivity.
+ * It's particularly useful for integrating with web APIs like `MediaQuery`, `IntersectionObserver`, or `WebSocket`.
+ *
+ * If `subscribe` is called inside an effect (including indirectly, for example inside a getter),
+ * the `start` callback will be called with an `update` function. Whenever `update` is called, the effect re-runs.
+ *
+ * If `start` returns a cleanup function, it will be called when the effect is destroyed.
+ *
+ * If `subscribe` is called in multiple effects, `start` will only be called once as long as the effects
+ * are active, and the returned teardown function will only be called when all effects are destroyed.
+ *
+ * It's best understood with an example. Here's an implementation of [`MediaQuery`](https://svelte.dev/docs/svelte/svelte-reactivity#MediaQuery):
+ *
+ * ```js
+ * import { createSubscriber } from 'svelte/reactivity';
+ * import { on } from 'svelte/events';
+ *
+ * export class MediaQuery {
+ * 	#query;
+ * 	#subscribe;
+ *
+ * 	constructor(query) {
+ * 		this.#query = window.matchMedia(`(${query})`);
+ *
+ * 		this.#subscribe = createSubscriber((update) => {
+ * 			// when the `change` event occurs, re-run any effects that read `this.current`
+ * 			const off = on(this.#query, 'change', update);
+ *
+ * 			// stop listening when all the effects are destroyed
+ * 			return () => off();
+ * 		});
+ * 	}
+ *
+ * 	get current() {
+ * 		// This makes the getter reactive, if read in an effect
+ * 		this.#subscribe();
+ *
+ * 		// Return the current state of the query, whether or not we're in an effect
+ * 		return this.#query.matches;
+ * 	}
+ * }
+ * ```
+ * @param {(update: () => void) => (() => void) | void} start
+ * @since 5.7.0
+ */
 function createSubscriber(start) {
 	let subscribers = 0;
 	let version = source(0);
@@ -543,20 +554,20 @@ function createSubscriber(start) {
 //#region node_modules/svelte/src/internal/client/dom/blocks/boundary.js
 /** @import { Effect, Source, TemplateNode, } from '#client' */
 /**
-* @typedef {{
-* 	 onerror?: ((error: unknown, reset: () => void) => void) | null;
-*   failed?: ((anchor: Node, error: () => unknown, reset: () => () => void) => void) | null;
-*   pending?: ((anchor: Node) => void) | null;
-* }} BoundaryProps
-*/
+ * @typedef {{
+ * 	 onerror?: ((error: unknown, reset: () => void) => void) | null;
+ *   failed?: ((anchor: Node, error: () => unknown, reset: () => () => void) => void) | null;
+ *   pending?: ((anchor: Node) => void) | null;
+ * }} BoundaryProps
+ */
 var flags = EFFECT_TRANSPARENT | EFFECT_PRESERVED;
 /**
-* @param {TemplateNode} node
-* @param {BoundaryProps} props
-* @param {((anchor: Node) => void)} children
-* @param {((error: unknown) => unknown) | undefined} [transform_error]
-* @returns {void}
-*/
+ * @param {TemplateNode} node
+ * @param {BoundaryProps} props
+ * @param {((anchor: Node) => void)} children
+ * @param {((error: unknown) => unknown) | undefined} [transform_error]
+ * @returns {void}
+ */
 function boundary(node, props, children, transform_error) {
 	new Boundary(node, props, children, transform_error);
 }
@@ -565,10 +576,10 @@ var Boundary = class {
 	parent;
 	is_pending = false;
 	/**
-	* API-level transformError transform function. Transforms errors before they reach the `failed` snippet.
-	* Inherited from parent boundary, or defaults to identity.
-	* @type {(error: unknown) => unknown}
-	*/
+	 * API-level transformError transform function. Transforms errors before they reach the `failed` snippet.
+	 * Inherited from parent boundary, or defaults to identity.
+	 * @type {(error: unknown) => unknown}
+	 */
 	transform_error;
 	/** @type {TemplateNode} */
 	#anchor;
@@ -596,12 +607,12 @@ var Boundary = class {
 	/** @type {Set<Effect>} */
 	#maybe_dirty_effects = /* @__PURE__ */ new Set();
 	/**
-	* A source containing the number of pending async deriveds/expressions.
-	* Only created if `$effect.pending()` is used inside the boundary,
-	* otherwise updating the source results in needless `Batch.ensure()`
-	* calls followed by no-op flushes
-	* @type {Source<number> | null}
-	*/
+	 * A source containing the number of pending async deriveds/expressions.
+	 * Only created if `$effect.pending()` is used inside the boundary,
+	 * otherwise updating the source results in needless `Batch.ensure()`
+	 * calls followed by no-op flushes
+	 * @type {Source<number> | null}
+	 */
 	#effect_pending = null;
 	#effect_pending_subscriber = createSubscriber(() => {
 		this.#effect_pending = source(this.#local_pending_count);
@@ -610,11 +621,11 @@ var Boundary = class {
 		};
 	});
 	/**
-	* @param {TemplateNode} node
-	* @param {BoundaryProps} props
-	* @param {((anchor: Node) => void)} children
-	* @param {((error: unknown) => unknown) | undefined} [transform_error]
-	*/
+	 * @param {TemplateNode} node
+	 * @param {BoundaryProps} props
+	 * @param {((anchor: Node) => void)} children
+	 * @param {((error: unknown) => unknown) | undefined} [transform_error]
+	 */
 	constructor(node, props, children, transform_error) {
 		this.#anchor = node;
 		this.#props = props;
@@ -630,8 +641,8 @@ var Boundary = class {
 			if (hydrating) {
 				const comment = this.#hydrate_open;
 				hydrate_next();
-				const server_rendered_pending = comment.data === "[!";
-				if (comment.data.startsWith("[?")) {
+				const server_rendered_pending = comment.data === '[!';
+				if (comment.data.startsWith('[?')) {
 					const serialized_error = JSON.parse(comment.data.slice(2));
 					this.#hydrate_failed_content(serialized_error);
 				} else if (server_rendered_pending) this.#hydrate_pending_content();
@@ -648,23 +659,27 @@ var Boundary = class {
 		}
 	}
 	/**
-	* @param {unknown} error The deserialized error from the server's hydration comment
-	*/
+	 * @param {unknown} error The deserialized error from the server's hydration comment
+	 */
 	#hydrate_failed_content(error) {
 		const failed = this.#props.failed;
 		const { reset, invoke_onerror } = this.#create_reset(error);
 		queue_micro_task(invoke_onerror);
 		if (!failed) return;
 		this.#failed_effect = branch(() => {
-			failed(this.#anchor, () => error, () => reset);
+			failed(
+				this.#anchor,
+				() => error,
+				() => reset,
+			);
 		});
 	}
 	/**
-	* Creates the `reset` function for a failed boundary, along with a function
-	* that invokes `onerror` with it (if provided)
-	* @param {unknown} error
-	* @returns {{ reset: () => void, invoke_onerror: () => void }}
-	*/
+	 * Creates the `reset` function for a failed boundary, along with a function
+	 * that invokes `onerror` with it (if provided)
+	 * @param {unknown} error
+	 * @returns {{ reset: () => void, invoke_onerror: () => void }}
+	 */
 	#create_reset(error) {
 		var did_reset = false;
 		var calling_on_error = false;
@@ -675,9 +690,10 @@ var Boundary = class {
 			}
 			did_reset = true;
 			if (calling_on_error) svelte_boundary_reset_onerror();
-			if (this.#failed_effect !== null) pause_effect(this.#failed_effect, () => {
-				this.#failed_effect = null;
-			});
+			if (this.#failed_effect !== null)
+				pause_effect(this.#failed_effect, () => {
+					this.#failed_effect = null;
+				});
 			this.#run(() => {
 				this.#render();
 			});
@@ -693,7 +709,7 @@ var Boundary = class {
 		};
 		return {
 			reset,
-			invoke_onerror
+			invoke_onerror,
 		};
 	}
 	#hydrate_pending_content() {
@@ -702,7 +718,7 @@ var Boundary = class {
 		this.is_pending = true;
 		this.#pending_effect = branch(() => pending(this.#anchor));
 		queue_micro_task(() => {
-			var fragment = this.#offscreen_fragment = document.createDocumentFragment();
+			var fragment = (this.#offscreen_fragment = document.createDocumentFragment());
 			var anchor = create_text();
 			fragment.append(anchor);
 			this.#main_effect = this.#run(() => {
@@ -727,7 +743,7 @@ var Boundary = class {
 				this.#children(this.#anchor);
 			});
 			if (this.#pending_count > 0) {
-				var fragment = this.#offscreen_fragment = document.createDocumentFragment();
+				var fragment = (this.#offscreen_fragment = document.createDocumentFragment());
 				move_effect(this.#main_effect, fragment);
 				const pending = this.#props.pending;
 				this.#pending_effect = branch(() => pending(this.#anchor));
@@ -737,23 +753,23 @@ var Boundary = class {
 		}
 	}
 	/**
-	* @param {Batch} batch
-	*/
+	 * @param {Batch} batch
+	 */
 	#resolve(batch) {
 		this.is_pending = false;
 		batch.transfer_effects(this.#dirty_effects, this.#maybe_dirty_effects);
 	}
 	/**
-	* Defer an effect inside a pending boundary until the boundary resolves
-	* @param {Effect} effect
-	*/
+	 * Defer an effect inside a pending boundary until the boundary resolves
+	 * @param {Effect} effect
+	 */
 	defer_effect(effect) {
 		defer_effect(effect, this.#dirty_effects, this.#maybe_dirty_effects);
 	}
 	/**
-	* Returns `false` if the effect exists inside a boundary whose pending snippet is shown
-	* @returns {boolean}
-	*/
+	 * Returns `false` if the effect exists inside a boundary whose pending snippet is shown
+	 * @returns {boolean}
+	 */
 	is_rendered() {
 		return !this.is_pending && (!this.parent || this.parent.is_rendered());
 	}
@@ -761,9 +777,9 @@ var Boundary = class {
 		return !!this.#props.pending;
 	}
 	/**
-	* @template T
-	* @param {() => T} fn
-	*/
+	 * @template T
+	 * @param {() => T} fn
+	 */
 	#run(fn) {
 		var previous_effect = active_effect;
 		var previous_reaction = active_reaction;
@@ -784,11 +800,11 @@ var Boundary = class {
 		}
 	}
 	/**
-	* Updates the pending count associated with the currently visible pending snippet,
-	* if any, such that we can replace the snippet with content once work is done
-	* @param {1 | -1} d
-	* @param {Batch} batch
-	*/
+	 * Updates the pending count associated with the currently visible pending snippet,
+	 * if any, such that we can replace the snippet with content once work is done
+	 * @param {1 | -1} d
+	 * @param {Batch} batch
+	 */
 	#update_pending_count(d, batch) {
 		if (!this.has_pending_snippet()) {
 			if (this.parent) this.parent.#update_pending_count(d, batch);
@@ -797,9 +813,10 @@ var Boundary = class {
 		this.#pending_count += d;
 		if (this.#pending_count === 0) {
 			this.#resolve(batch);
-			if (this.#pending_effect) pause_effect(this.#pending_effect, () => {
-				this.#pending_effect = null;
-			});
+			if (this.#pending_effect)
+				pause_effect(this.#pending_effect, () => {
+					this.#pending_effect = null;
+				});
 			if (this.#offscreen_fragment) {
 				this.#anchor.before(this.#offscreen_fragment);
 				this.#offscreen_fragment = null;
@@ -807,12 +824,12 @@ var Boundary = class {
 		}
 	}
 	/**
-	* Update the source that powers `$effect.pending()` inside this boundary,
-	* and controls when the current `pending` snippet (if any) is removed.
-	* Do not call from inside the class
-	* @param {1 | -1} d
-	* @param {Batch} batch
-	*/
+	 * Update the source that powers `$effect.pending()` inside this boundary,
+	 * and controls when the current `pending` snippet (if any) is removed.
+	 * Do not call from inside the class
+	 * @param {1 | -1} d
+	 * @param {Batch} batch
+	 */
 	update_pending_count(d, batch) {
 		this.#update_pending_count(d, batch);
 		this.#local_pending_count += d;
@@ -840,8 +857,8 @@ var Boundary = class {
 		} else this.#handle_error(error);
 	}
 	/**
-	* @param {unknown} error
-	*/
+	 * @param {unknown} error
+	 */
 	#handle_error(error) {
 		if (this.#main_effect) {
 			destroy_effect(this.#main_effect);
@@ -865,19 +882,24 @@ var Boundary = class {
 		const handle_error_result = (transformed_error) => {
 			const { reset, invoke_onerror } = this.#create_reset(transformed_error);
 			invoke_onerror();
-			if (failed) this.#failed_effect = this.#run(() => {
-				try {
-					return branch(() => {
-						var effect = active_effect;
-						effect.b = this;
-						effect.f |= 128;
-						failed(this.#anchor, () => transformed_error, () => reset);
-					});
-				} catch (error) {
-					invoke_error_boundary(error, this.#effect.parent);
-					return null;
-				}
-			});
+			if (failed)
+				this.#failed_effect = this.#run(() => {
+					try {
+						return branch(() => {
+							var effect = active_effect;
+							effect.b = this;
+							effect.f |= 128;
+							failed(
+								this.#anchor,
+								() => transformed_error,
+								() => reset,
+							);
+						});
+					} catch (error) {
+						invoke_error_boundary(error, this.#effect.parent);
+						return null;
+					}
+				});
 		};
 		queue_micro_task(() => {
 			/** @type {unknown} */
@@ -888,21 +910,21 @@ var Boundary = class {
 				invoke_error_boundary(e, this.#effect && this.#effect.parent);
 				return;
 			}
-			if (result !== null && typeof result === "object" && typeof result.then === "function")
- /** @type {any} */ result.then(
-				handle_error_result,
-				/** @param {unknown} e */
-				(e) => invoke_error_boundary(e, this.#effect && this.#effect.parent)
-			);
+			if (result !== null && typeof result === 'object' && typeof result.then === 'function')
+				/** @type {any} */ result.then(
+					handle_error_result,
+					/** @param {unknown} e */
+					(e) => invoke_error_boundary(e, this.#effect && this.#effect.parent),
+				);
 			else handle_error_result(result);
 		});
 	}
 };
-var OBSOLETE = Symbol("obsolete");
+var OBSOLETE = Symbol('obsolete');
 /**
-* @param {Derived} derived
-* @returns {void}
-*/
+ * @param {Derived} derived
+ * @returns {void}
+ */
 function destroy_derived_effects(derived) {
 	var effects = derived.effects;
 	if (effects !== null) {
@@ -911,15 +933,20 @@ function destroy_derived_effects(derived) {
 	}
 }
 /**
-* @template T
-* @param {Derived} derived
-* @returns {T}
-*/
+ * @template T
+ * @param {Derived} derived
+ * @returns {T}
+ */
 function execute_derived(derived) {
 	var value;
 	var prev_active_effect = active_effect;
 	var parent = derived.parent;
-	if (!is_destroying_effect && parent !== null && derived.v !== UNINITIALIZED && (parent.f & 24576) !== 0) {
+	if (
+		!is_destroying_effect &&
+		parent !== null &&
+		derived.v !== UNINITIALIZED &&
+		(parent.f & 24576) !== 0
+	) {
 		derived_inert();
 		return derived.v;
 	}
@@ -934,9 +961,9 @@ function execute_derived(derived) {
 	return value;
 }
 /**
-* @param {Derived} derived
-* @returns {void}
-*/
+ * @param {Derived} derived
+ * @returns {void}
+ */
 function update_derived(derived) {
 	var value = execute_derived(derived);
 	if (!derived.equals(value)) {
@@ -958,24 +985,26 @@ function update_derived(derived) {
 	} else update_derived_status(derived);
 }
 /**
-* @param {Derived} derived
-*/
+ * @param {Derived} derived
+ */
 function freeze_derived_effects(derived) {
 	if (derived.effects === null) return;
-	for (const e of derived.effects) if (e.teardown || e.ac) {
-		e.teardown?.();
-		if (e.ac !== null) without_reactive_context(() => {
-			/** @type {AbortController} */ e.ac.abort(STALE_REACTION);
-			e.ac = null;
-		});
-		if (e.fn !== null) e.teardown = noop;
-		remove_reactions(e, 0);
-		destroy_effect_children(e);
-	}
+	for (const e of derived.effects)
+		if (e.teardown || e.ac) {
+			e.teardown?.();
+			if (e.ac !== null)
+				without_reactive_context(() => {
+					/** @type {AbortController} */ e.ac.abort(STALE_REACTION);
+					e.ac = null;
+				});
+			if (e.fn !== null) e.teardown = noop;
+			remove_reactions(e, 0);
+			destroy_effect_children(e);
+		}
 }
 /**
-* @param {Derived} derived
-*/
+ * @param {Derived} derived
+ */
 function unfreeze_derived_effects(derived) {
 	if (derived.effects === null) return;
 	for (const e of derived.effects) if (e.teardown && e.fn !== null) update_effect(e);
@@ -991,35 +1020,35 @@ var last_batch = null;
 /** @type {Batch | null} */
 var current_batch = null;
 /**
-* This is needed to avoid overwriting inputs
-* @type {Batch | null}
-*/
+ * This is needed to avoid overwriting inputs
+ * @type {Batch | null}
+ */
 var previous_batch = null;
 /**
-* When time travelling (i.e. working in one batch, while other batches
-* still have ongoing work), we ignore the real values of affected
-* signals in favour of their values within the batch
-* @type {Map<Value, any> | null}
-*/
+ * When time travelling (i.e. working in one batch, while other batches
+ * still have ongoing work), we ignore the real values of affected
+ * signals in favour of their values within the batch
+ * @type {Map<Value, any> | null}
+ */
 var batch_values = null;
 /** @type {Effect | null} */
 var last_scheduled_effect = null;
 var is_flushing_sync = false;
 var is_processing = false;
 /**
-* During traversal, this is an array. Newly created effects are (if not immediately
-* executed) pushed to this array, rather than going through the scheduling
-* rigamarole that would cause another turn of the flush loop.
-* @type {Effect[] | null}
-*/
+ * During traversal, this is an array. Newly created effects are (if not immediately
+ * executed) pushed to this array, rather than going through the scheduling
+ * rigamarole that would cause another turn of the flush loop.
+ * @type {Effect[] | null}
+ */
 var collected_effects = null;
 /**
-* An array of effects that are marked during traversal as a result of a `set`
-* (not `internal_set`) call. These will be added to the next batch and
-* trigger another `batch.process()`
-* @type {Effect[] | null}
-* @deprecated when we get rid of legacy mode and stores, we can get rid of this
-*/
+ * An array of effects that are marked during traversal as a result of a `set`
+ * (not `internal_set`) call. These will be added to the next batch and
+ * trigger another `batch.process()`
+ * @type {Effect[] | null}
+ * @deprecated when we get rid of legacy mode and stores, we can get rid of this
+ */
 var legacy_updates = null;
 var flush_count = 0;
 var uid = 1;
@@ -1035,76 +1064,76 @@ var Batch = class Batch {
 	/** @type {Map<Effect, ReturnType<typeof deferred<any>>>} */
 	async_deriveds = /* @__PURE__ */ new Map();
 	/**
-	* The current values of any signals that are updated in this batch.
-	* Tuple format: [value, is_derived] (note: is_derived is false for deriveds, too, if they were overridden via assignment)
-	* They keys of this map are identical to `this.#previous`
-	* @type {Map<Value, [any, boolean]>}
-	*/
+	 * The current values of any signals that are updated in this batch.
+	 * Tuple format: [value, is_derived] (note: is_derived is false for deriveds, too, if they were overridden via assignment)
+	 * They keys of this map are identical to `this.#previous`
+	 * @type {Map<Value, [any, boolean]>}
+	 */
 	current = /* @__PURE__ */ new Map();
 	/**
-	* The values of any signals (sources and deriveds) that are updated in this batch _before_ those updates took place.
-	* They keys of this map are identical to `this.#current`
-	* @type {Map<Value, any>}
-	*/
+	 * The values of any signals (sources and deriveds) that are updated in this batch _before_ those updates took place.
+	 * They keys of this map are identical to `this.#current`
+	 * @type {Map<Value, any>}
+	 */
 	previous = /* @__PURE__ */ new Map();
 	/**
-	* When the batch is committed (and the DOM is updated), we need to remove old branches
-	* and append new ones by calling the functions added inside (if/each/key/etc) blocks
-	* @type {Set<(batch: Batch) => void>}
-	*/
+	 * When the batch is committed (and the DOM is updated), we need to remove old branches
+	 * and append new ones by calling the functions added inside (if/each/key/etc) blocks
+	 * @type {Set<(batch: Batch) => void>}
+	 */
 	#commit_callbacks = /* @__PURE__ */ new Set();
 	/**
-	* If a fork is discarded, we need to destroy any effects that are no longer needed
-	* @type {Set<(batch: Batch) => void>}
-	*/
+	 * If a fork is discarded, we need to destroy any effects that are no longer needed
+	 * @type {Set<(batch: Batch) => void>}
+	 */
 	#discard_callbacks = /* @__PURE__ */ new Set();
 	/**
-	* The number of async effects that are currently in flight
-	*/
+	 * The number of async effects that are currently in flight
+	 */
 	#pending = 0;
 	/**
-	* Async effects that are currently in flight, _not_ inside a pending boundary
-	* @type {Map<Effect, number>}
-	*/
+	 * Async effects that are currently in flight, _not_ inside a pending boundary
+	 * @type {Map<Effect, number>}
+	 */
 	#blocking_pending = /* @__PURE__ */ new Map();
 	/**
-	* A deferred that resolves when the batch is committed, used with `settled()`
-	* TODO replace with Promise.withResolvers once supported widely enough
-	* @type {{ promise: Promise<void>, resolve: (value?: any) => void, reject: (reason: unknown) => void } | null}
-	*/
+	 * A deferred that resolves when the batch is committed, used with `settled()`
+	 * TODO replace with Promise.withResolvers once supported widely enough
+	 * @type {{ promise: Promise<void>, resolve: (value?: any) => void, reject: (reason: unknown) => void } | null}
+	 */
 	#deferred = null;
 	/**
-	* The root effects that need to be flushed
-	* @type {Effect[]}
-	*/
+	 * The root effects that need to be flushed
+	 * @type {Effect[]}
+	 */
 	#roots = [];
 	/**
-	* Effects created while this batch was active.
-	* @type {Effect[]}
-	*/
+	 * Effects created while this batch was active.
+	 * @type {Effect[]}
+	 */
 	#new_effects = [];
 	/**
-	* Deferred effects (which run after async work has completed) that are DIRTY
-	* @type {Set<Effect>}
-	*/
+	 * Deferred effects (which run after async work has completed) that are DIRTY
+	 * @type {Set<Effect>}
+	 */
 	#dirty_effects = /* @__PURE__ */ new Set();
 	/**
-	* Deferred effects that are MAYBE_DIRTY
-	* @type {Set<Effect>}
-	*/
+	 * Deferred effects that are MAYBE_DIRTY
+	 * @type {Set<Effect>}
+	 */
 	#maybe_dirty_effects = /* @__PURE__ */ new Set();
 	/**
-	* A map of branches that still exist, but will be destroyed when this batch
-	* is committed — we skip over these during `process`.
-	* The value contains child effects that were dirty/maybe_dirty before being reset,
-	* so they can be rescheduled if the branch survives.
-	* @type {Map<Effect, { d: Effect[], m: Effect[] }>}
-	*/
+	 * A map of branches that still exist, but will be destroyed when this batch
+	 * is committed — we skip over these during `process`.
+	 * The value contains child effects that were dirty/maybe_dirty before being reset,
+	 * so they can be rescheduled if the branch survives.
+	 * @type {Map<Effect, { d: Effect[], m: Effect[] }>}
+	 */
 	#skipped_branches = /* @__PURE__ */ new Map();
 	/**
-	* Inverse of #skipped_branches which we need to tell prior batches to unskip them when committing
-	* @type {Set<Effect>}
-	*/
+	 * Inverse of #skipped_branches which we need to tell prior batches to unskip them when committing
+	 * @type {Set<Effect>}
+	 */
 	#unskipped_branches = /* @__PURE__ */ new Set();
 	is_fork = false;
 	#decrement_queued = false;
@@ -1133,22 +1162,23 @@ var Batch = class Batch {
 		return false;
 	}
 	/**
-	* Add an effect to the #skipped_branches map and reset its children
-	* @param {Effect} effect
-	*/
+	 * Add an effect to the #skipped_branches map and reset its children
+	 * @param {Effect} effect
+	 */
 	skip_effect(effect) {
-		if (!this.#skipped_branches.has(effect)) this.#skipped_branches.set(effect, {
-			d: [],
-			m: []
-		});
+		if (!this.#skipped_branches.has(effect))
+			this.#skipped_branches.set(effect, {
+				d: [],
+				m: [],
+			});
 		this.#unskipped_branches.delete(effect);
 	}
 	/**
-	* Remove an effect from the #skipped_branches map and reschedule
-	* any tracked dirty/maybe_dirty child effects
-	* @param {Effect} effect
-	* @param {(e: Effect) => void} callback
-	*/
+	 * Remove an effect from the #skipped_branches map and reschedule
+	 * any tracked dirty/maybe_dirty child effects
+	 * @param {Effect} effect
+	 * @param {(e: Effect) => void} callback
+	 */
 	unskip_effect(effect, callback = (e) => this.schedule(e)) {
 		var tracked = this.#skipped_branches.get(effect);
 		if (tracked) {
@@ -1183,21 +1213,22 @@ var Batch = class Batch {
 		this.#roots = [];
 		this.apply();
 		/** @type {Effect[]} */
-		var effects = collected_effects = [];
+		var effects = (collected_effects = []);
 		/** @type {Effect[]} */
 		var render_effects = [];
 		/**
-		* @type {Effect[]}
-		* @deprecated when we get rid of legacy mode and stores, we can get rid of this
-		*/
-		var updates = legacy_updates = [];
-		for (const root of roots) try {
-			this.#traverse(root, effects, render_effects);
-		} catch (e) {
-			reset_all(root);
-			if (!this.#is_deferred()) this.discard();
-			throw e;
-		}
+		 * @type {Effect[]}
+		 * @deprecated when we get rid of legacy mode and stores, we can get rid of this
+		 */
+		var updates = (legacy_updates = []);
+		for (const root of roots)
+			try {
+				this.#traverse(root, effects, render_effects);
+			} catch (e) {
+				reset_all(root);
+				if (!this.#is_deferred()) this.discard();
+				throw e;
+			}
 		current_batch = null;
 		if (updates.length > 0) {
 			var batch = Batch.ensure();
@@ -1210,7 +1241,7 @@ var Batch = class Batch {
 			this.#defer_effects(effects);
 			for (const [e, t] of this.#skipped_branches) reset_branch(e, t);
 			if (updates.length > 0)
- /** @type {Batch} */ current_batch.#process();
+				/** @type {Batch} */ current_batch.#process();
 			return;
 		}
 		const earlier_batch = this.#find_earlier_batch();
@@ -1246,19 +1277,26 @@ var Batch = class Batch {
 		if (next_batch !== null) next_batch.#process();
 	}
 	/**
-	* Traverse the effect tree, executing effects or stashing
-	* them for later execution as appropriate
-	* @param {Effect} root
-	* @param {Effect[]} effects
-	* @param {Effect[]} render_effects
-	*/
+	 * Traverse the effect tree, executing effects or stashing
+	 * them for later execution as appropriate
+	 * @param {Effect} root
+	 * @param {Effect[]} effects
+	 * @param {Effect[]} render_effects
+	 */
 	#traverse(root, effects, render_effects) {
 		root.f ^= CLEAN;
 		var effect = root.first;
 		while (effect !== null) {
 			var flags = effect.f;
 			var is_branch = (flags & 96) !== 0;
-			if (!(is_branch && (flags & 1024) !== 0 || (flags & 8192) !== 0 || this.#skipped_branches.has(effect)) && effect.fn !== null) {
+			if (
+				!(
+					(is_branch && (flags & 1024) !== 0) ||
+					(flags & 8192) !== 0 ||
+					this.#skipped_branches.has(effect)
+				) &&
+				effect.fn !== null
+			) {
 				if (is_branch) effect.f ^= CLEAN;
 				else if ((flags & 4) !== 0) effects.push(effect);
 				else if (async_mode_flag && (flags & 16777224) !== 0) render_effects.push(effect);
@@ -1286,18 +1324,20 @@ var Batch = class Batch {
 		var batch = this.#prev;
 		while (batch !== null) {
 			if (!batch.is_fork) {
-				for (const [value, [, is_derived]] of this.current) if (batch.current.has(value) && !is_derived) return batch;
+				for (const [value, [, is_derived]] of this.current)
+					if (batch.current.has(value) && !is_derived) return batch;
 			}
 			batch = batch.#prev;
 		}
 		return null;
 	}
 	/**
-	* @param {Batch} batch
-	*/
+	 * @param {Batch} batch
+	 */
 	#merge(batch) {
 		for (const [source, value] of batch.current) {
-			if (!this.previous.has(source) && batch.previous.has(source)) this.previous.set(source, batch.previous.get(source));
+			if (!this.previous.has(source) && batch.previous.has(source))
+				this.previous.set(source, batch.previous.get(source));
 			this.current.set(source, value);
 		}
 		for (const [effect, deferred] of batch.async_deriveds) {
@@ -1307,13 +1347,13 @@ var Batch = class Batch {
 		batch.async_deriveds.clear();
 		this.transfer_effects(batch.#dirty_effects, batch.#maybe_dirty_effects);
 		/**
-		* mark all effects that depend on `batch.current`, except the
-		* async effects that we just resolved (TODO unless they depend
-		* on values in this batch that are NOT in the later batch?).
-		* Through this we also will populate the correct #skipped_branches,
-		* oncommit callbacks etc, so we don't need to merge them separately.
-		* @param {Value} value
-		*/
+		 * mark all effects that depend on `batch.current`, except the
+		 * async effects that we just resolved (TODO unless they depend
+		 * on values in this batch that are NOT in the later batch?).
+		 * Through this we also will populate the correct #skipped_branches,
+		 * oncommit callbacks etc, so we don't need to merge them separately.
+		 * @param {Value} value
+		 */
 		const mark = (value) => {
 			var reactions = value.reactions;
 			if (reactions === null) return;
@@ -1338,20 +1378,22 @@ var Batch = class Batch {
 		this.#process();
 	}
 	/**
-	* @param {Effect[]} effects
-	*/
+	 * @param {Effect[]} effects
+	 */
 	#defer_effects(effects) {
-		for (var i = 0; i < effects.length; i += 1) defer_effect(effects[i], this.#dirty_effects, this.#maybe_dirty_effects);
+		for (var i = 0; i < effects.length; i += 1)
+			defer_effect(effects[i], this.#dirty_effects, this.#maybe_dirty_effects);
 	}
 	/**
-	* Associate a change to a given source with the current
-	* batch, noting its previous and current values
-	* @param {Value} source
-	* @param {any} value
-	* @param {boolean} [is_derived]
-	*/
+	 * Associate a change to a given source with the current
+	 * batch, noting its previous and current values
+	 * @param {Value} source
+	 * @param {any} value
+	 * @param {boolean} [is_derived]
+	 */
 	capture(source, value, is_derived = false) {
-		if (source.v !== UNINITIALIZED && !this.previous.has(source)) this.previous.set(source, source.v);
+		if (source.v !== UNINITIALIZED && !this.previous.has(source))
+			this.previous.set(source, source.v);
 		if ((source.f & 8388608) === 0) {
 			this.current.set(source, [value, is_derived]);
 			batch_values?.set(source, value);
@@ -1389,8 +1431,8 @@ var Batch = class Batch {
 		this.#deferred?.resolve();
 	}
 	/**
-	* @param {Effect} effect
-	*/
+	 * @param {Effect} effect
+	 */
 	register_created_effect(effect) {
 		this.#new_effects.push(effect);
 	}
@@ -1407,20 +1449,23 @@ var Batch = class Batch {
 				}
 				sources.push(source);
 			}
-			if (is_earlier) for (const [effect, deferred] of this.async_deriveds) {
-				const d = batch.async_deriveds.get(effect);
-				if (d) deferred.promise.then(d.resolve).catch(d.reject);
-			}
+			if (is_earlier)
+				for (const [effect, deferred] of this.async_deriveds) {
+					const d = batch.async_deriveds.get(effect);
+					if (d) deferred.promise.then(d.resolve).catch(d.reject);
+				}
 			var current = [...batch.current.keys()].filter((source) => !batch.current.get(source)[1]);
 			if (!batch.#started || current.length === 0) continue;
 			var others = current.filter((source) => !this.current.has(source));
 			if (others.length === 0) {
 				if (is_earlier) batch.discard();
 			} else if (sources.length > 0) {
-				if (is_earlier) for (const unskipped of this.#unskipped_branches) batch.unskip_effect(unskipped, (e) => {
-					if ((e.f & 4194320) !== 0) batch.schedule(e);
-					else batch.#defer_effects([e]);
-				});
+				if (is_earlier)
+					for (const unskipped of this.#unskipped_branches)
+						batch.unskip_effect(unskipped, (e) => {
+							if ((e.f & 4194320) !== 0) batch.schedule(e);
+							else batch.#defer_effects([e]);
+						});
 				batch.activate();
 				/** @type {Set<Value>} */
 				var marked = /* @__PURE__ */ new Set();
@@ -1428,18 +1473,21 @@ var Batch = class Batch {
 				var checked = /* @__PURE__ */ new Map();
 				for (var source of sources) mark_effects(source, others, marked, checked);
 				checked = /* @__PURE__ */ new Map();
-				var current_unequal = [...batch.current].filter(([c, v1]) => {
-					const v2 = this.current.get(c);
-					if (!v2) return true;
-					return v2[0] !== v1[0] || v2[1] !== v1[1];
-				}).map(([c]) => c);
+				var current_unequal = [...batch.current]
+					.filter(([c, v1]) => {
+						const v2 = this.current.get(c);
+						if (!v2) return true;
+						return v2[0] !== v1[0] || v2[1] !== v1[1];
+					})
+					.map(([c]) => c);
 				if (current_unequal.length > 0) {
-					for (const effect of this.#new_effects) if ((effect.f & 155648) === 0 && depends_on(effect, current_unequal, checked)) {
-						if ((effect.f & 4194320) !== 0) {
-							set_signal_status(effect, DIRTY);
-							batch.schedule(effect);
-						} else batch.#dirty_effects.add(effect);
-					}
+					for (const effect of this.#new_effects)
+						if ((effect.f & 155648) === 0 && depends_on(effect, current_unequal, checked)) {
+							if ((effect.f & 4194320) !== 0) {
+								set_signal_status(effect, DIRTY);
+								batch.schedule(effect);
+							} else batch.#dirty_effects.add(effect);
+						}
 				}
 				if (batch.#roots.length > 0 && !batch.#decrement_queued) {
 					batch.apply();
@@ -1451,9 +1499,9 @@ var Batch = class Batch {
 		}
 	}
 	/**
-	* @param {boolean} blocking
-	* @param {Effect} effect
-	*/
+	 * @param {boolean} blocking
+	 * @param {Effect} effect
+	 */
 	increment(blocking, effect) {
 		this.#pending += 1;
 		if (blocking) {
@@ -1462,9 +1510,9 @@ var Batch = class Batch {
 		}
 	}
 	/**
-	* @param {boolean} blocking
-	* @param {Effect} effect
-	*/
+	 * @param {boolean} blocking
+	 * @param {Effect} effect
+	 */
 	decrement(blocking, effect) {
 		this.#pending -= 1;
 		if (blocking) {
@@ -1480,9 +1528,9 @@ var Batch = class Batch {
 		});
 	}
 	/**
-	* @param {Set<Effect>} dirty_effects
-	* @param {Set<Effect>} maybe_dirty_effects
-	*/
+	 * @param {Set<Effect>} dirty_effects
+	 * @param {Set<Effect>} maybe_dirty_effects
+	 */
 	transfer_effects(dirty_effects, maybe_dirty_effects) {
 		for (const e of dirty_effects) this.#dirty_effects.add(e);
 		for (const e of maybe_dirty_effects) this.#maybe_dirty_effects.add(e);
@@ -1502,15 +1550,16 @@ var Batch = class Batch {
 	}
 	static ensure() {
 		if (current_batch === null) {
-			const batch = current_batch = new Batch();
-			if (!is_processing && !is_flushing_sync) queue_micro_task(() => {
-				if (!batch.#started) batch.flush();
-			});
+			const batch = (current_batch = new Batch());
+			if (!is_processing && !is_flushing_sync)
+				queue_micro_task(() => {
+					if (!batch.#started) batch.flush();
+				});
 		}
 		return current_batch;
 	}
 	apply() {
-		if (!async_mode_flag || !this.is_fork && this.#prev === null && this.#next === null) {
+		if (!async_mode_flag || (!this.is_fork && this.#prev === null && this.#next === null)) {
 			batch_values = null;
 			return;
 		}
@@ -1519,22 +1568,24 @@ var Batch = class Batch {
 		for (let batch = first_batch; batch !== null; batch = batch.#next) {
 			if (batch === this || batch.is_fork) continue;
 			var intersects = false;
-			if (batch.id < this.id) for (const [source, [, is_derived]] of batch.current) {
-				if (is_derived) continue;
-				if (this.current.has(source)) {
-					intersects = true;
-					break;
+			if (batch.id < this.id)
+				for (const [source, [, is_derived]] of batch.current) {
+					if (is_derived) continue;
+					if (this.current.has(source)) {
+						intersects = true;
+						break;
+					}
 				}
-			}
 			if (!intersects) {
-				for (const [source, previous] of batch.previous) if (!batch_values.has(source)) batch_values.set(source, previous);
+				for (const [source, previous] of batch.previous)
+					if (!batch_values.has(source)) batch_values.set(source, previous);
 			}
 		}
 	}
 	/**
-	*
-	* @param {Effect} effect
-	*/
+	 *
+	 * @param {Effect} effect
+	 */
 	schedule(effect) {
 		last_scheduled_effect = effect;
 		if (effect.b?.is_pending && (effect.f & 16777228) !== 0 && (effect.f & 32768) === 0) {
@@ -1547,7 +1598,11 @@ var Batch = class Batch {
 			var flags = e.f;
 			if (collected_effects !== null && e === active_effect) {
 				if (async_mode_flag) return;
-				if ((active_reaction === null || (active_reaction.f & 2) === 0) && !legacy_is_updating_store) return;
+				if (
+					(active_reaction === null || (active_reaction.f & 2) === 0) &&
+					!legacy_is_updating_store
+				)
+					return;
 			}
 			if ((flags & 96) !== 0) {
 				if ((flags & 1024) === 0) return;
@@ -1568,12 +1623,12 @@ var Batch = class Batch {
 	}
 };
 /**
-* Synchronously flush any pending updates.
-* Returns void if no callback is provided, otherwise returns the result of calling the callback.
-* @template [T=void]
-* @param {(() => T) | undefined} [fn]
-* @returns {T}
-*/
+ * Synchronously flush any pending updates.
+ * Returns void if no callback is provided, otherwise returns the result of calling the callback.
+ * @template [T=void]
+ * @param {(() => T) | undefined} [fn]
+ * @returns {T}
+ */
 function flushSync(fn) {
 	var was_flushing_sync = is_flushing_sync;
 	is_flushing_sync = true;
@@ -1602,9 +1657,9 @@ function infinite_loop_guard() {
 /** @type {Set<Effect> | null} */
 var eager_block_effects = null;
 /**
-* @param {Array<Effect>} effects
-* @returns {void}
-*/
+ * @param {Array<Effect>} effects
+ * @returns {void}
+ */
 function flush_queued_effects(effects) {
 	var length = effects.length;
 	if (length === 0) return;
@@ -1614,7 +1669,14 @@ function flush_queued_effects(effects) {
 		if ((effect.f & 24576) === 0 && is_dirty(effect)) {
 			eager_block_effects = /* @__PURE__ */ new Set();
 			update_effect(effect);
-			if (effect.deps === null && effect.first === null && effect.nodes === null && effect.teardown === null && effect.ac === null) unlink_effect(effect);
+			if (
+				effect.deps === null &&
+				effect.first === null &&
+				effect.nodes === null &&
+				effect.teardown === null &&
+				effect.ac === null
+			)
+				unlink_effect(effect);
 			if (eager_block_effects?.size > 0) {
 				old_values.clear();
 				for (const e of eager_block_effects) {
@@ -1642,58 +1704,64 @@ function flush_queued_effects(effects) {
 	eager_block_effects = null;
 }
 /**
-* This is similar to `mark_reactions`, but it only marks async/block effects
-* depending on `value` and at least one of the other `sources`, so that
-* these effects can re-run after another batch has been committed
-* @param {Value} value
-* @param {Source[]} sources
-* @param {Set<Value>} marked
-* @param {Map<Reaction, boolean>} checked
-*/
+ * This is similar to `mark_reactions`, but it only marks async/block effects
+ * depending on `value` and at least one of the other `sources`, so that
+ * these effects can re-run after another batch has been committed
+ * @param {Value} value
+ * @param {Source[]} sources
+ * @param {Set<Value>} marked
+ * @param {Map<Reaction, boolean>} checked
+ */
 function mark_effects(value, sources, marked, checked) {
 	if (marked.has(value)) return;
 	marked.add(value);
-	if (value.reactions !== null) for (const reaction of value.reactions) {
-		const flags = reaction.f;
-		if ((flags & 2) !== 0) mark_effects(reaction, sources, marked, checked);
-		else if ((flags & 4194320) !== 0 && (flags & 2048) === 0 && depends_on(reaction, sources, checked)) {
-			set_signal_status(reaction, DIRTY);
-			schedule_effect(reaction);
+	if (value.reactions !== null)
+		for (const reaction of value.reactions) {
+			const flags = reaction.f;
+			if ((flags & 2) !== 0) mark_effects(reaction, sources, marked, checked);
+			else if (
+				(flags & 4194320) !== 0 &&
+				(flags & 2048) === 0 &&
+				depends_on(reaction, sources, checked)
+			) {
+				set_signal_status(reaction, DIRTY);
+				schedule_effect(reaction);
+			}
 		}
-	}
 }
 /**
-* @param {Reaction} reaction
-* @param {Source[]} sources
-* @param {Map<Reaction, boolean>} checked
-*/
+ * @param {Reaction} reaction
+ * @param {Source[]} sources
+ * @param {Map<Reaction, boolean>} checked
+ */
 function depends_on(reaction, sources, checked) {
 	const depends = checked.get(reaction);
 	if (depends !== void 0) return depends;
-	if (reaction.deps !== null) for (const dep of reaction.deps) {
-		if (includes.call(sources, dep)) return true;
-		if ((dep.f & 2) !== 0 && depends_on(dep, sources, checked)) {
-			checked.set(dep, true);
-			return true;
+	if (reaction.deps !== null)
+		for (const dep of reaction.deps) {
+			if (includes.call(sources, dep)) return true;
+			if ((dep.f & 2) !== 0 && depends_on(dep, sources, checked)) {
+				checked.set(dep, true);
+				return true;
+			}
 		}
-	}
 	checked.set(reaction, false);
 	return false;
 }
 /**
-* @param {Effect} effect
-* @returns {void}
-*/
+ * @param {Effect} effect
+ * @returns {void}
+ */
 function schedule_effect(effect) {
 	/** @type {Batch} */ current_batch.schedule(effect);
 }
 /**
-* Mark all the effects inside a skipped branch CLEAN, so that
-* they can be correctly rescheduled later. Tracks dirty and maybe_dirty
-* effects so they can be rescheduled if the branch survives.
-* @param {Effect} effect
-* @param {{ d: Effect[], m: Effect[] }} tracked
-*/
+ * Mark all the effects inside a skipped branch CLEAN, so that
+ * they can be correctly rescheduled later. Tracks dirty and maybe_dirty
+ * effects so they can be rescheduled if the branch survives.
+ * @param {Effect} effect
+ * @param {{ d: Effect[], m: Effect[] }} tracked
+ */
 function reset_branch(effect, tracked) {
 	if ((effect.f & 32) !== 0 && (effect.f & 1024) !== 0) return;
 	if ((effect.f & 2048) !== 0) tracked.d.push(effect);
@@ -1706,9 +1774,9 @@ function reset_branch(effect, tracked) {
 	}
 }
 /**
-* Mark an entire effect tree clean following an error
-* @param {Effect} effect
-*/
+ * Mark an entire effect tree clean following an error
+ * @param {Effect} effect
+ */
 function reset_all(effect) {
 	set_signal_status(effect, CLEAN);
 	var e = effect.first;
@@ -1726,11 +1794,11 @@ var eager_effects = /* @__PURE__ */ new Set();
 var old_values = /* @__PURE__ */ new Map();
 var eager_effects_deferred = false;
 /**
-* @template V
-* @param {V} v
-* @param {Error | null} [stack]
-* @returns {Source<V>}
-*/
+ * @template V
+ * @param {V} v
+ * @param {Error | null} [stack]
+ * @returns {Source<V>}
+ */
 function source(v, stack) {
 	return {
 		f: 0,
@@ -1738,14 +1806,14 @@ function source(v, stack) {
 		reactions: null,
 		equals,
 		rv: 0,
-		wv: 0
+		wv: 0,
 	};
 }
 /**
-* @template V
-* @param {V} v
-* @param {Error | null} [stack]
-*/
+ * @template V
+ * @param {V} v
+ * @param {Error | null} [stack]
+ */
 /*#__NO_SIDE_EFFECTS__*/
 function state(v, stack) {
 	const s = source(v, stack);
@@ -1753,36 +1821,44 @@ function state(v, stack) {
 	return s;
 }
 /**
-* @template V
-* @param {V} initial_value
-* @param {boolean} [immutable]
-* @returns {Source<V>}
-*/
+ * @template V
+ * @param {V} initial_value
+ * @param {boolean} [immutable]
+ * @returns {Source<V>}
+ */
 /*#__NO_SIDE_EFFECTS__*/
 function mutable_source(initial_value, immutable = false, trackable = true) {
 	const s = source(initial_value);
 	if (!immutable) s.equals = safe_equals;
-	if (legacy_mode_flag && trackable && component_context !== null && component_context.l !== null) (component_context.l.s ??= []).push(s);
+	if (legacy_mode_flag && trackable && component_context !== null && component_context.l !== null)
+		(component_context.l.s ??= []).push(s);
 	return s;
 }
 /**
-* @template V
-* @param {Source<V>} source
-* @param {V} value
-* @param {boolean} [should_proxy]
-* @returns {V}
-*/
+ * @template V
+ * @param {Source<V>} source
+ * @param {V} value
+ * @param {boolean} [should_proxy]
+ * @returns {V}
+ */
 function set(source, value, should_proxy = false) {
-	if (active_reaction !== null && (!untracking || (active_reaction.f & 131072) !== 0) && is_runes() && (active_reaction.f & 4325394) !== 0 && (current_sources === null || !current_sources.has(source))) state_unsafe_mutation();
+	if (
+		active_reaction !== null &&
+		(!untracking || (active_reaction.f & 131072) !== 0) &&
+		is_runes() &&
+		(active_reaction.f & 4325394) !== 0 &&
+		(current_sources === null || !current_sources.has(source))
+	)
+		state_unsafe_mutation();
 	return internal_set(source, should_proxy ? proxy(value) : value, legacy_updates);
 }
 /**
-* @template V
-* @param {Source<V>} source
-* @param {V} value
-* @param {Effect[] | null} [updated_during_traversal]
-* @returns {V}
-*/
+ * @template V
+ * @param {Source<V>} source
+ * @param {V} value
+ * @param {Effect[] | null} [updated_during_traversal]
+ * @returns {V}
+ */
 function internal_set(source, value, updated_during_traversal = null) {
 	if (!source.equals(value)) {
 		old_values.set(source, is_destroying_effect ? value : source.v);
@@ -1795,7 +1871,12 @@ function internal_set(source, value, updated_during_traversal = null) {
 		}
 		source.wv = increment_write_version();
 		mark_reactions(source, DIRTY, updated_during_traversal);
-		if (is_runes() && active_effect !== null && (active_effect.f & 1024) !== 0 && (active_effect.f & 96) === 0) {
+		if (
+			is_runes() &&
+			active_effect !== null &&
+			(active_effect.f & 1024) !== 0 &&
+			(active_effect.f & 96) === 0
+		) {
 			if (untracked_writes === null) set_untracked_writes([source]);
 			else untracked_writes.push(source);
 		}
@@ -1818,18 +1899,18 @@ function flush_eager_effects() {
 	eager_effects.clear();
 }
 /**
-* Silently (without using `get`) increment a source
-* @param {Source<number>} source
-*/
+ * Silently (without using `get`) increment a source
+ * @param {Source<number>} source
+ */
 function increment(source) {
 	set(source, source.v + 1);
 }
 /**
-* @param {Value} signal
-* @param {number} status should be DIRTY or MAYBE_DIRTY
-* @param {Effect[] | null} updated_during_traversal
-* @returns {void}
-*/
+ * @param {Value} signal
+ * @param {number} status should be DIRTY or MAYBE_DIRTY
+ * @param {Effect[] | null} updated_during_traversal
+ * @returns {void}
+ */
 function mark_reactions(signal, status, updated_during_traversal) {
 	var reactions = signal.reactions;
 	if (reactions === null) return;
@@ -1846,7 +1927,8 @@ function mark_reactions(signal, status, updated_during_traversal) {
 			var derived = reaction;
 			batch_values?.delete(derived);
 			if ((flags & 65536) === 0) {
-				if (flags & 512 && (active_effect === null || (active_effect.f & 2097152) === 0)) reaction.f |= WAS_MARKED;
+				if (flags & 512 && (active_effect === null || (active_effect.f & 2097152) === 0))
+					reaction.f |= WAS_MARKED;
 				mark_reactions(derived, MAYBE_DIRTY, updated_during_traversal);
 			}
 		} else if (not_dirty) {
@@ -1858,12 +1940,12 @@ function mark_reactions(signal, status, updated_during_traversal) {
 	}
 }
 /**
-* @template T
-* @param {T} value
-* @returns {T}
-*/
+ * @template T
+ * @param {T} value
+ * @returns {T}
+ */
 function proxy(value) {
-	if (typeof value !== "object" || value === null || STATE_SYMBOL in value) return value;
+	if (typeof value !== 'object' || value === null || STATE_SYMBOL in value) return value;
 	const prototype = get_prototype_of(value);
 	if (prototype !== object_prototype && prototype !== array_prototype) return value;
 	/** @type {Map<any, Source<any>>} */
@@ -1873,10 +1955,10 @@ function proxy(value) {
 	var stack = null;
 	var parent_version = update_version;
 	/**
-	* Executes the proxy in the context of the reaction it was originally created in, if any
-	* @template T
-	* @param {() => T} fn
-	*/
+	 * Executes the proxy in the context of the reaction it was originally created in, if any
+	 * @template T
+	 * @param {() => T} fn
+	 */
 	var with_parent = (fn) => {
 		if (update_version === parent_version) return fn();
 		var reaction = active_reaction;
@@ -1888,20 +1970,31 @@ function proxy(value) {
 		set_update_version(version);
 		return result;
 	};
-	if (is_proxied_array) sources.set("length", /* @__PURE__ */ state(
-		/** @type {any[]} */
-		value.length,
-		stack
-	));
+	if (is_proxied_array)
+		sources.set(
+			'length',
+			/* @__PURE__ */ state(
+				/** @type {any[]} */
+				value.length,
+				stack,
+			),
+		);
 	return new Proxy(value, {
 		defineProperty(_, prop, descriptor) {
-			if (!("value" in descriptor) || descriptor.configurable === false || descriptor.enumerable === false || descriptor.writable === false) state_descriptors_fixed();
+			if (
+				!('value' in descriptor) ||
+				descriptor.configurable === false ||
+				descriptor.enumerable === false ||
+				descriptor.writable === false
+			)
+				state_descriptors_fixed();
 			var s = sources.get(prop);
-			if (s === void 0) with_parent(() => {
-				var s = /* @__PURE__ */ state(descriptor.value, stack);
-				sources.set(prop, s);
-				return s;
-			});
+			if (s === void 0)
+				with_parent(() => {
+					var s = /* @__PURE__ */ state(descriptor.value, stack);
+					sources.set(prop, s);
+					return s;
+				});
 			else set(s, descriptor.value, true);
 			return true;
 		},
@@ -1937,26 +2030,30 @@ function proxy(value) {
 		},
 		getOwnPropertyDescriptor(target, prop) {
 			var descriptor = Reflect.getOwnPropertyDescriptor(target, prop);
-			if (descriptor && "value" in descriptor) {
+			if (descriptor && 'value' in descriptor) {
 				var s = sources.get(prop);
 				if (s) descriptor.value = get(s);
 			} else if (descriptor === void 0) {
 				var source = sources.get(prop);
 				var value = source?.v;
-				if (source !== void 0 && value !== UNINITIALIZED) return {
-					enumerable: true,
-					configurable: true,
-					value,
-					writable: true
-				};
+				if (source !== void 0 && value !== UNINITIALIZED)
+					return {
+						enumerable: true,
+						configurable: true,
+						value,
+						writable: true,
+					};
 			}
 			return descriptor;
 		},
 		has(target, prop) {
 			if (prop === STATE_SYMBOL) return true;
 			var s = sources.get(prop);
-			var has = s !== void 0 && s.v !== UNINITIALIZED || Reflect.has(target, prop);
-			if (s !== void 0 || active_effect !== null && (!has || get_descriptor(target, prop)?.writable)) {
+			var has = (s !== void 0 && s.v !== UNINITIALIZED) || Reflect.has(target, prop);
+			if (
+				s !== void 0 ||
+				(active_effect !== null && (!has || get_descriptor(target, prop)?.writable))
+			) {
 				if (s === void 0) {
 					s = with_parent(() => {
 						return /* @__PURE__ */ state(has ? proxy(target[prop]) : UNINITIALIZED, stack);
@@ -1970,14 +2067,15 @@ function proxy(value) {
 		set(target, prop, value, receiver) {
 			var s = sources.get(prop);
 			var has = prop in target;
-			if (is_proxied_array && prop === "length") for (var i = value; i < s.v; i += 1) {
-				var other_s = sources.get(i + "");
-				if (other_s !== void 0) set(other_s, UNINITIALIZED);
-				else if (i in target) {
-					other_s = with_parent(() => /* @__PURE__ */ state(UNINITIALIZED, stack));
-					sources.set(i + "", other_s);
+			if (is_proxied_array && prop === 'length')
+				for (var i = value; i < s.v; i += 1) {
+					var other_s = sources.get(i + '');
+					if (other_s !== void 0) set(other_s, UNINITIALIZED);
+					else if (i in target) {
+						other_s = with_parent(() => /* @__PURE__ */ state(UNINITIALIZED, stack));
+						sources.set(i + '', other_s);
+					}
 				}
-			}
 			if (s === void 0) {
 				if (!has || get_descriptor(target, prop)?.writable) {
 					s = with_parent(() => /* @__PURE__ */ state(void 0, stack));
@@ -1992,8 +2090,8 @@ function proxy(value) {
 			var descriptor = Reflect.getOwnPropertyDescriptor(target, prop);
 			if (descriptor?.set) descriptor.set.call(receiver, value);
 			if (!has) {
-				if (is_proxied_array && typeof prop === "string") {
-					var ls = sources.get("length");
+				if (is_proxied_array && typeof prop === 'string') {
+					var ls = sources.get('length');
 					var n = Number(prop);
 					if (Number.isInteger(n) && n >= ls.v) set(ls, n + 1);
 				}
@@ -2007,12 +2105,13 @@ function proxy(value) {
 				var source = sources.get(key);
 				return source === void 0 || source.v !== UNINITIALIZED;
 			});
-			for (var [key, source] of sources) if (source.v !== UNINITIALIZED && !(key in target)) own_keys.push(key);
+			for (var [key, source] of sources)
+				if (source.v !== UNINITIALIZED && !(key in target)) own_keys.push(key);
 			return own_keys;
 		},
 		setPrototypeOf() {
 			state_prototype_fixed();
-		}
+		},
 	});
 }
 //#endregion
@@ -2024,9 +2123,9 @@ var first_child_getter;
 /** @type {() => Node | null} */
 var next_sibling_getter;
 /**
-* Initialize these lazily to avoid issues when using the runtime in a server context
-* where these globals are not available while avoiding a separate server entry point
-*/
+ * Initialize these lazily to avoid issues when using the runtime in a server context
+ * where these globals are not available while avoiding a separate server entry point
+ */
 function init_operations() {
 	if ($window !== void 0) return;
 	$window = window;
@@ -2034,8 +2133,8 @@ function init_operations() {
 	var element_prototype = Element.prototype;
 	var node_prototype = Node.prototype;
 	var text_prototype = Text.prototype;
-	first_child_getter = get_descriptor(node_prototype, "firstChild").get;
-	next_sibling_getter = get_descriptor(node_prototype, "nextSibling").get;
+	first_child_getter = get_descriptor(node_prototype, 'firstChild').get;
+	next_sibling_getter = get_descriptor(node_prototype, 'nextSibling').get;
 	if (is_extensible(element_prototype)) {
 		/** @type {any} */ element_prototype[CLASS_CACHE] = void 0;
 		/** @type {any} */ element_prototype[ATTRIBUTES_CACHE] = null;
@@ -2043,46 +2142,46 @@ function init_operations() {
 		element_prototype.__e = void 0;
 	}
 	if (is_extensible(text_prototype))
- /** @type {any} */ text_prototype[TEXT_CACHE] = void 0;
+		/** @type {any} */ text_prototype[TEXT_CACHE] = void 0;
 }
 /**
-* @param {string} value
-* @returns {Text}
-*/
-function create_text(value = "") {
+ * @param {string} value
+ * @returns {Text}
+ */
+function create_text(value = '') {
 	return document.createTextNode(value);
 }
 /**
-* @template {Node} N
-* @param {N} node
-*/
+ * @template {Node} N
+ * @param {N} node
+ */
 /*@__NO_SIDE_EFFECTS__*/
 function get_first_child(node) {
 	return first_child_getter.call(node);
 }
 /**
-* @template {Node} N
-* @param {N} node
-*/
+ * @template {Node} N
+ * @param {N} node
+ */
 /*@__NO_SIDE_EFFECTS__*/
 function get_next_sibling(node) {
 	return next_sibling_getter.call(node);
 }
 /**
-* @template {Node} N
-* @param {N} node
-* @returns {void}
-*/
+ * @template {Node} N
+ * @param {N} node
+ * @returns {void}
+ */
 function clear_text_content(node) {
-	node.textContent = "";
+	node.textContent = '';
 }
 //#endregion
 //#region node_modules/svelte/src/internal/client/reactivity/effects.js
 /** @import { Blocker, ComponentContext, ComponentContextLegacy, Derived, Effect, TemplateNode, TransitionManager } from '#client' */
 /**
-* @param {Effect} effect
-* @param {Effect} parent_effect
-*/
+ * @param {Effect} effect
+ * @param {Effect} parent_effect
+ */
 function push_effect(effect, parent_effect) {
 	var parent_last = parent_effect.last;
 	if (parent_last === null) parent_effect.last = parent_effect.first = effect;
@@ -2093,10 +2192,10 @@ function push_effect(effect, parent_effect) {
 	}
 }
 /**
-* @param {number} type
-* @param {null | (() => void | (() => void))} fn
-* @returns {Effect}
-*/
+ * @param {number} type
+ * @param {null | (() => void | (() => void))} fn
+ * @returns {Effect}
+ */
 function create_effect(type, fn) {
 	var parent = active_effect;
 	if (parent !== null && (parent.f & 8192) !== 0) type |= INERT;
@@ -2115,7 +2214,7 @@ function create_effect(type, fn) {
 		prev: null,
 		teardown: null,
 		wv: 0,
-		ac: null
+		ac: null,
 	};
 	current_batch?.register_created_effect(effect);
 	/** @type {Effect | null} */
@@ -2130,7 +2229,13 @@ function create_effect(type, fn) {
 			destroy_effect(effect);
 			throw e;
 		}
-		if (e.deps === null && e.teardown === null && e.nodes === null && e.first === e.last && (e.f & 524288) === 0) {
+		if (
+			e.deps === null &&
+			e.teardown === null &&
+			e.nodes === null &&
+			e.first === e.last &&
+			(e.f & 524288) === 0
+		) {
 			e = e.first;
 			if ((type & 16) !== 0 && (type & 65536) !== 0 && e !== null) e.f |= EFFECT_TRANSPARENT;
 		}
@@ -2146,32 +2251,33 @@ function create_effect(type, fn) {
 	return effect;
 }
 /**
-* Internal representation of `$effect.tracking()`
-* @returns {boolean}
-*/
+ * Internal representation of `$effect.tracking()`
+ * @returns {boolean}
+ */
 function effect_tracking() {
 	return active_reaction !== null && !untracking;
 }
 /**
-* @param {() => void | (() => void)} fn
-*/
+ * @param {() => void | (() => void)} fn
+ */
 function create_user_effect(fn) {
 	return create_effect(4 | USER_EFFECT, fn);
 }
 /**
-* An effect root whose children can transition out
-* @param {() => void} fn
-* @returns {(options?: { outro?: boolean }) => Promise<void>}
-*/
+ * An effect root whose children can transition out
+ * @param {() => void} fn
+ * @returns {(options?: { outro?: boolean }) => Promise<void>}
+ */
 function component_root(fn) {
 	Batch.ensure();
 	const effect = create_effect(64 | EFFECT_PRESERVED, fn);
 	return (options = {}) => {
 		return new Promise((fulfil) => {
-			if (options.outro) pause_effect(effect, () => {
-				destroy_effect(effect);
-				fulfil(void 0);
-			});
+			if (options.outro)
+				pause_effect(effect, () => {
+					destroy_effect(effect);
+					fulfil(void 0);
+				});
 			else {
 				destroy_effect(effect);
 				fulfil(void 0);
@@ -2180,28 +2286,28 @@ function component_root(fn) {
 	};
 }
 /**
-* @param {() => void | (() => void)} fn
-* @returns {Effect}
-*/
+ * @param {() => void | (() => void)} fn
+ * @returns {Effect}
+ */
 function render_effect(fn, flags = 0) {
 	return create_effect(8 | flags, fn);
 }
 /**
-* @param {(() => void)} fn
-* @param {number} flags
-*/
+ * @param {(() => void)} fn
+ * @param {number} flags
+ */
 function block(fn, flags = 0) {
 	return create_effect(16 | flags, fn);
 }
 /**
-* @param {(() => void)} fn
-*/
+ * @param {(() => void)} fn
+ */
 function branch(fn) {
 	return create_effect(32 | EFFECT_PRESERVED, fn);
 }
 /**
-* @param {Effect} effect
-*/
+ * @param {Effect} effect
+ */
 function execute_effect_teardown(effect) {
 	var teardown = effect.teardown;
 	if (teardown !== null) {
@@ -2218,18 +2324,19 @@ function execute_effect_teardown(effect) {
 	}
 }
 /**
-* @param {Effect} signal
-* @param {boolean} remove_dom
-* @returns {void}
-*/
+ * @param {Effect} signal
+ * @param {boolean} remove_dom
+ * @returns {void}
+ */
 function destroy_effect_children(signal, remove_dom = false) {
 	var effect = signal.first;
 	signal.first = signal.last = null;
 	while (effect !== null) {
 		const controller = effect.ac;
-		if (controller !== null) without_reactive_context(() => {
-			controller.abort(STALE_REACTION);
-		});
+		if (controller !== null)
+			without_reactive_context(() => {
+				controller.abort(STALE_REACTION);
+			});
 		var next = effect.next;
 		if ((effect.f & 64) !== 0) effect.parent = null;
 		else destroy_effect(effect, remove_dom);
@@ -2237,9 +2344,9 @@ function destroy_effect_children(signal, remove_dom = false) {
 	}
 }
 /**
-* @param {Effect} signal
-* @returns {void}
-*/
+ * @param {Effect} signal
+ * @returns {void}
+ */
 function destroy_block_effect_children(signal) {
 	var effect = signal.first;
 	while (effect !== null) {
@@ -2249,13 +2356,17 @@ function destroy_block_effect_children(signal) {
 	}
 }
 /**
-* @param {Effect} effect
-* @param {boolean} [remove_dom]
-* @returns {void}
-*/
+ * @param {Effect} effect
+ * @param {boolean} [remove_dom]
+ * @returns {void}
+ */
 function destroy_effect(effect, remove_dom = true) {
 	var removed = false;
-	if ((remove_dom || (effect.f & 262144) !== 0) && effect.nodes !== null && effect.nodes.end !== null) {
+	if (
+		(remove_dom || (effect.f & 262144) !== 0) &&
+		effect.nodes !== null &&
+		effect.nodes.end !== null
+	) {
 		remove_effect_dom(effect.nodes.start, effect.nodes.end);
 		removed = true;
 	}
@@ -2269,13 +2380,22 @@ function destroy_effect(effect, remove_dom = true) {
 	effect.f |= DESTROYED;
 	var parent = effect.parent;
 	if (parent !== null && parent.first !== null) unlink_effect(effect);
-	effect.next = effect.prev = effect.teardown = effect.ctx = effect.deps = effect.fn = effect.nodes = effect.ac = effect.b = null;
+	effect.next =
+		effect.prev =
+		effect.teardown =
+		effect.ctx =
+		effect.deps =
+		effect.fn =
+		effect.nodes =
+		effect.ac =
+		effect.b =
+			null;
 }
 /**
-*
-* @param {TemplateNode | null} node
-* @param {TemplateNode} end
-*/
+ *
+ * @param {TemplateNode | null} node
+ * @param {TemplateNode} end
+ */
 function remove_effect_dom(node, end) {
 	while (node !== null) {
 		/** @type {TemplateNode | null} */
@@ -2285,10 +2405,10 @@ function remove_effect_dom(node, end) {
 	}
 }
 /**
-* Detach an effect from the effect tree, freeing up memory and
-* reducing the amount of work that happens on subsequent traversals
-* @param {Effect} effect
-*/
+ * Detach an effect from the effect tree, freeing up memory and
+ * reducing the amount of work that happens on subsequent traversals
+ * @param {Effect} effect
+ */
 function unlink_effect(effect) {
 	var parent = effect.parent;
 	var prev = effect.prev;
@@ -2301,15 +2421,15 @@ function unlink_effect(effect) {
 	}
 }
 /**
-* When a block effect is removed, we don't immediately destroy it or yank it
-* out of the DOM, because it might have transitions. Instead, we 'pause' it.
-* It stays around (in memory, and in the DOM) until outro transitions have
-* completed, and if the state change is reversed then we _resume_ it.
-* A paused effect does not update, and the DOM subtree becomes inert.
-* @param {Effect} effect
-* @param {() => void} [callback]
-* @param {boolean} [destroy]
-*/
+ * When a block effect is removed, we don't immediately destroy it or yank it
+ * out of the DOM, because it might have transitions. Instead, we 'pause' it.
+ * It stays around (in memory, and in the DOM) until outro transitions have
+ * completed, and if the state change is reversed then we _resume_ it.
+ * A paused effect does not update, and the DOM subtree becomes inert.
+ * @param {Effect} effect
+ * @param {() => void} [callback]
+ * @param {boolean} [destroy]
+ */
 function pause_effect(effect, callback, destroy = true) {
 	/** @type {TransitionManager[]} */
 	var transitions = [];
@@ -2325,10 +2445,10 @@ function pause_effect(effect, callback, destroy = true) {
 	} else fn();
 }
 /**
-* @param {Effect} effect
-* @param {TransitionManager[]} transitions
-* @param {boolean} local
-*/
+ * @param {Effect} effect
+ * @param {TransitionManager[]} transitions
+ * @param {boolean} local
+ */
 function pause_children(effect, transitions, local) {
 	if ((effect.f & 8192) !== 0) return;
 	effect.f ^= INERT;
@@ -2340,16 +2460,16 @@ function pause_children(effect, transitions, local) {
 	while (child !== null) {
 		var sibling = child.next;
 		if ((child.f & 64) === 0) {
-			var transparent = (child.f & 65536) !== 0 || (child.f & 32) !== 0 && (effect.f & 16) !== 0;
+			var transparent = (child.f & 65536) !== 0 || ((child.f & 32) !== 0 && (effect.f & 16) !== 0);
 			pause_children(child, transitions, transparent ? local : false);
 		}
 		child = sibling;
 	}
 }
 /**
-* @param {Effect} effect
-* @param {DocumentFragment} fragment
-*/
+ * @param {Effect} effect
+ * @param {DocumentFragment} fragment
+ */
 function move_effect(effect, fragment) {
 	if (!effect.nodes) return;
 	/** @type {TemplateNode | null} */
@@ -2365,16 +2485,16 @@ function move_effect(effect, fragment) {
 //#endregion
 //#region node_modules/svelte/src/internal/client/legacy.js
 /**
-* @type {Set<Value> | null}
-* @deprecated
-*/
+ * @type {Set<Value> | null}
+ * @deprecated
+ */
 var captured_signals = null;
 //#endregion
 //#region node_modules/svelte/src/internal/client/runtime.js
 /** @import { Derived, Effect, Reaction, Source, Value } from '#client' */
 /**
-* True if updating in an effect context that is reactive (i.e. not branch/root effects)
-*/
+ * True if updating in an effect context that is reactive (i.e. not branch/root effects)
+ */
 var is_updating_effect = false;
 var is_destroying_effect = false;
 /** @param {boolean} value */
@@ -2395,37 +2515,38 @@ function set_active_effect(effect) {
 	active_effect = effect;
 }
 /**
-* When sources are created within a reaction, reading and writing
-* them within that reaction should not cause a re-run
-* @type {null | Set<Source>}
-*/
+ * When sources are created within a reaction, reading and writing
+ * them within that reaction should not cause a re-run
+ * @type {null | Set<Source>}
+ */
 var current_sources = null;
 /** @param {Value} value */
 function push_reaction_value(value) {
-	if (active_reaction !== null && (!async_mode_flag || (active_reaction.f & 2) !== 0)) (current_sources ??= /* @__PURE__ */ new Set()).add(value);
+	if (active_reaction !== null && (!async_mode_flag || (active_reaction.f & 2) !== 0))
+		(current_sources ??= /* @__PURE__ */ new Set()).add(value);
 }
 /**
-* The dependencies of the reaction that is currently being executed. In many cases,
-* the dependencies are unchanged between runs, and so this will be `null` unless
-* and until a new dependency is accessed — we track this via `skipped_deps`
-* @type {null | Value[]}
-*/
+ * The dependencies of the reaction that is currently being executed. In many cases,
+ * the dependencies are unchanged between runs, and so this will be `null` unless
+ * and until a new dependency is accessed — we track this via `skipped_deps`
+ * @type {null | Value[]}
+ */
 var new_deps = null;
 var skipped_deps = 0;
 /**
-* Tracks writes that the effect it's executed in doesn't listen to yet,
-* so that the dependency can be added to the effect later on if it then reads it
-* @type {null | Source[]}
-*/
+ * Tracks writes that the effect it's executed in doesn't listen to yet,
+ * so that the dependency can be added to the effect later on if it then reads it
+ * @type {null | Source[]}
+ */
 var untracked_writes = null;
 /** @param {null | Source[]} value */
 function set_untracked_writes(value) {
 	untracked_writes = value;
 }
 /**
-* @type {number} Used by sources and deriveds for handling updates.
-* Version starts from 1 so that unowned deriveds differentiate between a created effect and a run one for tracing
-**/
+ * @type {number} Used by sources and deriveds for handling updates.
+ * Version starts from 1 so that unowned deriveds differentiate between a created effect and a run one for tracing
+ **/
 var write_version = 1;
 /** @type {number} Used to version each read of a source of derived to avoid duplicating depedencies inside a reaction */
 var read_version = 0;
@@ -2438,11 +2559,11 @@ function increment_write_version() {
 	return ++write_version;
 }
 /**
-* Determines whether a derived or effect is dirty.
-* If it is MAYBE_DIRTY, will set the status to CLEAN
-* @param {Reaction} reaction
-* @returns {boolean}
-*/
+ * Determines whether a derived or effect is dirty.
+ * If it is MAYBE_DIRTY, will set the status to CLEAN
+ * @param {Reaction} reaction
+ * @returns {boolean}
+ */
 function is_dirty(reaction) {
 	var flags = reaction.f;
 	if ((flags & 2048) !== 0) return true;
@@ -2460,10 +2581,10 @@ function is_dirty(reaction) {
 	return false;
 }
 /**
-* @param {Value} signal
-* @param {Effect} effect
-* @param {boolean} [root]
-*/
+ * @param {Value} signal
+ * @param {Effect} effect
+ * @param {boolean} [root]
+ */
 function schedule_possible_effect_self_invalidation(signal, effect, root = true) {
 	var reactions = signal.reactions;
 	if (reactions === null) return;
@@ -2517,15 +2638,26 @@ function update_reaction(reaction) {
 				deps.length = skipped_deps + new_deps.length;
 				for (i = 0; i < new_deps.length; i++) deps[skipped_deps + i] = new_deps[i];
 			} else reaction.deps = deps = new_deps;
-			if (effect_tracking() && (reaction.f & 512) !== 0) for (i = skipped_deps; i < deps.length; i++) (deps[i].reactions ??= []).push(reaction);
+			if (effect_tracking() && (reaction.f & 512) !== 0)
+				for (i = skipped_deps; i < deps.length; i++) (deps[i].reactions ??= []).push(reaction);
 		} else if (!is_fork && deps !== null && skipped_deps < deps.length) {
 			remove_reactions(reaction, skipped_deps);
 			deps.length = skipped_deps;
 		}
-		if (is_runes() && untracked_writes !== null && !untracking && deps !== null && (reaction.f & 6146) === 0) for (i = 0; i < untracked_writes.length; i++) schedule_possible_effect_self_invalidation(untracked_writes[i], reaction);
+		if (
+			is_runes() &&
+			untracked_writes !== null &&
+			!untracking &&
+			deps !== null &&
+			(reaction.f & 6146) === 0
+		)
+			for (i = 0; i < untracked_writes.length; i++)
+				schedule_possible_effect_self_invalidation(untracked_writes[i], reaction);
 		if (previous_reaction !== null && previous_reaction !== reaction) {
 			read_version++;
-			if (previous_reaction.deps !== null) for (let i = 0; i < previous_skipped_deps; i += 1) previous_reaction.deps[i].rv = read_version;
+			if (previous_reaction.deps !== null)
+				for (let i = 0; i < previous_skipped_deps; i += 1)
+					previous_reaction.deps[i].rv = read_version;
 			if (previous_deps !== null) for (const dep of previous_deps) dep.rv = read_version;
 			if (untracked_writes !== null) {
 				if (previous_untracked_writes === null) previous_untracked_writes = untracked_writes;
@@ -2549,11 +2681,11 @@ function update_reaction(reaction) {
 	}
 }
 /**
-* @template V
-* @param {Reaction} signal
-* @param {Value<V>} dependency
-* @returns {void}
-*/
+ * @template V
+ * @param {Reaction} signal
+ * @param {Value<V>} dependency
+ * @returns {void}
+ */
 function remove_reaction(signal, dependency) {
 	let reactions = dependency.reactions;
 	if (reactions !== null) {
@@ -2567,36 +2699,41 @@ function remove_reaction(signal, dependency) {
 			}
 		}
 	}
-	if (reactions === null && (dependency.f & 2) !== 0 && (new_deps === null || !includes.call(new_deps, dependency))) {
+	if (
+		reactions === null &&
+		(dependency.f & 2) !== 0 &&
+		(new_deps === null || !includes.call(new_deps, dependency))
+	) {
 		var derived = dependency;
 		if ((derived.f & 512) !== 0) {
 			derived.f ^= 512;
 			derived.f &= ~WAS_MARKED;
 		}
 		if (derived.v !== UNINITIALIZED) update_derived_status(derived);
-		if (derived.ac !== null) without_reactive_context(() => {
-			/** @type {AbortController} */ derived.ac.abort(STALE_REACTION);
-			derived.ac = null;
-			set_signal_status(derived, DIRTY);
-		});
+		if (derived.ac !== null)
+			without_reactive_context(() => {
+				/** @type {AbortController} */ derived.ac.abort(STALE_REACTION);
+				derived.ac = null;
+				set_signal_status(derived, DIRTY);
+			});
 		freeze_derived_effects(derived);
 		remove_reactions(derived, 0);
 	}
 }
 /**
-* @param {Reaction} signal
-* @param {number} start_index
-* @returns {void}
-*/
+ * @param {Reaction} signal
+ * @param {number} start_index
+ * @returns {void}
+ */
 function remove_reactions(signal, start_index) {
 	var dependencies = signal.deps;
 	if (dependencies === null) return;
 	for (var i = start_index; i < dependencies.length; i++) remove_reaction(signal, dependencies[i]);
 }
 /**
-* @param {Effect} effect
-* @returns {void}
-*/
+ * @param {Effect} effect
+ * @returns {void}
+ */
 function update_effect(effect) {
 	var flags = effect.f;
 	if ((flags & 16384) !== 0) return;
@@ -2610,7 +2747,7 @@ function update_effect(effect) {
 		else destroy_effect_children(effect);
 		execute_effect_teardown(effect);
 		var teardown = update_reaction(effect);
-		effect.teardown = typeof teardown === "function" ? teardown : null;
+		effect.teardown = typeof teardown === 'function' ? teardown : null;
 		effect.wv = write_version;
 	} finally {
 		is_updating_effect = was_updating_effect;
@@ -2618,15 +2755,18 @@ function update_effect(effect) {
 	}
 }
 /**
-* @template V
-* @param {Value<V>} signal
-* @returns {V}
-*/
+ * @template V
+ * @param {Value<V>} signal
+ * @returns {V}
+ */
 function get(signal) {
 	var is_derived = (signal.f & 2) !== 0;
 	captured_signals?.add(signal);
 	if (active_reaction !== null && !untracking) {
-		if (!(active_effect !== null && (active_effect.f & 16384) !== 0) && (current_sources === null || !current_sources.has(signal))) {
+		if (
+			!(active_effect !== null && (active_effect.f & 16384) !== 0) &&
+			(current_sources === null || !current_sources.has(signal))
+		) {
 			var deps = active_reaction.deps;
 			if ((active_reaction.f & 2097152) !== 0) {
 				if (signal.rv < read_version) {
@@ -2649,11 +2789,19 @@ function get(signal) {
 		var derived = signal;
 		if (is_destroying_effect) {
 			var value = derived.v;
-			if ((derived.f & 1024) === 0 && derived.reactions !== null || depends_on_old_values(derived)) value = execute_derived(derived);
+			if (
+				((derived.f & 1024) === 0 && derived.reactions !== null) ||
+				depends_on_old_values(derived)
+			)
+				value = execute_derived(derived);
 			old_values.set(derived, value);
 			return value;
 		}
-		var should_connect = (derived.f & 512) === 0 && !untracking && active_reaction !== null && (is_updating_effect || (active_reaction.f & 512) !== 0);
+		var should_connect =
+			(derived.f & 512) === 0 &&
+			!untracking &&
+			active_reaction !== null &&
+			(is_updating_effect || (active_reaction.f & 512) !== 0);
 		var is_new = (derived.f & REACTION_RAN) === 0;
 		if (is_dirty(derived)) {
 			if (should_connect) derived.f |= 512;
@@ -2669,10 +2817,10 @@ function get(signal) {
 	return signal.v;
 }
 /**
-* (Re)connect a disconnected derived, so that it is notified
-* of changes in `mark_reactions`
-* @param {Derived} derived
-*/
+ * (Re)connect a disconnected derived, so that it is notified
+ * of changes in `mark_reactions`
+ * @param {Derived} derived
+ */
 function reconnect(derived) {
 	derived.f |= 512;
 	if (derived.deps === null) return;
@@ -2695,21 +2843,21 @@ function depends_on_old_values(derived) {
 	return false;
 }
 /**
-* When used inside a [`$derived`](https://svelte.dev/docs/svelte/$derived) or [`$effect`](https://svelte.dev/docs/svelte/$effect),
-* any state read inside `fn` will not be treated as a dependency.
-*
-* ```ts
-* $effect(() => {
-*   // this will run when `data` changes, but not when `time` changes
-*   save(data, {
-*     timestamp: untrack(() => time)
-*   });
-* });
-* ```
-* @template T
-* @param {() => T} fn
-* @returns {T}
-*/
+ * When used inside a [`$derived`](https://svelte.dev/docs/svelte/$derived) or [`$effect`](https://svelte.dev/docs/svelte/$effect),
+ * any state read inside `fn` will not be treated as a dependency.
+ *
+ * ```ts
+ * $effect(() => {
+ *   // this will run when `data` changes, but not when `time` changes
+ *   save(data, {
+ *     timestamp: untrack(() => time)
+ *   });
+ * });
+ * ```
+ * @template T
+ * @param {() => T} fn
+ * @returns {T}
+ */
 function untrack(fn) {
 	var previous_untracking = untracking;
 	try {
@@ -2724,37 +2872,37 @@ function untrack(fn) {
 /** @import { Readable, StartStopNotifier, Subscriber, Unsubscriber, Updater, Writable } from '../public.js' */
 /** @import { Stores, StoresValues, SubscribeInvalidateTuple } from '../private.js' */
 /**
-* @type {Array<SubscribeInvalidateTuple<any> | any>}
-*/
+ * @type {Array<SubscribeInvalidateTuple<any> | any>}
+ */
 var subscriber_queue = [];
 /**
-* Creates a `Readable` store that allows reading by subscription.
-*
-* @template T
-* @param {T} [value] initial value
-* @param {StartStopNotifier<T>} [start]
-* @returns {Readable<T>}
-*/
+ * Creates a `Readable` store that allows reading by subscription.
+ *
+ * @template T
+ * @param {T} [value] initial value
+ * @param {StartStopNotifier<T>} [start]
+ * @returns {Readable<T>}
+ */
 function readable(value, start) {
 	return { subscribe: writable(value, start).subscribe };
 }
 /**
-* Create a `Writable` store that allows both updating and reading by subscription.
-*
-* @template T
-* @param {T} [value] initial value
-* @param {StartStopNotifier<T>} [start]
-* @returns {Writable<T>}
-*/
+ * Create a `Writable` store that allows both updating and reading by subscription.
+ *
+ * @template T
+ * @param {T} [value] initial value
+ * @param {StartStopNotifier<T>} [start]
+ * @returns {Writable<T>}
+ */
 function writable(value, start = noop) {
 	/** @type {Unsubscriber | null} */
 	let stop = null;
 	/** @type {Set<SubscribeInvalidateTuple<T>>} */
 	const subscribers = /* @__PURE__ */ new Set();
 	/**
-	* @param {T} new_value
-	* @returns {void}
-	*/
+	 * @param {T} new_value
+	 * @returns {void}
+	 */
 	function set(new_value) {
 		if (safe_not_equal(value, new_value)) {
 			value = new_value;
@@ -2765,24 +2913,25 @@ function writable(value, start = noop) {
 					subscriber_queue.push(subscriber, value);
 				}
 				if (run_queue) {
-					for (let i = 0; i < subscriber_queue.length; i += 2) subscriber_queue[i][0](subscriber_queue[i + 1]);
+					for (let i = 0; i < subscriber_queue.length; i += 2)
+						subscriber_queue[i][0](subscriber_queue[i + 1]);
 					subscriber_queue.length = 0;
 				}
 			}
 		}
 	}
 	/**
-	* @param {Updater<T>} fn
-	* @returns {void}
-	*/
+	 * @param {Updater<T>} fn
+	 * @returns {void}
+	 */
 	function update(fn) {
 		set(fn(value));
 	}
 	/**
-	* @param {Subscriber<T>} run
-	* @param {() => void} [invalidate]
-	* @returns {Unsubscriber}
-	*/
+	 * @param {Subscriber<T>} run
+	 * @param {() => void} [invalidate]
+	 * @returns {Unsubscriber}
+	 */
 	function subscribe(run, invalidate = noop) {
 		/** @type {SubscribeInvalidateTuple<T>} */
 		const subscriber = [run, invalidate];
@@ -2800,66 +2949,66 @@ function writable(value, start = noop) {
 	return {
 		set,
 		update,
-		subscribe
+		subscribe,
 	};
 }
 //#endregion
 //#region node_modules/svelte/src/utils.js
 /**
-* Attributes that are boolean, i.e. they are present or not present.
-*/
+ * Attributes that are boolean, i.e. they are present or not present.
+ */
 var DOM_BOOLEAN_ATTRIBUTES = [
-	"allowfullscreen",
-	"async",
-	"autofocus",
-	"autoplay",
-	"checked",
-	"controls",
-	"default",
-	"disabled",
-	"formnovalidate",
-	"indeterminate",
-	"inert",
-	"ismap",
-	"loop",
-	"multiple",
-	"muted",
-	"nomodule",
-	"novalidate",
-	"open",
-	"playsinline",
-	"readonly",
-	"required",
-	"reversed",
-	"seamless",
-	"selected",
-	"webkitdirectory",
-	"defer",
-	"disablepictureinpicture",
-	"disableremoteplayback"
+	'allowfullscreen',
+	'async',
+	'autofocus',
+	'autoplay',
+	'checked',
+	'controls',
+	'default',
+	'disabled',
+	'formnovalidate',
+	'indeterminate',
+	'inert',
+	'ismap',
+	'loop',
+	'multiple',
+	'muted',
+	'nomodule',
+	'novalidate',
+	'open',
+	'playsinline',
+	'readonly',
+	'required',
+	'reversed',
+	'seamless',
+	'selected',
+	'webkitdirectory',
+	'defer',
+	'disablepictureinpicture',
+	'disableremoteplayback',
 ];
 /**
-* Returns `true` if `name` is a boolean attribute
-* @param {string} name
-*/
+ * Returns `true` if `name` is a boolean attribute
+ * @param {string} name
+ */
 function is_boolean_attribute(name) {
 	return DOM_BOOLEAN_ATTRIBUTES.includes(name);
 }
 [...DOM_BOOLEAN_ATTRIBUTES];
 /**
-* Subset of delegated events which should be passive by default.
-* These two are already passive via browser defaults on window, document and body.
-* But since
-* - we're delegating them
-* - they happen often
-* - they apply to mobile which is generally less performant
-* we're marking them as passive by default for other elements, too.
-*/
-var PASSIVE_EVENTS = ["touchstart", "touchmove"];
+ * Subset of delegated events which should be passive by default.
+ * These two are already passive via browser defaults on window, document and body.
+ * But since
+ * - we're delegating them
+ * - they happen often
+ * - they apply to mobile which is generally less performant
+ * we're marking them as passive by default for other elements, too.
+ */
+var PASSIVE_EVENTS = ['touchstart', 'touchmove'];
 /**
-* Returns `true` if `name` is a passive event
-* @param {string} name
-*/
+ * Returns `true` if `name` is a passive event
+ * @param {string} name
+ */
 function is_passive_event(name) {
 	return PASSIVE_EVENTS.includes(name);
 }
@@ -2868,20 +3017,20 @@ function is_passive_event(name) {
 var ATTR_REGEX = /[&"<]/g;
 var CONTENT_REGEX = /[&<]/g;
 /**
-* @template V
-* @param {V} value
-* @param {boolean} [is_attr]
-*/
+ * @template V
+ * @param {V} value
+ * @param {boolean} [is_attr]
+ */
 function escape_html(value, is_attr) {
-	const str = String(value ?? "");
+	const str = String(value ?? '');
 	const pattern = is_attr ? ATTR_REGEX : CONTENT_REGEX;
 	pattern.lastIndex = 0;
-	let escaped = "";
+	let escaped = '';
 	let last = 0;
 	while (pattern.test(str)) {
 		const i = pattern.lastIndex - 1;
 		const ch = str[i];
-		escaped += str.substring(last, i) + (ch === "&" ? "&amp;" : ch === "\"" ? "&quot;" : "&lt;");
+		escaped += str.substring(last, i) + (ch === '&' ? '&amp;' : ch === '"' ? '&quot;' : '&lt;');
 		last = i + 1;
 	}
 	return escaped + str.substring(last);
@@ -2889,88 +3038,99 @@ function escape_html(value, is_attr) {
 //#endregion
 //#region node_modules/svelte/src/internal/shared/attributes.js
 /**
-* `<div translate={false}>` should be rendered as `<div translate="no">` and _not_
-* `<div translate="false">`, which is equivalent to `<div translate="yes">`. There
-* may be other odd cases that need to be added to this list in future
-* @type {Record<string, Map<any, string>>}
-*/
-var replacements = { translate: /* @__PURE__ */ new Map([[true, "yes"], [false, "no"]]) };
+ * `<div translate={false}>` should be rendered as `<div translate="no">` and _not_
+ * `<div translate="false">`, which is equivalent to `<div translate="yes">`. There
+ * may be other odd cases that need to be added to this list in future
+ * @type {Record<string, Map<any, string>>}
+ */
+var replacements = {
+	translate: /* @__PURE__ */ new Map([
+		[true, 'yes'],
+		[false, 'no'],
+	]),
+};
 /**
-* @template V
-* @param {string} name
-* @param {V} value
-* @param {boolean} [is_boolean]
-* @returns {string}
-*/
+ * @template V
+ * @param {string} name
+ * @param {V} value
+ * @param {boolean} [is_boolean]
+ * @returns {string}
+ */
 function attr(name, value, is_boolean = false) {
-	if (name === "hidden" && value !== "until-found") is_boolean = true;
-	if (value == null || !value && is_boolean) return "";
-	const normalized = has_own_property.call(replacements, name) && replacements[name].get(value) || value;
+	if (name === 'hidden' && value !== 'until-found') is_boolean = true;
+	if (value == null || (!value && is_boolean)) return '';
+	const normalized =
+		(has_own_property.call(replacements, name) && replacements[name].get(value)) || value;
 	return ` ${name}${is_boolean ? `=""` : `="${escape_html(normalized, true)}"`}`;
 }
 /**
-* Small wrapper around clsx to preserve Svelte's (weird) handling of falsy values.
-* TODO Svelte 6 revisit this, and likely turn all falsy values into the empty string (what clsx also does)
-* @param  {any} value
-*/
+ * Small wrapper around clsx to preserve Svelte's (weird) handling of falsy values.
+ * TODO Svelte 6 revisit this, and likely turn all falsy values into the empty string (what clsx also does)
+ * @param  {any} value
+ */
 function clsx$1(value) {
-	if (typeof value === "object") return clsx(value);
-	else return value ?? "";
+	if (typeof value === 'object') return clsx(value);
+	else return value ?? '';
 }
-var whitespace = [..." 	\n\r\f\xA0\v﻿"];
+var whitespace = [...' 	\n\r\f\xA0\v﻿'];
 /**
-* @param {any} value
-* @param {string | null} [hash]
-* @param {Record<string, boolean>} [directives]
-* @returns {string | null}
-*/
+ * @param {any} value
+ * @param {string | null} [hash]
+ * @param {Record<string, boolean>} [directives]
+ * @returns {string | null}
+ */
 function to_class(value, hash, directives) {
-	var classname = value == null ? "" : "" + value;
-	if (hash) classname = classname ? classname + " " + hash : hash;
+	var classname = value == null ? '' : '' + value;
+	if (hash) classname = classname ? classname + ' ' + hash : hash;
 	if (directives) {
-		for (var key of Object.keys(directives)) if (directives[key]) classname = classname ? classname + " " + key : key;
-		else if (classname.length) {
-			var len = key.length;
-			var a = 0;
-			while ((a = classname.indexOf(key, a)) >= 0) {
-				var b = a + len;
-				if ((a === 0 || whitespace.includes(classname[a - 1])) && (b === classname.length || whitespace.includes(classname[b]))) classname = (a === 0 ? "" : classname.substring(0, a)) + classname.substring(b + 1);
-				else a = b;
+		for (var key of Object.keys(directives))
+			if (directives[key]) classname = classname ? classname + ' ' + key : key;
+			else if (classname.length) {
+				var len = key.length;
+				var a = 0;
+				while ((a = classname.indexOf(key, a)) >= 0) {
+					var b = a + len;
+					if (
+						(a === 0 || whitespace.includes(classname[a - 1])) &&
+						(b === classname.length || whitespace.includes(classname[b]))
+					)
+						classname = (a === 0 ? '' : classname.substring(0, a)) + classname.substring(b + 1);
+					else a = b;
+				}
 			}
-		}
 	}
-	return classname === "" ? null : classname;
+	return classname === '' ? null : classname;
 }
 /**
-*
-* @param {Record<string,any>} styles
-* @param {boolean} important
-*/
+ *
+ * @param {Record<string,any>} styles
+ * @param {boolean} important
+ */
 function append_styles(styles, important = false) {
-	var separator = important ? " !important;" : ";";
-	var css = "";
+	var separator = important ? ' !important;' : ';';
+	var css = '';
 	for (var key of Object.keys(styles)) {
 		var value = styles[key];
-		if (value != null && value !== "") css += " " + key + ": " + value + separator;
+		if (value != null && value !== '') css += ' ' + key + ': ' + value + separator;
 	}
 	return css;
 }
 /**
-* @param {string} name
-* @returns {string}
-*/
+ * @param {string} name
+ * @returns {string}
+ */
 function to_css_name(name) {
-	if (name[0] !== "-" || name[1] !== "-") return name.toLowerCase();
+	if (name[0] !== '-' || name[1] !== '-') return name.toLowerCase();
 	return name;
 }
 /**
-* @param {any} value
-* @param {Record<string, any> | [Record<string, any>, Record<string, any>]} [styles]
-* @returns {string | null}
-*/
+ * @param {any} value
+ * @param {Record<string, any> | [Record<string, any>, Record<string, any>]} [styles]
+ * @returns {string | null}
+ */
 function to_style(value, styles) {
 	if (styles) {
-		var new_style = "";
+		var new_style = '';
 		/** @type {Record<string,any> | undefined} */
 		var normal_styles;
 		/** @type {Record<string,any> | undefined} */
@@ -2980,7 +3140,9 @@ function to_style(value, styles) {
 			important_styles = styles[1];
 		} else normal_styles = styles;
 		if (value) {
-			value = String(value).replaceAll(/\s*\/\*.*?\*\/\s*/g, "").trim();
+			value = String(value)
+				.replaceAll(/\s*\/\*.*?\*\/\s*/g, '')
+				.trim();
 			/** @type {boolean | '"' | "'"} */
 			var in_str = false;
 			var in_apo = 0;
@@ -2994,22 +3156,22 @@ function to_style(value, styles) {
 			for (var i = 0; i < len; i++) {
 				var c = value[i];
 				if (in_comment) {
-					if (c === "/" && value[i - 1] === "*") in_comment = false;
+					if (c === '/' && value[i - 1] === '*') in_comment = false;
 				} else if (in_str) {
 					if (in_str === c) in_str = false;
-				} else if (c === "/" && value[i + 1] === "*") in_comment = true;
-				else if (c === "\"" || c === "'") in_str = c;
-				else if (c === "(") in_apo++;
-				else if (c === ")") in_apo--;
+				} else if (c === '/' && value[i + 1] === '*') in_comment = true;
+				else if (c === '"' || c === "'") in_str = c;
+				else if (c === '(') in_apo++;
+				else if (c === ')') in_apo--;
 				if (!in_comment && in_str === false && in_apo === 0) {
-					if (c === ":" && name_index === -1) name_index = i;
-					else if (c === ";" || i === len - 1) {
+					if (c === ':' && name_index === -1) name_index = i;
+					else if (c === ';' || i === len - 1) {
 						if (name_index !== -1) {
 							var name = to_css_name(value.substring(start_index, name_index).trim());
 							if (!reserved_names.includes(name)) {
-								if (c !== ";") i++;
+								if (c !== ';') i++;
 								var property = value.substring(start_index, i).trim();
-								new_style += " " + property + ";";
+								new_style += ' ' + property + ';';
 							}
 						}
 						start_index = i + 1;
@@ -3021,7 +3183,7 @@ function to_style(value, styles) {
 		if (normal_styles) new_style += append_styles(normal_styles);
 		if (important_styles) new_style += append_styles(important_styles, true);
 		new_style = new_style.trim();
-		return new_style === "" ? null : new_style;
+		return new_style === '' ? null : new_style;
 	}
 	return value == null ? null : String(value);
 }
@@ -3044,103 +3206,119 @@ function getAbortSignal() {
 //#endregion
 //#region node_modules/svelte/src/internal/server/errors.js
 /**
-* The node API `AsyncLocalStorage` is not available, but is required to use async server rendering.
-* @returns {never}
-*/
+ * The node API `AsyncLocalStorage` is not available, but is required to use async server rendering.
+ * @returns {never}
+ */
 function async_local_storage_unavailable() {
-	const error = /* @__PURE__ */ new Error(`async_local_storage_unavailable\nThe node API \`AsyncLocalStorage\` is not available, but is required to use async server rendering.\nhttps://svelte.dev/e/async_local_storage_unavailable`);
-	error.name = "Svelte error";
+	const error = /* @__PURE__ */ new Error(
+		`async_local_storage_unavailable\nThe node API \`AsyncLocalStorage\` is not available, but is required to use async server rendering.\nhttps://svelte.dev/e/async_local_storage_unavailable`,
+	);
+	error.name = 'Svelte error';
 	throw error;
 }
 /**
-* Encountered asynchronous work while rendering synchronously.
-* @returns {never}
-*/
+ * Encountered asynchronous work while rendering synchronously.
+ * @returns {never}
+ */
 function await_invalid() {
-	const error = /* @__PURE__ */ new Error(`await_invalid\nEncountered asynchronous work while rendering synchronously.\nhttps://svelte.dev/e/await_invalid`);
-	error.name = "Svelte error";
+	const error = /* @__PURE__ */ new Error(
+		`await_invalid\nEncountered asynchronous work while rendering synchronously.\nhttps://svelte.dev/e/await_invalid`,
+	);
+	error.name = 'Svelte error';
 	throw error;
 }
 /**
-* The `html` property of server render results has been deprecated. Use `body` instead.
-* @returns {never}
-*/
+ * The `html` property of server render results has been deprecated. Use `body` instead.
+ * @returns {never}
+ */
 function html_deprecated() {
-	const error = /* @__PURE__ */ new Error(`html_deprecated\nThe \`html\` property of server render results has been deprecated. Use \`body\` instead.\nhttps://svelte.dev/e/html_deprecated`);
-	error.name = "Svelte error";
+	const error = /* @__PURE__ */ new Error(
+		`html_deprecated\nThe \`html\` property of server render results has been deprecated. Use \`body\` instead.\nhttps://svelte.dev/e/html_deprecated`,
+	);
+	error.name = 'Svelte error';
 	throw error;
 }
 /**
-* Attempted to set `hydratable` with key `%key%` twice with different values.
-* 
-* %stack%
-* @param {string} key
-* @param {string} stack
-* @returns {never}
-*/
+ * Attempted to set `hydratable` with key `%key%` twice with different values.
+ *
+ * %stack%
+ * @param {string} key
+ * @param {string} stack
+ * @returns {never}
+ */
 function hydratable_clobbering(key, stack) {
-	const error = /* @__PURE__ */ new Error(`hydratable_clobbering\nAttempted to set \`hydratable\` with key \`${key}\` twice with different values.
+	const error =
+		/* @__PURE__ */ new Error(`hydratable_clobbering\nAttempted to set \`hydratable\` with key \`${key}\` twice with different values.
 
 ${stack}\nhttps://svelte.dev/e/hydratable_clobbering`);
-	error.name = "Svelte error";
+	error.name = 'Svelte error';
 	throw error;
 }
 /**
-* Failed to serialize `hydratable` data for key `%key%`.
-* 
-* `hydratable` can serialize anything [`uneval` from `devalue`](https://npmjs.com/package/uneval) can, plus Promises.
-* 
-* Cause:
-* %stack%
-* @param {string} key
-* @param {string} stack
-* @returns {never}
-*/
+ * Failed to serialize `hydratable` data for key `%key%`.
+ *
+ * `hydratable` can serialize anything [`uneval` from `devalue`](https://npmjs.com/package/uneval) can, plus Promises.
+ *
+ * Cause:
+ * %stack%
+ * @param {string} key
+ * @param {string} stack
+ * @returns {never}
+ */
 function hydratable_serialization_failed(key, stack) {
-	const error = /* @__PURE__ */ new Error(`hydratable_serialization_failed\nFailed to serialize \`hydratable\` data for key \`${key}\`.
+	const error =
+		/* @__PURE__ */ new Error(`hydratable_serialization_failed\nFailed to serialize \`hydratable\` data for key \`${key}\`.
 
 \`hydratable\` can serialize anything [\`uneval\` from \`devalue\`](https://npmjs.com/package/uneval) can, plus Promises.
 
 Cause:
 ${stack}\nhttps://svelte.dev/e/hydratable_serialization_failed`);
-	error.name = "Svelte error";
+	error.name = 'Svelte error';
 	throw error;
 }
 /**
-* `csp.nonce` was set while `csp.hash` was `true`. These options cannot be used simultaneously.
-* @returns {never}
-*/
+ * `csp.nonce` was set while `csp.hash` was `true`. These options cannot be used simultaneously.
+ * @returns {never}
+ */
 function invalid_csp() {
-	const error = /* @__PURE__ */ new Error(`invalid_csp\n\`csp.nonce\` was set while \`csp.hash\` was \`true\`. These options cannot be used simultaneously.\nhttps://svelte.dev/e/invalid_csp`);
-	error.name = "Svelte error";
+	const error = /* @__PURE__ */ new Error(
+		`invalid_csp\n\`csp.nonce\` was set while \`csp.hash\` was \`true\`. These options cannot be used simultaneously.\nhttps://svelte.dev/e/invalid_csp`,
+	);
+	error.name = 'Svelte error';
 	throw error;
 }
 /**
-* The `idPrefix` option cannot include `--`.
-* @returns {never}
-*/
+ * The `idPrefix` option cannot include `--`.
+ * @returns {never}
+ */
 function invalid_id_prefix() {
-	const error = /* @__PURE__ */ new Error(`invalid_id_prefix\nThe \`idPrefix\` option cannot include \`--\`.\nhttps://svelte.dev/e/invalid_id_prefix`);
-	error.name = "Svelte error";
+	const error = /* @__PURE__ */ new Error(
+		`invalid_id_prefix\nThe \`idPrefix\` option cannot include \`--\`.\nhttps://svelte.dev/e/invalid_id_prefix`,
+	);
+	error.name = 'Svelte error';
 	throw error;
 }
 /**
-* `%name%(...)` is not available on the server
-* @param {string} name
-* @returns {never}
-*/
+ * `%name%(...)` is not available on the server
+ * @param {string} name
+ * @returns {never}
+ */
 function lifecycle_function_unavailable(name) {
-	const error = /* @__PURE__ */ new Error(`lifecycle_function_unavailable\n\`${name}(...)\` is not available on the server\nhttps://svelte.dev/e/lifecycle_function_unavailable`);
-	error.name = "Svelte error";
+	const error = /* @__PURE__ */ new Error(
+		`lifecycle_function_unavailable\n\`${name}(...)\` is not available on the server\nhttps://svelte.dev/e/lifecycle_function_unavailable`,
+	);
+	error.name = 'Svelte error';
 	throw error;
 }
 /**
-* Could not resolve `render` context.
-* @returns {never}
-*/
+ * Could not resolve `render` context.
+ * @returns {never}
+ */
 function server_context_required() {
-	const error = /* @__PURE__ */ new Error(`server_context_required\nCould not resolve \`render\` context.\nhttps://svelte.dev/e/server_context_required`);
-	error.name = "Svelte error";
+	const error = /* @__PURE__ */ new Error(
+		`server_context_required\nCould not resolve \`render\` context.\nhttps://svelte.dev/e/server_context_required`,
+	);
+	error.name = 'Svelte error';
 	throw error;
 }
 //#endregion
@@ -3153,71 +3331,74 @@ function set_ssr_context(v) {
 	ssr_context = v;
 }
 /**
-* @template T
-* @returns {[() => T, (context: T) => T]}
-* @since 5.40.0
-*/
+ * @template T
+ * @returns {[() => T, (context: T) => T]}
+ * @since 5.40.0
+ */
 function createContext() {
 	const key = {};
-	return [() => {
-		if (!hasContext(key)) missing_context();
-		return getContext(key);
-	}, (context) => setContext(key, context)];
+	return [
+		() => {
+			if (!hasContext(key)) missing_context();
+			return getContext(key);
+		},
+		(context) => setContext(key, context),
+	];
 }
 /**
-* @template T
-* @param {any} key
-* @returns {T}
-*/
+ * @template T
+ * @param {any} key
+ * @returns {T}
+ */
 function getContext(key) {
-	return get_or_init_context_map("getContext").get(key);
+	return get_or_init_context_map('getContext').get(key);
 }
 /**
-* @template T
-* @param {any} key
-* @param {T} context
-* @returns {T}
-*/
+ * @template T
+ * @param {any} key
+ * @param {T} context
+ * @returns {T}
+ */
 function setContext(key, context) {
-	get_or_init_context_map("setContext").set(key, context);
+	get_or_init_context_map('setContext').set(key, context);
 	return context;
 }
 /**
-* @param {any} key
-* @returns {boolean}
-*/
+ * @param {any} key
+ * @returns {boolean}
+ */
 function hasContext(key) {
-	return get_or_init_context_map("hasContext").has(key);
+	return get_or_init_context_map('hasContext').has(key);
 }
 /** @returns {Map<any, any>} */
 function getAllContexts() {
-	return get_or_init_context_map("getAllContexts");
+	return get_or_init_context_map('getAllContexts');
 }
 /**
-* @param {string} name
-* @returns {Map<unknown, unknown>}
-*/
+ * @param {string} name
+ * @returns {Map<unknown, unknown>}
+ */
 function get_or_init_context_map(name) {
 	if (ssr_context === null) lifecycle_outside_component(name);
-	return ssr_context.c ??= new Map(get_parent_context(ssr_context) || void 0);
+	return (ssr_context.c ??= new Map(get_parent_context(ssr_context) || void 0));
 }
 /**
-* @param {Function} [fn]
-*/
+ * @param {Function} [fn]
+ */
 function push(fn) {
 	ssr_context = {
 		p: ssr_context,
 		c: null,
-		r: null
+		r: null,
 	};
 }
 function pop() {
 	ssr_context = ssr_context.p;
 }
 /**
-* @param {SSRContext} ssr_context
-* @returns {Map<unknown, unknown> | null}
-*/
+ * @param {SSRContext} ssr_context
+ * @returns {Map<unknown, unknown> | null}
+ */
 function get_parent_context(ssr_context) {
 	let parent = ssr_context.p;
 	while (parent !== null) {
@@ -3228,13 +3409,13 @@ function get_parent_context(ssr_context) {
 	return null;
 }
 /**
-* A `hydratable` value with key `%key%` was created, but at least part of it was not used during the render.
-* 
-* The `hydratable` was initialized in:
-* %stack%
-* @param {string} key
-* @param {string} stack
-*/
+ * A `hydratable` value with key `%key%` was created, but at least part of it was not used during the render.
+ *
+ * The `hydratable` was initialized in:
+ * %stack%
+ * @param {string} key
+ * @param {string} stack
+ */
 function unresolved_hydratable(key, stack) {
 	console.warn(`https://svelte.dev/e/unresolved_hydratable`);
 }
@@ -3253,16 +3434,18 @@ function get_render_context() {
 	return store;
 }
 /**
-* @template T
-* @param {() => Promise<T>} fn
-* @returns {Promise<T>}
-*/
+ * @template T
+ * @param {() => Promise<T>} fn
+ * @returns {Promise<T>}
+ */
 async function with_render_context(fn) {
-	context = { hydratable: {
-		lookup: /* @__PURE__ */ new Map(),
-		comparisons: [],
-		unresolved_promises: /* @__PURE__ */ new Map()
-	} };
+	context = {
+		hydratable: {
+			lookup: /* @__PURE__ */ new Map(),
+			comparisons: [],
+			unresolved_promises: /* @__PURE__ */ new Map(),
+		},
+	};
 	if (in_webcontainer()) {
 		const { promise, resolve } = deferred();
 		const previous_render = current_render;
@@ -3282,13 +3465,15 @@ var als = null;
 /** @type {Promise<void> | null} */
 var als_import = null;
 /**
-*
-* @returns {Promise<void>}
-*/
+ *
+ * @returns {Promise<void>}
+ */
 function init_render_context() {
-	als_import ??= import("node:async_hooks").then((hooks) => {
-		als = new hooks.AsyncLocalStorage();
-	}).then(noop, noop);
+	als_import ??= import('node:async_hooks')
+		.then((hooks) => {
+			als = new hooks.AsyncLocalStorage();
+		})
+		.then(noop, noop);
 	return als_import;
 }
 function in_webcontainer() {
@@ -3299,23 +3484,26 @@ function in_webcontainer() {
 var text_encoder;
 var crypto;
 /** @param {string} module_name */
-var obfuscated_import = (module_name) => import(
-	/* @vite-ignore */
-	module_name
-);
+var obfuscated_import = (module_name) =>
+	import(
+		/* @vite-ignore */
+		module_name
+	);
 /** @param {string} data */
 async function sha256(data) {
 	text_encoder ??= new TextEncoder();
-	crypto ??= globalThis.crypto?.subtle?.digest ? globalThis.crypto : (await obfuscated_import("node:crypto")).webcrypto;
-	return base64_encode(await crypto.subtle.digest("SHA-256", text_encoder.encode(data)));
+	crypto ??= globalThis.crypto?.subtle?.digest
+		? globalThis.crypto
+		: (await obfuscated_import('node:crypto')).webcrypto;
+	return base64_encode(await crypto.subtle.digest('SHA-256', text_encoder.encode(data)));
 }
 /**
-* @param {Uint8Array} bytes
-* @returns {string}
-*/
+ * @param {Uint8Array} bytes
+ * @returns {string}
+ */
 function base64_encode(bytes) {
-	if (globalThis.Buffer) return globalThis.Buffer.from(bytes).toString("base64");
-	let binary = "";
+	if (globalThis.Buffer) return globalThis.Buffer.from(bytes).toString('base64');
+	let binary = '';
 	for (let i = 0; i < bytes.length; i++) binary += String.fromCharCode(bytes[i]);
 	return btoa(binary);
 }
@@ -3327,101 +3515,101 @@ function base64_encode(bytes) {
 /** @typedef {'head' | 'body'} RendererType */
 /** @typedef {{ [key in RendererType]: string }} AccumulatedContent */
 /**
-* @typedef {string | Renderer} RendererItem
-*/
+ * @typedef {string | Renderer} RendererItem
+ */
 /**
-* Renderers are basically a tree of `string | Renderer`s, where each `Renderer` in the tree represents
-* work that may or may not have completed. A renderer can be {@link collect}ed to aggregate the
-* content from itself and all of its children, but this will throw if any of the children are
-* performing asynchronous work. To asynchronously collect a renderer, just `await` it.
-*
-* The `string` values within a renderer are always associated with the {@link type} of that renderer. To switch types,
-* call {@link child} with a different `type` argument.
-*/
+ * Renderers are basically a tree of `string | Renderer`s, where each `Renderer` in the tree represents
+ * work that may or may not have completed. A renderer can be {@link collect}ed to aggregate the
+ * content from itself and all of its children, but this will throw if any of the children are
+ * performing asynchronous work. To asynchronously collect a renderer, just `await` it.
+ *
+ * The `string` values within a renderer are always associated with the {@link type} of that renderer. To switch types,
+ * call {@link child} with a different `type` argument.
+ */
 var Renderer = class Renderer {
 	/**
-	* The contents of the renderer.
-	* @type {RendererItem[]}
-	*/
+	 * The contents of the renderer.
+	 * @type {RendererItem[]}
+	 */
 	#out = [];
 	/**
-	* Any `onDestroy` callbacks registered during execution of this renderer.
-	* @type {(() => void)[] | undefined}
-	*/
+	 * Any `onDestroy` callbacks registered during execution of this renderer.
+	 * @type {(() => void)[] | undefined}
+	 */
 	#on_destroy = void 0;
 	/**
-	* Whether this renderer is a component body.
-	* @type {boolean}
-	*/
+	 * Whether this renderer is a component body.
+	 * @type {boolean}
+	 */
 	#is_component_body = false;
 	/**
-	* If set, this renderer is an error boundary. When async collection
-	* of the children fails, the failed snippet is rendered instead.
-	* @type {{
-	* 	failed: (renderer: Renderer, error: unknown, reset: () => void) => void;
-	* 	transformError: (error: unknown) => unknown;
-	* 	context: SSRContext | null;
-	* } | null}
-	*/
+	 * If set, this renderer is an error boundary. When async collection
+	 * of the children fails, the failed snippet is rendered instead.
+	 * @type {{
+	 * 	failed: (renderer: Renderer, error: unknown, reset: () => void) => void;
+	 * 	transformError: (error: unknown) => unknown;
+	 * 	context: SSRContext | null;
+	 * } | null}
+	 */
 	#boundary = null;
 	/**
-	* The type of string content that this renderer is accumulating.
-	* @type {RendererType}
-	*/
+	 * The type of string content that this renderer is accumulating.
+	 * @type {RendererType}
+	 */
 	type;
 	/** @type {Renderer | undefined} */
 	#parent;
 	/**
-	* Asynchronous work associated with this renderer
-	* @type {Promise<void> | undefined}
-	*/
+	 * Asynchronous work associated with this renderer
+	 * @type {Promise<void> | undefined}
+	 */
 	promise = void 0;
 	/**
-	* State which is associated with the content tree as a whole.
-	* It will be re-exposed, uncopied, on all children.
-	* @type {SSRState}
-	* @readonly
-	*/
+	 * State which is associated with the content tree as a whole.
+	 * It will be re-exposed, uncopied, on all children.
+	 * @type {SSRState}
+	 * @readonly
+	 */
 	global;
 	/**
-	* State that is local to the branch it is declared in.
-	* It will be shallow-copied to all children.
-	*
-	* @type {{ select_value: string | undefined }}
-	*/
+	 * State that is local to the branch it is declared in.
+	 * It will be shallow-copied to all children.
+	 *
+	 * @type {{ select_value: string | undefined }}
+	 */
 	local;
 	/**
-	* @param {SSRState} global
-	* @param {Renderer | undefined} [parent]
-	*/
+	 * @param {SSRState} global
+	 * @param {Renderer | undefined} [parent]
+	 */
 	constructor(global, parent) {
 		this.#parent = parent;
 		this.global = global;
 		this.local = parent ? { ...parent.local } : { select_value: void 0 };
-		this.type = parent ? parent.type : "body";
+		this.type = parent ? parent.type : 'body';
 	}
 	/**
-	* @param {(renderer: Renderer) => void} fn
-	*/
+	 * @param {(renderer: Renderer) => void} fn
+	 */
 	head(fn) {
 		const head = new Renderer(this.global, this);
-		head.type = "head";
+		head.type = 'head';
 		this.#out.push(head);
 		head.child(fn);
 	}
 	/**
-	* @param {Array<Promise<void>>} blockers
-	* @param {(renderer: Renderer) => void} fn
-	*/
+	 * @param {Array<Promise<void>>} blockers
+	 * @param {(renderer: Renderer) => void} fn
+	 */
 	async_block(blockers, fn) {
 		this.#out.push(BLOCK_OPEN);
 		this.async(blockers, fn);
 		this.#out.push(BLOCK_CLOSE);
 	}
 	/**
-	* @param {Array<Promise<void>>} blockers
-	* @param {(renderer: Renderer) => void} fn
-	*/
+	 * @param {Array<Promise<void>>} blockers
+	 * @param {(renderer: Renderer) => void} fn
+	 */
 	async(blockers, fn) {
 		let callback = fn;
 		if (blockers.length > 0) {
@@ -3441,8 +3629,8 @@ var Renderer = class Renderer {
 		this.child(callback);
 	}
 	/**
-	* @param {Array<() => void>} thunks
-	*/
+	 * @param {Array<() => void>} thunks
+	 */
 	run(thunks) {
 		const context = ssr_context;
 		let promise = Promise.resolve(thunks[0]());
@@ -3464,18 +3652,18 @@ var Renderer = class Renderer {
 		return promises;
 	}
 	/**
-	* @param {(renderer: Renderer) => MaybePromise<void>} fn
-	*/
+	 * @param {(renderer: Renderer) => MaybePromise<void>} fn
+	 */
 	child_block(fn) {
 		this.#out.push(BLOCK_OPEN);
 		this.child(fn);
 		this.#out.push(BLOCK_CLOSE);
 	}
 	/**
-	* Create a child renderer. The child renderer inherits the state from the parent,
-	* but has its own content.
-	* @param {(renderer: Renderer) => MaybePromise<void>} fn
-	*/
+	 * Create a child renderer. The child renderer inherits the state from the parent,
+	 * but has its own content.
+	 * @param {(renderer: Renderer) => MaybePromise<void>} fn
+	 */
 	child(fn) {
 		const child = new Renderer(this.global, this);
 		this.#out.push(child);
@@ -3484,46 +3672,47 @@ var Renderer = class Renderer {
 			...ssr_context,
 			p: parent,
 			c: null,
-			r: child
+			r: child,
 		});
 		const result = fn(child);
 		set_ssr_context(parent);
 		if (result instanceof Promise) {
 			result.catch(noop);
 			result.finally(() => set_ssr_context(null)).catch(noop);
-			if (child.global.mode === "sync") await_invalid();
+			if (child.global.mode === 'sync') await_invalid();
 			child.promise = result;
 		}
 		return child;
 	}
 	/**
-	* Render children inside an error boundary. If the children throw and the API-level
-	* `transformError` transform handles the error (doesn't re-throw), the `failed` snippet is
-	* rendered instead. Otherwise the error propagates.
-	*
-	* @param {{ failed?: (renderer: Renderer, error: unknown, reset: () => void) => void }} props
-	* @param {(renderer: Renderer) => MaybePromise<void>} children_fn
-	*/
+	 * Render children inside an error boundary. If the children throw and the API-level
+	 * `transformError` transform handles the error (doesn't re-throw), the `failed` snippet is
+	 * rendered instead. Otherwise the error propagates.
+	 *
+	 * @param {{ failed?: (renderer: Renderer, error: unknown, reset: () => void) => void }} props
+	 * @param {(renderer: Renderer) => MaybePromise<void>} children_fn
+	 */
 	boundary(props, children_fn) {
 		const child = new Renderer(this.global, this);
 		this.#out.push(child);
 		const parent_context = ssr_context;
-		if (props.failed) child.#boundary = {
-			failed: props.failed,
-			transformError: this.global.transformError,
-			context: parent_context
-		};
+		if (props.failed)
+			child.#boundary = {
+				failed: props.failed,
+				transformError: this.global.transformError,
+				context: parent_context,
+			};
 		set_ssr_context({
 			...ssr_context,
 			p: parent_context,
 			c: null,
-			r: child
+			r: child,
 		});
 		try {
 			const result = children_fn(child);
 			set_ssr_context(parent_context);
 			if (result instanceof Promise) {
-				if (child.global.mode === "sync") await_invalid();
+				if (child.global.mode === 'sync') await_invalid();
 				result.catch(noop);
 				child.promise = result;
 			}
@@ -3535,7 +3724,7 @@ var Renderer = class Renderer {
 			child.#out.length = 0;
 			child.#boundary = null;
 			if (result instanceof Promise) {
-				if (this.global.mode === "sync") await_invalid();
+				if (this.global.mode === 'sync') await_invalid();
 				child.promise = result.then((transformed) => {
 					set_ssr_context(parent_context);
 					child.#out.push(Renderer.#serialize_failed_boundary(transformed));
@@ -3551,12 +3740,12 @@ var Renderer = class Renderer {
 		}
 	}
 	/**
-	* Create a component renderer. The component renderer inherits the state from the parent,
-	* but has its own content. It is treated as an ordering boundary for ondestroy callbacks.
-	* @param {(renderer: Renderer) => MaybePromise<void>} fn
-	* @param {Function} [component_fn]
-	* @returns {void}
-	*/
+	 * Create a component renderer. The component renderer inherits the state from the parent,
+	 * but has its own content. It is treated as an ordering boundary for ondestroy callbacks.
+	 * @param {(renderer: Renderer) => MaybePromise<void>} fn
+	 * @param {Function} [component_fn]
+	 * @returns {void}
+	 */
 	component(fn, component_fn) {
 		push(component_fn);
 		const child = this.child(fn);
@@ -3564,15 +3753,15 @@ var Renderer = class Renderer {
 		pop();
 	}
 	/**
-	* @param {Record<string, any>} attrs
-	* @param {(renderer: Renderer) => void} fn
-	* @param {string | undefined} [css_hash]
-	* @param {Record<string, boolean> | undefined} [classes]
-	* @param {Record<string, string> | undefined} [styles]
-	* @param {number | undefined} [flags]
-	* @param {boolean | undefined} [is_rich]
-	* @returns {void}
-	*/
+	 * @param {Record<string, any>} attrs
+	 * @param {(renderer: Renderer) => void} fn
+	 * @param {string | undefined} [css_hash]
+	 * @param {Record<string, boolean> | undefined} [classes]
+	 * @param {Record<string, string> | undefined} [styles]
+	 * @param {number | undefined} [flags]
+	 * @param {boolean | undefined} [is_rich]
+	 * @returns {void}
+	 */
 	select(attrs, fn, css_hash, classes, styles, flags, is_rich) {
 		const { value, ...select_attrs } = attrs;
 		this.push(`<select${attributes(select_attrs, css_hash, classes, styles, flags)}>`);
@@ -3580,46 +3769,48 @@ var Renderer = class Renderer {
 			renderer.local.select_value = value;
 			fn(renderer);
 		});
-		this.push(`${is_rich ? "<!>" : ""}</select>`);
+		this.push(`${is_rich ? '<!>' : ''}</select>`);
 	}
 	/**
-	* @param {Record<string, any>} attrs
-	* @param {string | number | boolean | ((renderer: Renderer) => void)} body
-	* @param {string | undefined} [css_hash]
-	* @param {Record<string, boolean> | undefined} [classes]
-	* @param {Record<string, string> | undefined} [styles]
-	* @param {number | undefined} [flags]
-	* @param {boolean | undefined} [is_rich]
-	*/
+	 * @param {Record<string, any>} attrs
+	 * @param {string | number | boolean | ((renderer: Renderer) => void)} body
+	 * @param {string | undefined} [css_hash]
+	 * @param {Record<string, boolean> | undefined} [classes]
+	 * @param {Record<string, string> | undefined} [styles]
+	 * @param {number | undefined} [flags]
+	 * @param {boolean | undefined} [is_rich]
+	 */
 	option(attrs, body, css_hash, classes, styles, flags, is_rich) {
 		this.#out.push(`<option${attributes(attrs, css_hash, classes, styles, flags)}`);
 		/**
-		* @param {Renderer} renderer
-		* @param {any} value
-		* @param {{ head?: string, body: any }} content
-		*/
+		 * @param {Renderer} renderer
+		 * @param {any} value
+		 * @param {{ head?: string, body: any }} content
+		 */
 		const close = (renderer, value, { head, body }) => {
-			if (has_own_property.call(attrs, "value")) value = attrs.value;
-			if (value === this.local.select_value) renderer.#out.push(" selected=\"\"");
-			renderer.#out.push(`>${body}${is_rich ? "<!>" : ""}</option>`);
+			if (has_own_property.call(attrs, 'value')) value = attrs.value;
+			if (value === this.local.select_value) renderer.#out.push(' selected=""');
+			renderer.#out.push(`>${body}${is_rich ? '<!>' : ''}</option>`);
 			if (head) renderer.head((child) => child.push(head));
 		};
-		if (typeof body === "function") this.child((renderer) => {
-			const r = new Renderer(this.global, this);
-			body(r);
-			if (this.global.mode === "async") return r.#collect_content_async().then((content) => {
-				close(renderer, content.body.replaceAll("<!---->", ""), content);
+		if (typeof body === 'function')
+			this.child((renderer) => {
+				const r = new Renderer(this.global, this);
+				body(r);
+				if (this.global.mode === 'async')
+					return r.#collect_content_async().then((content) => {
+						close(renderer, content.body.replaceAll('<!---->', ''), content);
+					});
+				else {
+					const content = r.#collect_content();
+					close(renderer, content.body.replaceAll('<!---->', ''), content);
+				}
 			});
-			else {
-				const content = r.#collect_content();
-				close(renderer, content.body.replaceAll("<!---->", ""), content);
-			}
-		});
 		else close(this, body, { body: escape_html(body) });
 	}
 	/**
-	* @param {(renderer: Renderer) => void} fn
-	*/
+	 * @param {(renderer: Renderer) => void} fn
+	 */
 	title(fn) {
 		const path = this.get_path();
 		/** @param {string} head */
@@ -3629,9 +3820,10 @@ var Renderer = class Renderer {
 		this.child((renderer) => {
 			const r = new Renderer(renderer.global, renderer);
 			fn(r);
-			if (renderer.global.mode === "async") return r.#collect_content_async().then((content) => {
-				close(content.head);
-			});
+			if (renderer.global.mode === 'async')
+				return r.#collect_content_async().then((content) => {
+					close(content.head);
+				});
 			else {
 				const content = r.#collect_content();
 				close(content.head);
@@ -3639,39 +3831,43 @@ var Renderer = class Renderer {
 		});
 	}
 	/**
-	* @param {string | (() => Promise<string>)} content
-	*/
+	 * @param {string | (() => Promise<string>)} content
+	 */
 	push(content) {
-		if (typeof content === "function") this.child(async (renderer) => renderer.push(await content()));
+		if (typeof content === 'function')
+			this.child(async (renderer) => renderer.push(await content()));
 		else this.#out.push(content);
 	}
 	/**
-	* @param {() => void} fn
-	*/
+	 * @param {() => void} fn
+	 */
 	on_destroy(fn) {
 		(this.#on_destroy ??= []).push(fn);
 	}
 	/**
-	* @returns {number[]}
-	*/
+	 * @returns {number[]}
+	 */
 	get_path() {
 		return this.#parent ? [...this.#parent.get_path(), this.#parent.#out.indexOf(this)] : [];
 	}
 	/**
-	* @deprecated this is needed for legacy component bindings
-	*/
+	 * @deprecated this is needed for legacy component bindings
+	 */
 	copy() {
 		const copy = new Renderer(this.global, this.#parent);
-		copy.#out = this.#out.map((item) => item instanceof Renderer ? item.copy() : item);
+		copy.#out = this.#out.map((item) => (item instanceof Renderer ? item.copy() : item));
 		copy.promise = this.promise;
 		return copy;
 	}
 	/**
-	* @param {Renderer} other
-	* @deprecated this is needed for legacy component bindings
-	*/
+	 * @param {Renderer} other
+	 * @deprecated this is needed for legacy component bindings
+	 */
 	subsume(other) {
-		if (this.global.mode !== other.global.mode) throw new Error("invariant: A renderer cannot switch modes. If you're seeing this, there's a compiler bug. File an issue!");
+		if (this.global.mode !== other.global.mode)
+			throw new Error(
+				"invariant: A renderer cannot switch modes. If you're seeing this, there's a compiler bug. File an issue!",
+			);
 		this.local = other.local;
 		this.#out = other.#out.map((item, i) => {
 			const current = this.#out[i];
@@ -3688,25 +3884,25 @@ var Renderer = class Renderer {
 		return this.#out.length;
 	}
 	/**
-	* Creates the hydration comment that marks the start of a failed boundary.
-	* The error is JSON-serialized and embedded inside an HTML comment for the client
-	* to parse during hydration. The JSON is escaped to prevent `-->` or `<!--` sequences
-	* from breaking out of the comment (XSS). Uses unicode escapes which `JSON.parse()`
-	* handles transparently.
-	* @param {unknown} error
-	* @returns {string}
-	*/
+	 * Creates the hydration comment that marks the start of a failed boundary.
+	 * The error is JSON-serialized and embedded inside an HTML comment for the client
+	 * to parse during hydration. The JSON is escaped to prevent `-->` or `<!--` sequences
+	 * from breaking out of the comment (XSS). Uses unicode escapes which `JSON.parse()`
+	 * handles transparently.
+	 * @param {unknown} error
+	 * @returns {string}
+	 */
 	static #serialize_failed_boundary(error) {
-		return `<!--[?${JSON.stringify(error).replace(/>/g, "\\u003e").replace(/</g, "\\u003c")}-->`;
+		return `<!--[?${JSON.stringify(error).replace(/>/g, '\\u003e').replace(/</g, '\\u003c')}-->`;
 	}
 	/**
-	* Only available on the server and when compiling with the `server` option.
-	* Takes a component and returns an object with `body` and `head` properties on it, which you can use to populate the HTML when server-rendering your app.
-	* @template {Record<string, any>} Props
-	* @param {Component<Props>} component
-	* @param {{ props?: Omit<Props, '$$slots' | '$$events'>; context?: Map<any, any>; idPrefix?: string; csp?: Csp }} [options]
-	* @returns {RenderOutput}
-	*/
+	 * Only available on the server and when compiling with the `server` option.
+	 * Takes a component and returns an object with `body` and `head` properties on it, which you can use to populate the HTML when server-rendering your app.
+	 * @template {Record<string, any>} Props
+	 * @param {Component<Props>} component
+	 * @param {{ props?: Omit<Props, '$$slots' | '$$events'>; context?: Map<any, any>; idPrefix?: string; csp?: Csp }} [options]
+	 * @returns {RenderOutput}
+	 */
 	static render(component, options = {}) {
 		/** @type {AccumulatedContent | undefined} */
 		let sync;
@@ -3714,85 +3910,99 @@ var Renderer = class Renderer {
 		let async;
 		const result = {};
 		Object.defineProperties(result, {
-			html: { get: () => {
-				return (sync ??= Renderer.#render(component, options)).body;
-			} },
-			head: { get: () => {
-				return (sync ??= Renderer.#render(component, options)).head;
-			} },
-			body: { get: () => {
-				return (sync ??= Renderer.#render(component, options)).body;
-			} },
-			hashes: { value: { script: "" } },
-			then: { value: 
-			/**
-			* this is not type-safe, but honestly it's the best I can do right now, and it's a straightforward function.
-			*
-			* @template TResult1
-			* @template [TResult2=never]
-			* @param { (value: SyncRenderOutput) => TResult1 } onfulfilled
-			* @param { (reason: unknown) => TResult2 } onrejected
-			*/
-			(onfulfilled, onrejected) => {
-				if (!async_mode_flag) {
-					const result = sync ??= Renderer.#render(component, options);
-					const user_result = onfulfilled({
-						head: result.head,
-						body: result.body,
-						html: result.body,
-						hashes: { script: [] }
-					});
-					return Promise.resolve(user_result);
-				}
-				async ??= init_render_context().then(() => with_render_context(() => Renderer.#render_async(component, options)));
-				return async.then((result) => {
-					Object.defineProperty(result, "html", { get: () => {
-						html_deprecated();
-					} });
-					return onfulfilled(result);
-				}, onrejected);
-			} }
+			html: {
+				get: () => {
+					return (sync ??= Renderer.#render(component, options)).body;
+				},
+			},
+			head: {
+				get: () => {
+					return (sync ??= Renderer.#render(component, options)).head;
+				},
+			},
+			body: {
+				get: () => {
+					return (sync ??= Renderer.#render(component, options)).body;
+				},
+			},
+			hashes: { value: { script: '' } },
+			then: {
+				value:
+					/**
+					 * this is not type-safe, but honestly it's the best I can do right now, and it's a straightforward function.
+					 *
+					 * @template TResult1
+					 * @template [TResult2=never]
+					 * @param { (value: SyncRenderOutput) => TResult1 } onfulfilled
+					 * @param { (reason: unknown) => TResult2 } onrejected
+					 */
+					(onfulfilled, onrejected) => {
+						if (!async_mode_flag) {
+							const result = (sync ??= Renderer.#render(component, options));
+							const user_result = onfulfilled({
+								head: result.head,
+								body: result.body,
+								html: result.body,
+								hashes: { script: [] },
+							});
+							return Promise.resolve(user_result);
+						}
+						async ??= init_render_context().then(() =>
+							with_render_context(() => Renderer.#render_async(component, options)),
+						);
+						return async.then((result) => {
+							Object.defineProperty(result, 'html', {
+								get: () => {
+									html_deprecated();
+								},
+							});
+							return onfulfilled(result);
+						}, onrejected);
+					},
+			},
 		});
 		return result;
 	}
 	/**
-	* Collect all of the `onDestroy` callbacks registered during rendering. In an async context, this is only safe to call
-	* after awaiting `collect_async`.
-	*
-	* Child renderers are "porous" and don't affect execution order, but component body renderers
-	* create ordering boundaries. Within a renderer, callbacks run in order until hitting a component boundary.
-	* @returns {Iterable<() => void>}
-	*/
+	 * Collect all of the `onDestroy` callbacks registered during rendering. In an async context, this is only safe to call
+	 * after awaiting `collect_async`.
+	 *
+	 * Child renderers are "porous" and don't affect execution order, but component body renderers
+	 * create ordering boundaries. Within a renderer, callbacks run in order until hitting a component boundary.
+	 * @returns {Iterable<() => void>}
+	 */
 	*#collect_on_destroy() {
 		for (const component of this.#traverse_components()) yield* component.#collect_ondestroy();
 	}
 	/**
-	* Performs a depth-first search of renderers, yielding the deepest components first, then additional components as we backtrack up the tree.
-	* @returns {Iterable<Renderer>}
-	*/
+	 * Performs a depth-first search of renderers, yielding the deepest components first, then additional components as we backtrack up the tree.
+	 * @returns {Iterable<Renderer>}
+	 */
 	*#traverse_components() {
-		for (const child of this.#out) if (typeof child !== "string") yield* child.#traverse_components();
+		for (const child of this.#out)
+			if (typeof child !== 'string') yield* child.#traverse_components();
 		if (this.#is_component_body) yield this;
 	}
 	/**
-	* @returns {Iterable<() => void>}
-	*/
+	 * @returns {Iterable<() => void>}
+	 */
 	*#collect_ondestroy() {
 		if (this.#on_destroy) for (const fn of this.#on_destroy) yield fn;
-		for (const child of this.#out) if (child instanceof Renderer && !child.#is_component_body) yield* child.#collect_ondestroy();
+		for (const child of this.#out)
+			if (child instanceof Renderer && !child.#is_component_body) yield* child.#collect_ondestroy();
 	}
 	/**
-	* Render a component. Throws if any of the children are performing asynchronous work.
-	*
-	* @template {Record<string, any>} Props
-	* @param {Component<Props>} component
-	* @param {{ props?: Omit<Props, '$$slots' | '$$events'>; context?: Map<any, any>; idPrefix?: string }} options
-	* @returns {AccumulatedContent}
-	*/
+	 * Render a component. Throws if any of the children are performing asynchronous work.
+	 *
+	 * @template {Record<string, any>} Props
+	 * @param {Component<Props>} component
+	 * @param {{ props?: Omit<Props, '$$slots' | '$$events'>; context?: Map<any, any>; idPrefix?: string }} options
+	 * @returns {AccumulatedContent}
+	 */
 	static #render(component, options) {
 		var previous_context = ssr_context;
 		try {
-			const renderer = Renderer.#open_render("sync", component, options);
+			const renderer = Renderer.#open_render('sync', component, options);
 			const content = renderer.#collect_content();
 			return Renderer.#close_render(content, renderer);
 		} finally {
@@ -3801,17 +4011,17 @@ var Renderer = class Renderer {
 		}
 	}
 	/**
-	* Render a component.
-	*
-	* @template {Record<string, any>} Props
-	* @param {Component<Props>} component
-	* @param {{ props?: Omit<Props, '$$slots' | '$$events'>; context?: Map<any, any>; idPrefix?: string; csp?: Csp }} options
-	* @returns {Promise<AccumulatedContent & { hashes: { script: Sha256Source[] } }>}
-	*/
+	 * Render a component.
+	 *
+	 * @template {Record<string, any>} Props
+	 * @param {Component<Props>} component
+	 * @param {{ props?: Omit<Props, '$$slots' | '$$events'>; context?: Map<any, any>; idPrefix?: string; csp?: Csp }} options
+	 * @returns {Promise<AccumulatedContent & { hashes: { script: Sha256Source[] } }>}
+	 */
 	static async #render_async(component, options) {
 		const previous_context = ssr_context;
 		try {
-			const renderer = Renderer.#open_render("async", component, options);
+			const renderer = Renderer.#open_render('async', component, options);
 			const content = await renderer.#collect_content_async();
 			const hydratables = await renderer.#collect_hydratables();
 			if (hydratables !== null) content.head = hydratables + content.head;
@@ -3822,80 +4032,94 @@ var Renderer = class Renderer {
 		}
 	}
 	/**
-	* Collect all of the code from the `out` array and return it as a string, or a promise resolving to a string.
-	* @param {AccumulatedContent} content
-	* @returns {AccumulatedContent}
-	*/
-	#collect_content(content = {
-		head: "",
-		body: ""
-	}) {
-		for (const item of this.#out) if (typeof item === "string") content[this.type] += item;
-		else if (item instanceof Renderer) item.#collect_content(content);
+	 * Collect all of the code from the `out` array and return it as a string, or a promise resolving to a string.
+	 * @param {AccumulatedContent} content
+	 * @returns {AccumulatedContent}
+	 */
+	#collect_content(
+		content = {
+			head: '',
+			body: '',
+		},
+	) {
+		for (const item of this.#out)
+			if (typeof item === 'string') content[this.type] += item;
+			else if (item instanceof Renderer) item.#collect_content(content);
 		return content;
 	}
 	/**
-	* Collect all of the code from the `out` array and return it as a string.
-	* @param {AccumulatedContent} content
-	* @returns {Promise<AccumulatedContent>}
-	*/
-	async #collect_content_async(content = {
-		head: "",
-		body: ""
-	}) {
+	 * Collect all of the code from the `out` array and return it as a string.
+	 * @param {AccumulatedContent} content
+	 * @returns {Promise<AccumulatedContent>}
+	 */
+	async #collect_content_async(
+		content = {
+			head: '',
+			body: '',
+		},
+	) {
 		await this.promise;
-		for (const item of this.#out) if (typeof item === "string") content[this.type] += item;
-		else if (item instanceof Renderer) {
-			if (item.#boundary) {
-				/** @type {AccumulatedContent} */
-				const boundary_content = {
-					head: "",
-					body: ""
-				};
-				try {
-					await item.#collect_content_async(boundary_content);
-					content.head += boundary_content.head;
-					content.body += boundary_content.body;
-				} catch (error) {
-					const { context, failed, transformError } = item.#boundary;
-					set_ssr_context(context);
-					let promise = transformError(error);
-					set_ssr_context(null);
-					let transformed = await promise;
-					set_ssr_context(context);
-					const failed_renderer = new Renderer(item.global, item);
-					failed_renderer.type = item.type;
-					failed_renderer.#out.push(Renderer.#serialize_failed_boundary(transformed));
-					failed(failed_renderer, transformed, noop);
-					failed_renderer.#out.push(BLOCK_CLOSE);
-					await failed_renderer.#collect_content_async(content);
-				}
-			} else await item.#collect_content_async(content);
-		}
+		for (const item of this.#out)
+			if (typeof item === 'string') content[this.type] += item;
+			else if (item instanceof Renderer) {
+				if (item.#boundary) {
+					/** @type {AccumulatedContent} */
+					const boundary_content = {
+						head: '',
+						body: '',
+					};
+					try {
+						await item.#collect_content_async(boundary_content);
+						content.head += boundary_content.head;
+						content.body += boundary_content.body;
+					} catch (error) {
+						const { context, failed, transformError } = item.#boundary;
+						set_ssr_context(context);
+						let promise = transformError(error);
+						set_ssr_context(null);
+						let transformed = await promise;
+						set_ssr_context(context);
+						const failed_renderer = new Renderer(item.global, item);
+						failed_renderer.type = item.type;
+						failed_renderer.#out.push(Renderer.#serialize_failed_boundary(transformed));
+						failed(failed_renderer, transformed, noop);
+						failed_renderer.#out.push(BLOCK_CLOSE);
+						await failed_renderer.#collect_content_async(content);
+					}
+				} else await item.#collect_content_async(content);
+			}
 		return content;
 	}
 	async #collect_hydratables() {
 		const ctx = get_render_context().hydratable;
-		for (const [_, key] of ctx.unresolved_promises) unresolved_hydratable(key, ctx.lookup.get(key)?.stack ?? "<missing stack trace>");
+		for (const [_, key] of ctx.unresolved_promises)
+			unresolved_hydratable(key, ctx.lookup.get(key)?.stack ?? '<missing stack trace>');
 		for (const comparison of ctx.comparisons) await comparison;
 		return await this.#hydratable_block(ctx);
 	}
 	/**
-	* @template {Record<string, any>} Props
-	* @param {'sync' | 'async'} mode
-	* @param {import('svelte').Component<Props>} component
-	* @param {{ props?: Omit<Props, '$$slots' | '$$events'>; context?: Map<any, any>; idPrefix?: string; csp?: Csp; transformError?: (error: unknown) => unknown }} options
-	* @returns {Renderer}
-	*/
+	 * @template {Record<string, any>} Props
+	 * @param {'sync' | 'async'} mode
+	 * @param {import('svelte').Component<Props>} component
+	 * @param {{ props?: Omit<Props, '$$slots' | '$$events'>; context?: Map<any, any>; idPrefix?: string; csp?: Csp; transformError?: (error: unknown) => unknown }} options
+	 * @returns {Renderer}
+	 */
 	static #open_render(mode, component, options) {
-		if (options.idPrefix?.includes("--")) invalid_id_prefix();
+		if (options.idPrefix?.includes('--')) invalid_id_prefix();
 		var previous_context = ssr_context;
 		try {
-			const renderer = new Renderer(new SSRState(mode, options.idPrefix ? options.idPrefix + "-" : "", options.csp, options.transformError));
+			const renderer = new Renderer(
+				new SSRState(
+					mode,
+					options.idPrefix ? options.idPrefix + '-' : '',
+					options.csp,
+					options.transformError,
+				),
+			);
 			set_ssr_context({
 				p: null,
 				c: options.context ?? null,
-				r: renderer
+				r: renderer,
 			});
 			renderer.push(BLOCK_OPEN);
 			component(renderer, options.props ?? {});
@@ -3906,10 +4130,10 @@ var Renderer = class Renderer {
 		}
 	}
 	/**
-	* @param {AccumulatedContent} content
-	* @param {Renderer} renderer
-	* @returns {AccumulatedContent & { hashes: { script: Sha256Source[] } }}
-	*/
+	 * @param {AccumulatedContent} content
+	 * @param {Renderer} renderer
+	 * @returns {AccumulatedContent & { hashes: { script: Sha256Source[] } }}
+	 */
 	static #close_render(content, renderer) {
 		for (const cleanup of renderer.#collect_on_destroy()) cleanup();
 		let head = content.head + renderer.global.get_title();
@@ -3918,12 +4142,12 @@ var Renderer = class Renderer {
 		return {
 			head,
 			body,
-			hashes: { script: renderer.global.csp.script_hashes }
+			hashes: { script: renderer.global.csp.script_hashes },
 		};
 	}
 	/**
-	* @param {HydratableContext} ctx
-	*/
+	 * @param {HydratableContext} ctx
+	 */
 	async #hydratable_block(ctx) {
 		if (ctx.lookup.size === 0) return null;
 		let entries = [];
@@ -3936,20 +4160,21 @@ var Renderer = class Renderer {
 			entries.push(`[${devalue.uneval(k)},${v.serialized}]`);
 		}
 		let prelude = `const h = (window.__svelte ??= {}).h ??= new Map();`;
-		if (has_promises) prelude = `const r = (v) => Promise.resolve(v);
+		if (has_promises)
+			prelude = `const r = (v) => Promise.resolve(v);
 				${prelude}`;
 		const body = `
 			{
 				${prelude}
 
 				for (const [k, v] of [
-					${entries.join(",\n					")}
+					${entries.join(',\n					')}
 				]) {
 					h.set(k, v);
 				}
 			}
 		`;
-		let csp_attr = "";
+		let csp_attr = '';
 		if (this.global.csp.nonce) csp_attr = ` nonce="${this.global.csp.nonce}"`;
 		else if (this.global.csp.hash) {
 			const hash = await sha256(body);
@@ -3968,31 +4193,33 @@ var SSRState = class {
 	/** @readonly @type {Set<{ hash: string; code: string }>} */
 	css = /* @__PURE__ */ new Set();
 	/**
-	* `transformError` passed to `render`. Called when an error boundary catches an error.
-	* Throws by default if unset in `render`.
-	* @type {(error: unknown) => unknown}
-	*/
+	 * `transformError` passed to `render`. Called when an error boundary catches an error.
+	 * Throws by default if unset in `render`.
+	 * @type {(error: unknown) => unknown}
+	 */
 	transformError;
 	/** @type {{ path: number[], value: string }} */
 	#title = {
 		path: [],
-		value: ""
+		value: '',
 	};
 	/**
-	* @param {'sync' | 'async'} mode
-	* @param {string} id_prefix
-	* @param {Csp} csp
-	* @param {((error: unknown) => unknown) | undefined} [transformError]
-	*/
-	constructor(mode, id_prefix = "", csp = { hash: false }, transformError) {
+	 * @param {'sync' | 'async'} mode
+	 * @param {string} id_prefix
+	 * @param {Csp} csp
+	 * @param {((error: unknown) => unknown) | undefined} [transformError]
+	 */
+	constructor(mode, id_prefix = '', csp = { hash: false }, transformError) {
 		this.mode = mode;
 		this.csp = {
 			...csp,
-			script_hashes: []
+			script_hashes: [],
 		};
-		this.transformError = transformError ?? ((error) => {
-			throw error;
-		});
+		this.transformError =
+			transformError ??
+			((error) => {
+				throw error;
+			});
 		let uid = 1;
 		this.uid = () => `${id_prefix}s${uid++}`;
 	}
@@ -4000,11 +4227,11 @@ var SSRState = class {
 		return this.#title.value;
 	}
 	/**
-	* Performs a depth-first (lexicographic) comparison using the path. Rejects sets
-	* from earlier than or equal to the current value.
-	* @param {string} value
-	* @param {number[]} path
-	*/
+	 * Performs a depth-first (lexicographic) comparison using the path. Rejects sets
+	 * from earlier than or equal to the current value.
+	 * @param {string} value
+	 * @param {number[]} path
+	 */
 	set_title(value, path) {
 		const current = this.#title.path;
 		let i = 0;
@@ -4020,29 +4247,33 @@ var SSRState = class {
 //#endregion
 //#region node_modules/svelte/src/internal/server/dev.js
 function get_user_code_location() {
-	return get_stack().filter((line) => line.trim().startsWith("at ")).map((line) => line.replace(/\((.*):\d+:\d+\)$/, (_, file) => `(${file})`)).join("\n");
+	return get_stack()
+		.filter((line) => line.trim().startsWith('at '))
+		.map((line) => line.replace(/\((.*):\d+:\d+\)$/, (_, file) => `(${file})`))
+		.join('\n');
 }
 //#endregion
 //#region node_modules/svelte/src/internal/server/index.js
-var INVALID_ATTR_NAME_CHAR_REGEX = /[\s'">/=\u{FDD0}-\u{FDEF}\u{FFFE}\u{FFFF}\u{1FFFE}\u{1FFFF}\u{2FFFE}\u{2FFFF}\u{3FFFE}\u{3FFFF}\u{4FFFE}\u{4FFFF}\u{5FFFE}\u{5FFFF}\u{6FFFE}\u{6FFFF}\u{7FFFE}\u{7FFFF}\u{8FFFE}\u{8FFFF}\u{9FFFE}\u{9FFFF}\u{AFFFE}\u{AFFFF}\u{BFFFE}\u{BFFFF}\u{CFFFE}\u{CFFFF}\u{DFFFE}\u{DFFFF}\u{EFFFE}\u{EFFFF}\u{FFFFE}\u{FFFFF}\u{10FFFE}\u{10FFFF}]/u;
+var INVALID_ATTR_NAME_CHAR_REGEX =
+	/[\s'">/=\u{FDD0}-\u{FDEF}\u{FFFE}\u{FFFF}\u{1FFFE}\u{1FFFF}\u{2FFFE}\u{2FFFF}\u{3FFFE}\u{3FFFF}\u{4FFFE}\u{4FFFF}\u{5FFFE}\u{5FFFF}\u{6FFFE}\u{6FFFF}\u{7FFFE}\u{7FFFF}\u{8FFFE}\u{8FFFF}\u{9FFFE}\u{9FFFF}\u{AFFFE}\u{AFFFF}\u{BFFFE}\u{BFFFF}\u{CFFFE}\u{CFFFF}\u{DFFFE}\u{DFFFF}\u{EFFFE}\u{EFFFF}\u{FFFFE}\u{FFFFF}\u{10FFFE}\u{10FFFF}]/u;
 /**
-* Only available on the server and when compiling with the `server` option.
-* Takes a component and returns an object with `body` and `head` properties on it, which you can use to populate the HTML when server-rendering your app.
-* @template {Record<string, any>} Props
-* @param {Component<Props> | ComponentType<SvelteComponent<Props>>} component
-* @param {{ props?: Omit<Props, '$$slots' | '$$events'>; context?: Map<any, any>; idPrefix?: string; csp?: Csp; transformError?: (error: unknown) => unknown }} [options]
-* @returns {RenderOutput}
-*/
+ * Only available on the server and when compiling with the `server` option.
+ * Takes a component and returns an object with `body` and `head` properties on it, which you can use to populate the HTML when server-rendering your app.
+ * @template {Record<string, any>} Props
+ * @param {Component<Props> | ComponentType<SvelteComponent<Props>>} component
+ * @param {{ props?: Omit<Props, '$$slots' | '$$events'>; context?: Map<any, any>; idPrefix?: string; csp?: Csp; transformError?: (error: unknown) => unknown }} [options]
+ * @returns {RenderOutput}
+ */
 function render(component, options = {}) {
 	if (options.csp?.hash && options.csp.nonce) invalid_csp();
 	return Renderer.render(component, options);
 }
 /**
-* @param {string} hash
-* @param {Renderer} renderer
-* @param {(renderer: Renderer) => Promise<void> | void} fn
-* @returns {void}
-*/
+ * @param {string} hash
+ * @param {Renderer} renderer
+ * @param {(renderer: Renderer) => Promise<void> | void} fn
+ * @returns {void}
+ */
 function head(hash, renderer, fn) {
 	renderer.head((renderer) => {
 		renderer.push(`<!--${hash}-->`);
@@ -4051,33 +4282,33 @@ function head(hash, renderer, fn) {
 	});
 }
 /**
-* @param {Record<string, unknown>} attrs
-* @param {string} [css_hash]
-* @param {Record<string, boolean>} [classes]
-* @param {Record<string, string>} [styles]
-* @param {number} [flags]
-* @returns {string}
-*/
+ * @param {Record<string, unknown>} attrs
+ * @param {string} [css_hash]
+ * @param {Record<string, boolean>} [classes]
+ * @param {Record<string, string>} [styles]
+ * @param {number} [flags]
+ * @returns {string}
+ */
 function attributes(attrs, css_hash, classes, styles, flags = 0) {
 	if (styles) attrs.style = to_style(attrs.style, styles);
 	if (attrs.class) attrs.class = clsx$1(attrs.class);
 	if (css_hash || classes) attrs.class = to_class(attrs.class, css_hash, classes);
-	let attr_str = "";
+	let attr_str = '';
 	let name;
 	const is_html = (flags & 1) === 0;
 	const lowercase = (flags & 2) === 0;
 	const is_input = (flags & 4) !== 0;
 	for (name of Object.keys(attrs)) {
-		if (typeof attrs[name] === "function") continue;
-		if (name[0] === "$" && name[1] === "$") continue;
-		if (name === "" || INVALID_ATTR_NAME_CHAR_REGEX.test(name)) continue;
+		if (typeof attrs[name] === 'function') continue;
+		if (name[0] === '$' && name[1] === '$') continue;
+		if (name === '' || INVALID_ATTR_NAME_CHAR_REGEX.test(name)) continue;
 		var value = attrs[name];
 		var lower = name.toLowerCase();
 		if (lowercase) name = lower;
-		if (lower.length > 2 && lower.startsWith("on")) continue;
+		if (lower.length > 2 && lower.startsWith('on')) continue;
 		if (is_input) {
-			if (name === "defaultvalue" || name === "defaultchecked") {
-				name = name === "defaultvalue" ? "value" : "checked";
+			if (name === 'defaultvalue' || name === 'defaultchecked') {
+				name = name === 'defaultvalue' ? 'value' : 'checked';
 				if (attrs[name]) continue;
 			}
 		}
@@ -4086,38 +4317,41 @@ function attributes(attrs, css_hash, classes, styles, flags = 0) {
 	return attr_str;
 }
 /**
-* @param {unknown} value
-* @returns {string}
-*/
+ * @param {unknown} value
+ * @returns {string}
+ */
 function stringify(value) {
-	return typeof value === "string" ? value : value == null ? "" : value + "";
+	return typeof value === 'string' ? value : value == null ? '' : value + '';
 }
 /**
-* @param {any} value
-* @param {string | undefined} [hash]
-* @param {Record<string, boolean>} [directives]
-*/
+ * @param {any} value
+ * @param {string | undefined} [hash]
+ * @param {Record<string, boolean>} [directives]
+ */
 function attr_class(value, hash, directives) {
 	var result = to_class(value, hash, directives);
-	return result ? ` class="${escape_html(result, true)}"` : "";
+	return result ? ` class="${escape_html(result, true)}"` : '';
 }
 /**
-* @param {any} value
-* @param {Record<string,any>|[Record<string,any>,Record<string,any>]} [directives]
-*/
+ * @param {any} value
+ * @param {Record<string,any>|[Record<string,any>,Record<string,any>]} [directives]
+ */
 function attr_style(value, directives) {
 	var result = to_style(value, directives);
-	return result ? ` style="${escape_html(result, true)}"` : "";
+	return result ? ` style="${escape_html(result, true)}"` : '';
 }
 /** @param {any} array_like_or_iterator */
 function ensure_array_like(array_like_or_iterator) {
-	if (array_like_or_iterator) return array_like_or_iterator.length !== void 0 ? array_like_or_iterator : Array.from(array_like_or_iterator);
+	if (array_like_or_iterator)
+		return array_like_or_iterator.length !== void 0
+			? array_like_or_iterator
+			: Array.from(array_like_or_iterator);
 	return [];
 }
 /**
-* @template V
-* @param {() => V} get_value
-*/
+ * @template V
+ * @param {() => V} get_value
+ */
 function once(get_value) {
 	let value = UNINITIALIZED;
 	return () => {
@@ -4126,19 +4360,79 @@ function once(get_value) {
 	};
 }
 /**
-* @template T
-* @param {()=>T} fn
-* @returns {(new_value?: T) => (T | void)}
-*/
+ * @template T
+ * @param {()=>T} fn
+ * @returns {(new_value?: T) => (T | void)}
+ */
 function derived(fn) {
 	const get_value = ssr_context === null ? fn : once(fn);
 	/** @type {T | undefined} */
 	let updated_value;
-	return function(new_value) {
+	return function (new_value) {
 		if (arguments.length === 0) return updated_value ?? get_value();
 		updated_value = new_value;
 		return updated_value;
 	};
 }
 //#endregion
-export { experimental_async_required as $, component_root as A, component_context as B, readable as C, get as D, active_reaction as E, init_operations as F, hydrating as G, push$1 as H, mutable_source as I, hydration_mismatch as J, set_hydrate_node as K, set as L, create_text as M, get_first_child as N, set_active_effect as O, get_next_sibling as P, hydration_failed as Q, flushSync as R, is_passive_event as S, active_effect as T, async_mode_flag as U, pop$1 as V, hydrate_node as W, state_proxy_unmount as X, lifecycle_double_unmount as Y, HYDRATION_ERROR as Z, hydratable_serialization_failed as _, head as a, run as at, attr as b, get_user_code_location as c, getAllContexts as d, LEGACY_PROPS as et, getContext as f, hydratable_clobbering as g, ssr_context as h, ensure_array_like as i, noop as it, clear_text_content as j, set_active_reaction as k, get_render_context as l, setContext as m, attr_style as n, array_from as nt, render as o, hasContext as p, set_hydrating as q, derived as r, define_property as rt, stringify as s, attr_class as t, STATE_SYMBOL as tt, createContext as u, lifecycle_function_unavailable as v, writable as w, escape_html as x, getAbortSignal as y, boundary as z };
+export {
+	experimental_async_required as $,
+	component_root as A,
+	component_context as B,
+	readable as C,
+	get as D,
+	active_reaction as E,
+	init_operations as F,
+	hydrating as G,
+	push$1 as H,
+	mutable_source as I,
+	hydration_mismatch as J,
+	set_hydrate_node as K,
+	set as L,
+	create_text as M,
+	get_first_child as N,
+	set_active_effect as O,
+	get_next_sibling as P,
+	hydration_failed as Q,
+	flushSync as R,
+	is_passive_event as S,
+	active_effect as T,
+	async_mode_flag as U,
+	pop$1 as V,
+	hydrate_node as W,
+	state_proxy_unmount as X,
+	lifecycle_double_unmount as Y,
+	HYDRATION_ERROR as Z,
+	hydratable_serialization_failed as _,
+	head as a,
+	run as at,
+	attr as b,
+	get_user_code_location as c,
+	getAllContexts as d,
+	LEGACY_PROPS as et,
+	getContext as f,
+	hydratable_clobbering as g,
+	ssr_context as h,
+	ensure_array_like as i,
+	noop as it,
+	clear_text_content as j,
+	set_active_reaction as k,
+	get_render_context as l,
+	setContext as m,
+	attr_style as n,
+	array_from as nt,
+	render as o,
+	hasContext as p,
+	set_hydrating as q,
+	derived as r,
+	define_property as rt,
+	stringify as s,
+	attr_class as t,
+	STATE_SYMBOL as tt,
+	createContext as u,
+	lifecycle_function_unavailable as v,
+	writable as w,
+	escape_html as x,
+	getAbortSignal as y,
+	boundary as z,
+};

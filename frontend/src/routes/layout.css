@@ -3,103 +3,103 @@
 @plugin '@tailwindcss/typography';
 
 @theme {
-  --color-background: #1A1C20;
-  --color-card: #222222;
-  --color-text-color: #FDFDFD;
-  --color-accent: #D9A4D9;
+	--color-background: #1a1c20;
+	--color-card: #222222;
+	--color-text-color: #fdfdfd;
+	--color-accent: #d9a4d9;
 }
 
 @font-face {
-  font-family: 'Iosevka Charon Regular';
-  src: local('Iosevka Charon Regular'), local('IosevkaCharon-Regular');
-  font-weight: 400;
-  font-style: normal;
+	font-family: 'Iosevka Charon Regular';
+	src: local('Iosevka Charon Regular'), local('IosevkaCharon-Regular');
+	font-weight: 400;
+	font-style: normal;
 }
 
 @font-face {
-  font-family: 'Iosevka Charon Light';
-  src: local('Iosevka Charon Light'), local('IosevkaCharon-Light');
-  font-weight: 300;
-  font-style: normal;
+	font-family: 'Iosevka Charon Light';
+	src: local('Iosevka Charon Light'), local('IosevkaCharon-Light');
+	font-weight: 300;
+	font-style: normal;
 }
 
 @font-face {
-  font-family: 'Iosevka Charon Light Italic';
-  src: local('Iosevka Charon Light Italic'), local('IosevkaCharon-LightItalic');
-  font-weight: 300;
-  font-style: italic;
+	font-family: 'Iosevka Charon Light Italic';
+	src: local('Iosevka Charon Light Italic'), local('IosevkaCharon-LightItalic');
+	font-weight: 300;
+	font-style: italic;
 }
 
 html {
-  zoom: 80%;
+	zoom: 80%;
 }
 
 body {
-  /* bg-background kept as fallback while the avif loads */
-  @apply text-text-color bg-background overflow-x-hidden h-screen flex flex-col;
+	/* bg-background kept as fallback while the avif loads */
+	@apply flex h-screen flex-col overflow-x-hidden bg-background text-text-color;
 }
 
 .home-content {
-  @apply flex flex-col gap-0 justify-baseline items-start ml-96 mt-56;
+	@apply mt-56 ml-96 flex flex-col items-start justify-baseline gap-0;
 }
 
 .home-title {
-  @apply text-8xl
+	@apply text-8xl;
 }
 
-.home-subtitle{
-  font-size: 28px;
-  font-family: 'Iosevka Charon Light', 'Iosevka Charon', monospace;
-  display: block;
-  line-height: 1.4;
-  text-align: left;
-  margin-top: -20px;
+.home-subtitle {
+	font-size: 28px;
+	font-family: 'Iosevka Charon Light', 'Iosevka Charon', monospace;
+	display: block;
+	line-height: 1.4;
+	text-align: left;
+	margin-top: -20px;
 }
 
 .subtitle-break {
-  display: block;
+	display: block;
 }
 
 .home-searchbutton {
-  @apply bg-card border-1 rounded-4xl px-4 py-3 cursor-pointer transition-colors duration-200;
-  font-family: 'Iosevka Charon Light Italic', 'Iosevka Charon Light', monospace;
-  font-style: italic;
-  font-size: 18px;
-  margin-top: 100px;
+	@apply cursor-pointer rounded-4xl border-1 bg-card px-4 py-3 transition-colors duration-200;
+	font-family: 'Iosevka Charon Light Italic', 'Iosevka Charon Light', monospace;
+	font-style: italic;
+	font-size: 18px;
+	margin-top: 100px;
 }
 
 .home-searchbutton:hover {
-  background-color: #FDFDFD;
-  color: #000000;
+	background-color: #fdfdfd;
+	color: #000000;
 }
 
 .navigation-bar {
-  @apply relative flex flex-row justify-center items-center gap-24 mt-12 pb-3;
-  font-size: 24px;
+	@apply relative mt-12 flex flex-row items-center justify-center gap-24 pb-3;
+	font-size: 24px;
 }
 
 .nav-logo {
-  @apply absolute left-90 top-1/2 h-32 w-auto;
-  transform: translateY(-50%);
+	@apply absolute top-1/2 left-90 h-32 w-auto;
+	transform: translateY(-50%);
 }
 
 .navigation-bar a {
-  @apply no-underline text-inherit;
-  font-family: 'Iosevka Charon Regular', 'Iosevka Charon', monospace;
+	@apply text-inherit no-underline;
+	font-family: 'Iosevka Charon Regular', 'Iosevka Charon', monospace;
 }
 
 .nav-indicator {
-  @apply absolute bottom-0 h-[3px] bg-current transition-all duration-300 ease-in-out;
-  /* width/position now set inline via measured offsetWidth/offsetLeft, not calc() */
+	@apply absolute bottom-0 h-[3px] bg-current transition-all duration-300 ease-in-out;
+	/* width/position now set inline via measured offsetWidth/offsetLeft, not calc() */
 }
 
 .nav-divider {
-  @apply border-t border-text-color my-4;
-  height: 1px;
-  background-color: #FDFDFD;
-  width: 80%;
-  margin-left: auto;
-  margin-right: auto;
+	@apply my-4 border-t border-text-color;
+	height: 1px;
+	background-color: #fdfdfd;
+	width: 80%;
+	margin-left: auto;
+	margin-right: auto;
 }
 
 /* ============================================================
@@ -107,7 +107,7 @@ body {
    ============================================================ */
 
 .page-transition-wrapper {
-  @apply relative flex-1 overflow-hidden;
+	@apply relative flex-1 overflow-hidden;
 }
 
 /* ============================================================
@@ -115,11 +115,11 @@ body {
    ============================================================ */
 
 .search-page {
-  @apply relative flex h-full overflow-hidden;
+	@apply relative flex h-full overflow-hidden;
 }
 
 .search-main {
-  @apply flex flex-1 flex-col overflow-hidden;
+	@apply flex flex-1 flex-col overflow-hidden;
 }
 
 /* ============================================================
@@ -127,15 +127,15 @@ body {
    ============================================================ */
 
 .idle-view {
-  @apply flex flex-1 flex-col items-center justify-center gap-6 px-8;
+	@apply flex flex-1 flex-col items-center justify-center gap-6 px-8;
 }
 
 .idle-heading {
-  @apply text-8xl text-text-color;
+	@apply text-8xl text-text-color;
 }
 
 .idle-searchbar {
-  @apply w-full rounded-4xl border border-card bg-card px-6 py-4 text-2xl text-text-color placeholder-[#888] outline-none focus:border-accent;
+	@apply w-full rounded-4xl border border-card bg-card px-6 py-4 text-2xl text-text-color placeholder-[#888] outline-none focus:border-accent;
 }
 
 /* ============================================================
@@ -143,66 +143,64 @@ body {
    ============================================================ */
 
 .search-input-wrapper {
-  @apply relative w-full max-w-2xl flex flex-col;
+	@apply relative flex w-full max-w-2xl flex-col;
 }
 
 /* Row that holds the input + inline spinner side by side */
 .search-input-row {
-  @apply relative flex items-center w-full;
+	@apply relative flex w-full items-center;
 }
 
 .search-input-row .idle-searchbar {
-  @apply flex-1 pr-14; /* make room for the spinner on the right */
+	@apply flex-1 pr-14; /* make room for the spinner on the right */
 }
 
 /* Spinning ring indicator — sits inside the input on the right */
 .search-spinner {
-  @apply absolute right-5 h-5 w-5 rounded-full border-2 border-[#888] border-t-accent pointer-events-none;
-  animation: spin 0.7s linear infinite;
+	@apply pointer-events-none absolute right-5 h-5 w-5 rounded-full border-2 border-[#888] border-t-accent;
+	animation: spin 0.7s linear infinite;
 }
 
 @keyframes spin {
-  to { transform: rotate(360deg); }
+	to {
+		transform: rotate(360deg);
+	}
 }
 
 .search-status--error {
-  @apply mt-2 px-2 text-sm text-red-400;
+	@apply mt-2 px-2 text-sm text-red-400;
 }
 
 /* Outer container — flex column so the footer sits below the scroll area */
 .search-results {
-  @apply mt-1 w-full rounded-2xl border border-card bg-card flex flex-col;
+	@apply mt-1 flex w-full flex-col rounded-2xl border border-card bg-card;
 }
 
 /* Scrollable planet list — capped at 5 rows (each row ~48px = 240px) */
 .search-results-list {
-  @apply overflow-y-auto list-none p-0 m-0;
-  max-height: 240px;
+	@apply m-0 list-none overflow-y-auto p-0;
+	max-height: 240px;
 }
 
 /* Sticky footer for Load more — never scrolls away */
 .search-results-footer {
-  @apply border-t border-[#333] flex-shrink-0;
+	@apply flex-shrink-0 border-t border-[#333];
 }
 
 .search-result-item {
-  @apply flex w-full items-center justify-between gap-4 px-5 py-3 text-left
-         text-text-color transition-colors duration-150 hover:bg-accent hover:text-background
-         focus:outline-none focus:bg-accent focus:text-background;
+	@apply flex w-full items-center justify-between gap-4 px-5 py-3 text-left text-text-color transition-colors duration-150 hover:bg-accent hover:text-background focus:bg-accent focus:text-background focus:outline-none;
 }
 
 .result-name {
-  @apply font-medium;
+	@apply font-medium;
 }
 
 .result-host {
-  @apply text-sm text-[#888];
+	@apply text-sm text-[#888];
 }
 
 .load-more-btn {
-  @apply w-full px-5 py-3 text-center text-accent transition-colors duration-150
-         hover:bg-accent hover:text-background disabled:opacity-40 disabled:cursor-not-allowed
-         focus:outline-none;
+	@apply w-full px-5 py-3 text-center text-accent transition-colors duration-150 hover:bg-accent hover:text-background focus:outline-none disabled:cursor-not-allowed disabled:opacity-40;
 }
 
 /* ============================================================
@@ -210,20 +208,19 @@ body {
    ============================================================ */
 
 .back-to-search-btn {
-  @apply self-start ml-6 mt-4 mb-2 text-sm text-accent underline underline-offset-4
-         transition-colors duration-200 hover:text-text-color bg-transparent;
+	@apply mt-4 mb-2 ml-6 self-start bg-transparent text-sm text-accent underline underline-offset-4 transition-colors duration-200 hover:text-text-color;
 }
 
 .chat-view {
-  @apply flex flex-1 flex-col overflow-hidden;
+	@apply flex flex-1 flex-col overflow-hidden;
 }
 
 .chat-window {
-  @apply flex flex-col w-full max-w-2xl flex-1 overflow-hidden rounded-2xl border border-card bg-card;
+	@apply flex w-full max-w-2xl flex-1 flex-col overflow-hidden rounded-2xl border border-card bg-card;
 }
 
 .message-list {
-  @apply flex flex-1 flex-col gap-3 overflow-y-auto px-6 py-4;
+	@apply flex flex-1 flex-col gap-3 overflow-y-auto px-6 py-4;
 }
 
 /* ============================================================
@@ -231,27 +228,27 @@ body {
    ============================================================ */
 
 .bubble-row {
-  @apply flex w-full;
+	@apply flex w-full;
 }
 
 .bubble-row--user {
-  @apply justify-end;
+	@apply justify-end;
 }
 
 .bubble-row--bot {
-  @apply justify-start;
+	@apply justify-start;
 }
 
 .bubble {
-  @apply max-w-[70%] rounded-2xl px-4 py-2 text-sm leading-relaxed;
+	@apply max-w-[70%] rounded-2xl px-4 py-2 text-sm leading-relaxed;
 }
 
 .bubble--user {
-  @apply bg-accent text-background;
+	@apply bg-accent text-background;
 }
 
 .bubble--bot {
-  @apply bg-card text-text-color;
+	@apply bg-card text-text-color;
 }
 
 /* ============================================================
@@ -259,25 +256,33 @@ body {
    ============================================================ */
 
 .typing-indicator {
-  @apply flex items-center gap-1 py-3;
+	@apply flex items-center gap-1 py-3;
 }
 
 .dot {
-  @apply h-2 w-2 rounded-full bg-text-color opacity-40;
-  animation: pulse-dot 1.2s ease-in-out infinite;
+	@apply h-2 w-2 rounded-full bg-text-color opacity-40;
+	animation: pulse-dot 1.2s ease-in-out infinite;
 }
 
 .dot:nth-child(2) {
-  animation-delay: 0.2s;
+	animation-delay: 0.2s;
 }
 
 .dot:nth-child(3) {
-  animation-delay: 0.4s;
+	animation-delay: 0.4s;
 }
 
 @keyframes pulse-dot {
-  0%, 80%, 100% { opacity: 0.2; transform: scale(0.9); }
-  40%           { opacity: 1;   transform: scale(1.2); }
+	0%,
+	80%,
+	100% {
+		opacity: 0.2;
+		transform: scale(0.9);
+	}
+	40% {
+		opacity: 1;
+		transform: scale(1.2);
+	}
 }
 
 /* ============================================================
@@ -285,15 +290,15 @@ body {
    ============================================================ */
 
 .message-input-bar {
-  @apply flex items-center gap-3 border-t border-card bg-card px-6 py-3 rounded-b-2xl;
+	@apply flex items-center gap-3 rounded-b-2xl border-t border-card bg-card px-6 py-3;
 }
 
 .message-input {
-  @apply flex-1 rounded-4xl border border-card bg-card px-5 py-2 text-text-color placeholder-[#888] outline-none focus:border-accent disabled:opacity-50;
+	@apply flex-1 rounded-4xl border border-card bg-card px-5 py-2 text-text-color placeholder-[#888] outline-none focus:border-accent disabled:opacity-50;
 }
 
 .send-btn {
-  @apply rounded-full border border-accent bg-transparent px-5 py-2 text-accent transition-colors duration-200 hover:bg-accent hover:text-background disabled:cursor-not-allowed disabled:opacity-40;
+	@apply rounded-full border border-accent bg-transparent px-5 py-2 text-accent transition-colors duration-200 hover:bg-accent hover:text-background disabled:cursor-not-allowed disabled:opacity-40;
 }
 
 /* ============================================================
@@ -301,37 +306,75 @@ body {
    ============================================================ */
 
 .sidebar-hover-zone {
-  @apply fixed left-0 top-0 z-40 flex h-full w-10 cursor-pointer items-center justify-start;
+	@apply fixed top-0 left-0 z-40 flex h-full w-10 cursor-pointer items-center justify-start;
 }
 
 .pull-tab {
-  @apply flex h-20 w-7 items-center justify-center rounded-r-xl bg-card text-text-color transition-transform duration-200;
+	@apply flex h-20 w-7 items-center justify-center rounded-r-xl bg-card text-text-color transition-transform duration-200;
 }
 
 .sidebar-hover-zone:hover .pull-tab {
-  @apply translate-x-2 bg-accent text-background;
+	@apply translate-x-2 bg-accent text-background;
 }
 
 .sidebar-panel {
-  @apply fixed left-0 top-0 z-50 flex h-full w-72 flex-col border-r border-card bg-background pt-24 shadow-lg;
+	@apply fixed top-0 left-0 z-50 flex h-full w-72 flex-col border-r border-card bg-background pt-24 shadow-lg;
 }
 
 .sidebar-header {
-  @apply flex items-center justify-between border-b border-card px-5 pb-4;
+	@apply flex items-center justify-between border-b border-card px-5 pb-4;
 }
 
 .sidebar-title {
-  @apply text-lg font-semibold text-text-color;
+	@apply text-lg font-semibold text-text-color;
 }
 
 .sidebar-close {
-  @apply text-2xl leading-none text-[#888] transition-colors hover:text-text-color;
+	@apply text-2xl leading-none text-[#888] transition-colors hover:text-text-color;
 }
 
 .sidebar-content {
-  @apply flex-1 overflow-y-auto px-5 py-4;
+	@apply flex-1 overflow-y-auto px-5 py-4;
 }
 
 .sidebar-placeholder {
-  @apply text-sm text-[#888];
+	@apply text-sm text-[#888];
+}
+
+/* ============================================================
+   New search page — shared section components
+   ============================================================ */
+
+.search-section {
+	@apply flex flex-col gap-3 rounded-2xl border border-card bg-card px-6 py-5;
+}
+
+.search-section-label {
+	@apply text-sm font-semibold tracking-widest text-accent uppercase;
+}
+
+.search-section-fields {
+	@apply flex flex-wrap gap-4;
+}
+
+.search-field-label {
+	@apply flex flex-col gap-1 text-sm text-text-color;
+}
+
+.search-field-input {
+	@apply rounded-lg border border-card bg-background px-3 py-2 text-text-color transition-colors duration-150 outline-none focus:border-accent;
+	min-width: 160px;
+}
+
+/* Dark-theme overrides for native date / time / number pickers */
+.search-field-input[type='date'],
+.search-field-input[type='time'] {
+	color-scheme: dark;
+}
+
+/* Map container inside LocationSettings */
+.location-map {
+	height: 350px;
+	width: 100%;
+	@apply overflow-hidden rounded-xl border border-card;
 }

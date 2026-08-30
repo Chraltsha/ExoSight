@@ -11,7 +11,7 @@
 
 	function handleMouseMove(event) {
 		// Normalise mouse position to [-1, +1] relative to viewport centre
-		const cx = (event.clientX / window.innerWidth  - 0.5) * 2;
+		const cx = (event.clientX / window.innerWidth - 0.5) * 2;
 		const cy = (event.clientY / window.innerHeight - 0.5) * 2;
 
 		offsetX = cx * strength;
