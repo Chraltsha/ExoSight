@@ -99,7 +99,11 @@
 					placeholder="e.g. Kepler-22 b"
 					bind:value={planetName}
 					oninput={handlePlanetInput}
-					onfocus={() => { if (searchState.results.length > 0) showDropdown = true; }}
+					onfocus={() => {
+						if (searchState.results.length > 0) {
+							showDropdown = true;
+						}
+					}}
 					autocomplete="off"
 				/>
 

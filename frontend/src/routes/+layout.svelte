@@ -41,7 +41,9 @@
 	});
 
 	onNavigate(({ from, to }) => {
-		if (!from?.url || !to?.url) return;
+		if (!from?.url || !to?.url) {
+			return;
+		}
 		const fromIndex = resolvedRoutes.indexOf(from.url.pathname);
 		const toIndex = resolvedRoutes.indexOf(to.url.pathname);
 		if (fromIndex !== -1 && toIndex !== -1) {
@@ -66,7 +68,10 @@
 			{link.label}
 		</a>
 	{/each}
-	<div class="nav-indicator" style="width: {navIndicator.width}px; left: {navIndicator.left}px" />
+	<div
+		class="nav-indicator"
+		style="width: {navIndicator.width}px; left: {navIndicator.left}px"
+	></div>
 </nav>
 
 <!-- <hr class="nav-divider" /> -->

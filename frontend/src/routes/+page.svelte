@@ -3,6 +3,7 @@
 	import homePageLogo from '$lib/assets/ExoSight_HomePage.svg';
 	import { goto } from '$app/navigation';
 
+	// eslint-disable-next-line svelte/no-navigation-without-resolve
 	const navigateToSearch = () => goto('/search');
 </script>
 

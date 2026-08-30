@@ -111,61 +111,8 @@ body {
 }
 
 /* ============================================================
-   Search page — layout
-   ============================================================ */
-
-.search-page {
-	@apply relative flex h-full overflow-hidden;
-}
-
-.search-main {
-	@apply flex flex-1 flex-col overflow-hidden;
-}
-
-/* ============================================================
-   Search page — idle state
-   ============================================================ */
-
-.idle-view {
-	@apply flex flex-1 flex-col items-center justify-center gap-6 px-8;
-}
-
-.idle-heading {
-	@apply text-8xl text-text-color;
-}
-
-.idle-searchbar {
-	@apply w-full rounded-4xl border border-card bg-card px-6 py-4 text-2xl text-text-color placeholder-[#888] outline-none focus:border-accent;
-}
-
-/* ============================================================
    Search input wrapper + results dropdown
    ============================================================ */
-
-.search-input-wrapper {
-	@apply relative flex w-full max-w-2xl flex-col;
-}
-
-/* Row that holds the input + inline spinner side by side */
-.search-input-row {
-	@apply relative flex w-full items-center;
-}
-
-.search-input-row .idle-searchbar {
-	@apply flex-1 pr-14; /* make room for the spinner on the right */
-}
-
-/* Spinning ring indicator — sits inside the input on the right */
-.search-spinner {
-	@apply pointer-events-none absolute right-5 h-5 w-5 rounded-full border-2 border-[#888] border-t-accent;
-	animation: spin 0.7s linear infinite;
-}
-
-@keyframes spin {
-	to {
-		transform: rotate(360deg);
-	}
-}
 
 .search-status--error {
 	@apply mt-2 px-2 text-sm text-red-400;
@@ -204,54 +151,6 @@ body {
 }
 
 /* ============================================================
-   Search page — chat view
-   ============================================================ */
-
-.back-to-search-btn {
-	@apply mt-4 mb-2 ml-6 self-start bg-transparent text-sm text-accent underline underline-offset-4 transition-colors duration-200 hover:text-text-color;
-}
-
-.chat-view {
-	@apply flex flex-1 flex-col overflow-hidden;
-}
-
-.chat-window {
-	@apply flex w-full max-w-2xl flex-1 flex-col overflow-hidden rounded-2xl border border-card bg-card;
-}
-
-.message-list {
-	@apply flex flex-1 flex-col gap-3 overflow-y-auto px-6 py-4;
-}
-
-/* ============================================================
-   Chat bubbles
-   ============================================================ */
-
-.bubble-row {
-	@apply flex w-full;
-}
-
-.bubble-row--user {
-	@apply justify-end;
-}
-
-.bubble-row--bot {
-	@apply justify-start;
-}
-
-.bubble {
-	@apply max-w-[70%] rounded-2xl px-4 py-2 text-sm leading-relaxed;
-}
-
-.bubble--user {
-	@apply bg-accent text-background;
-}
-
-.bubble--bot {
-	@apply bg-card text-text-color;
-}
-
-/* ============================================================
    Typing indicator (pulsing dots)
    ============================================================ */
 
@@ -286,62 +185,6 @@ body {
 }
 
 /* ============================================================
-   Message input bar
-   ============================================================ */
-
-.message-input-bar {
-	@apply flex items-center gap-3 rounded-b-2xl border-t border-card bg-card px-6 py-3;
-}
-
-.message-input {
-	@apply flex-1 rounded-4xl border border-card bg-card px-5 py-2 text-text-color placeholder-[#888] outline-none focus:border-accent disabled:opacity-50;
-}
-
-.send-btn {
-	@apply rounded-full border border-accent bg-transparent px-5 py-2 text-accent transition-colors duration-200 hover:bg-accent hover:text-background disabled:cursor-not-allowed disabled:opacity-40;
-}
-
-/* ============================================================
-   Sidebar
-   ============================================================ */
-
-.sidebar-hover-zone {
-	@apply fixed top-0 left-0 z-40 flex h-full w-10 cursor-pointer items-center justify-start;
-}
-
-.pull-tab {
-	@apply flex h-20 w-7 items-center justify-center rounded-r-xl bg-card text-text-color transition-transform duration-200;
-}
-
-.sidebar-hover-zone:hover .pull-tab {
-	@apply translate-x-2 bg-accent text-background;
-}
-
-.sidebar-panel {
-	@apply fixed top-0 left-0 z-50 flex h-full w-72 flex-col border-r border-card bg-background pt-24 shadow-lg;
-}
-
-.sidebar-header {
-	@apply flex items-center justify-between border-b border-card px-5 pb-4;
-}
-
-.sidebar-title {
-	@apply text-lg font-semibold text-text-color;
-}
-
-.sidebar-close {
-	@apply text-2xl leading-none text-[#888] transition-colors hover:text-text-color;
-}
-
-.sidebar-content {
-	@apply flex-1 overflow-y-auto px-5 py-4;
-}
-
-.sidebar-placeholder {
-	@apply text-sm text-[#888];
-}
-
-/* ============================================================
    New search page — shared section components
    ============================================================ */
 
@@ -368,8 +211,18 @@ body {
 
 /* Dark-theme overrides for native date / time / number pickers */
 .search-field-input[type='date'],
-.search-field-input[type='time'] {
+.search-field-input[type='time'],
+.search-field-input[type='number'] {
 	color-scheme: dark;
+	background-color: #222222;
+	color: #fdfdfd;
+}
+
+/* Remove the default light tint on the calendar/clock picker icon */
+.search-field-input[type='date']::-webkit-calendar-picker-indicator,
+.search-field-input[type='time']::-webkit-calendar-picker-indicator {
+	filter: invert(1);
+	cursor: pointer;
 }
 
 /* Map container inside LocationSettings */

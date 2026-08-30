@@ -77,8 +77,12 @@
 	$effect(() => {
 		const _lat = lat;
 		const _lon = lon;
-		if (dragging) return;
-		if (!map || !marker) return;
+		if (dragging) {
+			return;
+		}
+		if (!map || !marker) {
+			return;
+		}
 		marker.setLatLng([_lat, _lon]);
 		map.setView([_lat, _lon]);
 	});
