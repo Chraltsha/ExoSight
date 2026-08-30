@@ -94,19 +94,36 @@
 				<h2 class="search-page-heading">What exoplanet are we looking for?</h2>
 
 				<div class="planet-autocomplete-wrapper">
-					<input
-						type="text"
-						class="search-field-input planet-name-input"
-						placeholder="e.g. Kepler-22 b"
-						bind:value={planetName}
-						oninput={handlePlanetInput}
-						onfocus={() => {
-							if (searchState.results.length > 0) {
-								showDropdown = true;
-							}
-						}}
-						autocomplete="off"
-					/>
+					<!-- input row: icon stays anchored to just the input, not the dropdown -->
+					<div class="planet-input-row">
+						<svg
+							class="planet-search-icon"
+							xmlns="http://www.w3.org/2000/svg"
+							viewBox="0 0 24 24"
+							fill="none"
+							stroke="currentColor"
+							stroke-width="2"
+							stroke-linecap="round"
+							stroke-linejoin="round"
+							aria-hidden="true"
+						>
+							<circle cx="11" cy="11" r="7" />
+							<line x1="16.5" y1="16.5" x2="22" y2="22" />
+						</svg>
+						<input
+							type="text"
+							class="search-field-input planet-name-input"
+							placeholder="e.g. Kepler-22 b"
+							bind:value={planetName}
+							oninput={handlePlanetInput}
+							onfocus={() => {
+								if (searchState.results.length > 0) {
+									showDropdown = true;
+								}
+							}}
+							autocomplete="off"
+						/>
+					</div>
 
 					{#if showDropdown && (searchState.results.length > 0 || searchState.isLoading)}
 						<div class="search-results">
@@ -146,14 +163,28 @@
 					<DateTimeSettings bind:date bind:time bind:observationLength />
 					<LocationSettings bind:lat bind:lon />
 				</div>
-
-				<button class="search-submit-btn" onclick={handleSearch} disabled={isLoading}>
-					{isLoading ? 'Analysing…' : 'Search'}
-				</button>
 			</div>
 
-			<!-- RIGHT: Exosight output -->
+			<!-- RIGHT: Exosight output (search button on top) -->
 			<div class="search-output-col">
+				<button class="search-submit-btn" onclick={handleSearch} disabled={isLoading}>
+					<!-- planet/orbit icon -->
+					<svg
+						class="search-btn-icon"
+						xmlns="http://www.w3.org/2000/svg"
+						viewBox="0 0 24 24"
+						fill="none"
+						stroke="currentColor"
+						stroke-width="1.5"
+						stroke-linecap="round"
+						stroke-linejoin="round"
+						aria-hidden="true"
+					>
+						<circle cx="12" cy="12" r="4" />
+						<ellipse cx="12" cy="12" rx="11" ry="4.5" transform="rotate(-30 12 12)" />
+					</svg>
+					{isLoading ? 'Analysing…' : 'Search'}
+				</button>
 				<div class="search-section search-output-section">
 					<span class="exosight-label">Exosight says…</span>
 					<div class="exosight-output-box">

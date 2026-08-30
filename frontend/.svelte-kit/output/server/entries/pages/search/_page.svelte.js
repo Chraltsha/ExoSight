@@ -64,7 +64,7 @@ function _page($$renderer, $$props) {
 		function $$render_inner($$renderer) {
 			PageTransition($$renderer, {
 				children: ($$renderer) => {
-					$$renderer.push(`<main class="search-new-page"><div class="search-body-row"><div class="search-inputs-col"><h2 class="search-page-heading">What exoplanet are we looking for?</h2> <div class="planet-autocomplete-wrapper"><input type="text" class="search-field-input planet-name-input" placeholder="e.g. Kepler-22 b"${attr("value", planetName)} autocomplete="off"/> `);
+					$$renderer.push(`<main class="search-new-page"><div class="search-body-row"><div class="search-inputs-col"><h2 class="search-page-heading">What exoplanet are we looking for?</h2> <div class="planet-autocomplete-wrapper"><div class="planet-input-row"><svg class="planet-search-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><line x1="16.5" y1="16.5" x2="22" y2="22"></line></svg> <input type="text" class="search-field-input planet-name-input" placeholder="e.g. Kepler-22 b"${attr("value", planetName)} autocomplete="off"/></div> `);
 					$$renderer.push("<!--[-1-->");
 					$$renderer.push(`<!--]--></div> <div class="search-three-col">`);
 					TelescopeSettings($$renderer, {
@@ -124,7 +124,7 @@ function _page($$renderer, $$props) {
 							$$settled = false;
 						}
 					});
-					$$renderer.push(`<!----></div> <button class="search-submit-btn"${attr("disabled", isLoading, true)}>${escape_html("Search")}</button></div> <div class="search-output-col"><div class="search-section search-output-section"><span class="exosight-label">Exosight says…</span> <div class="exosight-output-box">`);
+					$$renderer.push(`<!----></div></div> <div class="search-output-col"><button class="search-submit-btn"${attr("disabled", isLoading, true)}><svg class="search-btn-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><ellipse cx="12" cy="12" rx="11" ry="4.5" transform="rotate(-30 12 12)"></ellipse></svg> ${escape_html("Search")}</button> <div class="search-section search-output-section"><span class="exosight-label">Exosight says…</span> <div class="exosight-output-box">`);
 					$$renderer.push("<!--[-1-->");
 					$$renderer.push(`<span class="exosight-placeholder">Fill in the fields above and hit Search to get your observation report</span>`);
 					$$renderer.push(`<!--]--></div></div></div></div></main>`);

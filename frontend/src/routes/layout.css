@@ -243,22 +243,42 @@ body {
 }
 
 .search-page-heading {
-	font-family: 'Iosevka Charon Light', 'Iosevka Charon', monospace;
-	font-size: 2.6rem;
-	font-weight: 300;
+	font-family: 'Iosevka Charon Regular', 'Iosevka Charon', monospace;
+	font-size: 3rem;
+	font-weight: 400;
 	line-height: 1.2;
 	@apply mb-1 text-text-color;
 }
 
-/* Planet name input — full width under the heading, taller */
+/* Planet name input — full width under the heading, taller, with icon */
 .planet-autocomplete-wrapper {
 	@apply relative w-full;
 }
 
+/* Input + icon wrapper — icon stays fixed to just this row, not the dropdown */
+.planet-input-row {
+	position: relative;
+	width: 100%;
+}
+
+/* Magnifying glass icon — anchored inside .planet-input-row, not the full wrapper */
+.planet-search-icon {
+	position: absolute;
+	left: 1.1rem;
+	top: 50%;
+	transform: translateY(-50%);
+	width: 1.4rem;
+	height: 1.4rem;
+	color: #888;
+	pointer-events: none;
+	z-index: 1;
+}
+
 .planet-name-input {
 	@apply w-full;
-	font-size: 1.2rem !important;
-	padding: 0.75rem 1rem !important;
+	border-radius: 9999px !important;
+	font-size: 1.25rem !important;
+	padding: 0.9rem 1.2rem 0.9rem 3.2rem !important;
 }
 
 /* BODY ROW: left col fills remaining space, right col fixed */
@@ -331,17 +351,42 @@ body {
    ============================================================ */
 
 .search-submit-btn {
-	@apply w-full cursor-pointer rounded-2xl border border-accent bg-transparent px-6 py-4 text-accent transition-colors duration-200 hover:bg-accent hover:text-background disabled:cursor-not-allowed disabled:opacity-50;
-	font-family: 'Iosevka Charon Light Italic', 'Iosevka Charon Light', monospace;
-	font-style: italic;
-	font-size: 1.15rem;
+	@apply w-full cursor-pointer transition-colors duration-200 disabled:cursor-not-allowed disabled:opacity-50;
+	border: none;
+	border-radius: 9999px;
+	background-color: #2e2234;
+	color: #d9a4d9;
+	padding-top: 1rem;
+	padding-bottom: 1rem;
+	padding-left: 2rem;
+	padding-right: 2rem;
+	margin-top: 2rem;
+	margin-bottom: 2rem;
+	font-family: 'Iosevka Charon Regular', 'Iosevka Charon', monospace;
+	font-size: 2rem;
+	font-weight: 400;
+	flex-shrink: 0;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 0.6rem;
+}
+
+.search-submit-btn:hover:not(:disabled) {
+	background-color: #3d2d4a;
+	color: #f0d0f0;
+}
+
+.search-btn-icon {
+	width: 1.4rem;
+	height: 1.4rem;
 	flex-shrink: 0;
 }
 
 /* Section header label — larger, Title Case, not all-caps */
 .search-section-label {
 	font-family: 'Iosevka Charon Regular', 'Iosevka Charon', monospace;
-	font-size: 1.15rem;
+	font-size: 1.2rem;
 	font-weight: 400;
 	letter-spacing: 0.01em;
 	text-transform: none;
