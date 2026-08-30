@@ -108,7 +108,7 @@ def propagate_satellites(
     """
     Propagate all satellites throughout the observation.
 
-    The exposure is sampled once per second.
+    The exposure is sampled every 3 seconds.
 
     Returns:
         list of satellite positions at each sampled time.
@@ -116,13 +116,13 @@ def propagate_satellites(
 
     positions = []
 
-    # We sample the beginning of the exposure and then
-    # every second after that.
-    number_of_samples = int(exposure_duration) + 1
+    # Sample the beginning of the exposure and then
+    # every 3 seconds after that.
+    number_of_samples = int(exposure_duration // 3) + 1
 
     for i in range(number_of_samples):
 
-        elapsed_seconds = float(i)
+        elapsed_seconds = float(i * 3)
 
         # Do not go beyond the requested exposure duration.
         if elapsed_seconds > exposure_duration:
