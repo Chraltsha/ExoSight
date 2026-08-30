@@ -1,6 +1,9 @@
 <script>
 	import PageTransition from '$lib/components/PageTransition.svelte';
 	import homePageLogo from '$lib/assets/ExoSight_HomePage.svg';
+	import { goto } from '$app/navigation';
+
+	const navigateToSearch = () => goto('/search');
 </script>
 
 <PageTransition>
@@ -12,7 +15,9 @@
     </h3>
 
     <div>
-      <input class="home-searchbar" placeholder="Search for Exoplanets  🔍︎"/>
+      <button class="home-searchbutton" onclick={navigateToSearch}>
+        Search for Exoplanets  🔍︎
+      </button>
     </div>
   </div>
 </PageTransition>

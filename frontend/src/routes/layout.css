@@ -44,7 +44,7 @@ body {
 }
 
 .home-subtitle{
-  @apply text-2xl;
+  font-size: 28px;
   font-family: 'Iosevka Charon Light', 'Iosevka Charon', monospace;
   display: block;
   line-height: 1.4;
@@ -56,16 +56,22 @@ body {
   display: block;
 }
 
-.home-searchbar {
-  @apply bg-card border-1 rounded-4xl px-4;
+.home-searchbutton {
+  @apply bg-card border-1 rounded-4xl px-4 py-3 cursor-pointer transition-colors duration-200;
   font-family: 'Iosevka Charon Light Italic', 'Iosevka Charon Light', monospace;
   font-style: italic;
-  margin-top: 24px;
+  font-size: 18px;
+  margin-top: 100px;
+}
+
+.home-searchbutton:hover {
+  background-color: #FDFDFD;
+  color: #000000;
 }
 
 .navigation-bar {
-  @apply relative flex flex-row justify-center items-center text-3xl gap-24 mt-12 pb-3;
-
+  @apply relative flex flex-row justify-center items-center gap-24 mt-12 pb-3;
+  font-size: 24px;
 }
 
 .nav-logo {
