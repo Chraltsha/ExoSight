@@ -36,7 +36,7 @@ body {
 }
 
 .home-content {
-  @apply flex flex-col gap-4 justify-baseline items-start ml-96 mt-56;
+  @apply flex flex-col gap-0 justify-baseline items-start ml-96 mt-56;
 }
 
 .home-title {
@@ -49,6 +49,7 @@ body {
   display: block;
   line-height: 1.4;
   text-align: left;
+  margin-top: -20px;
 }
 
 .subtitle-break {
@@ -59,11 +60,17 @@ body {
   @apply bg-card border-1 rounded-4xl px-4;
   font-family: 'Iosevka Charon Light Italic', 'Iosevka Charon Light', monospace;
   font-style: italic;
+  margin-top: 24px;
 }
 
 .navigation-bar {
   @apply relative flex flex-row justify-center items-center text-3xl gap-24 mt-12 pb-3;
 
+}
+
+.nav-logo {
+  @apply absolute left-90 top-1/2 h-32 w-auto;
+  transform: translateY(-50%);
 }
 
 .navigation-bar a {
@@ -74,6 +81,15 @@ body {
 .nav-indicator {
   @apply absolute bottom-0 h-[3px] bg-current transition-all duration-300 ease-in-out;
   /* width/position now set inline via measured offsetWidth/offsetLeft, not calc() */
+}
+
+.nav-divider {
+  @apply border-t border-text-color my-4;
+  height: 1px;
+  background-color: #FDFDFD;
+  width: 80%;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 /* ============================================================

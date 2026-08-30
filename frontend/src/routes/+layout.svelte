@@ -1,6 +1,7 @@
 <script>
 	import './layout.css';
 	import favicon from '$lib/assets/favicon.svg';
+	import logoWhite from '$lib/assets/ExoSight_Logo_White.svg';
 	import { resolve } from '$app/paths';
 	import { page } from '$app/state';
 	import { onNavigate } from '$app/navigation';
@@ -42,6 +43,7 @@
 <StarBackground src="/star-layer3.png"      strength={LAYER_FRONT} zIndex={-1} />
 
 <nav class="navigation-bar">
+	<img src={logoWhite} alt="ExoSight" class="nav-logo" />
 	{#each NAV_LINKS as link (link.href)}
 		<a href={resolve(link.href)} class:active={page.url.pathname === resolve(link.href)}>
 			{link.label}
@@ -49,7 +51,7 @@
 	{/each}
 </nav>
 
-<hr />
+<hr class="nav-divider" />
 
 <div class="page-transition-wrapper">
 	{@render children()}
