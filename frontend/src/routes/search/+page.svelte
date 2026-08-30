@@ -86,12 +86,9 @@
 
 <PageTransition>
 	<main class="search-new-page">
-		<!-- 1. Heading -->
-		<h2 class="search-page-heading">What exoplanet are we looking for?</h2>
-
-		<!-- 2. Exoplanet name autocomplete -->
-		<div class="search-section">
-			<span class="search-section-label">Exoplanet</span>
+		<!-- TOP ROW: heading + planet autocomplete -->
+		<div class="search-top-row">
+			<h2 class="search-page-heading">What exoplanet are we looking for?</h2>
 			<div class="planet-autocomplete-wrapper">
 				<input
 					type="text"
@@ -140,37 +137,41 @@
 			</div>
 		</div>
 
-		<!-- 3. Telescope settings -->
-		<TelescopeSettings bind:hFov bind:vFov />
+		<!-- BODY ROW: left inputs + right output -->
+		<div class="search-body-row">
+			<!-- LEFT: three-column input sections + search button -->
+			<div class="search-inputs-col">
+				<div class="search-three-col">
+					<TelescopeSettings bind:hFov bind:vFov />
+					<DateTimeSettings bind:date bind:time bind:observationLength />
+					<LocationSettings bind:lat bind:lon />
+				</div>
 
-		<!-- 4. Date/time settings -->
-		<DateTimeSettings bind:date bind:time bind:observationLength />
+				<button class="search-submit-btn" onclick={handleSearch} disabled={isLoading}>
+					{isLoading ? 'Analysing…' : 'Search'}
+				</button>
+			</div>
 
-		<!-- 5. Location settings -->
-		<LocationSettings bind:lat bind:lon />
-
-		<!-- 6. Search button -->
-		<button class="search-submit-btn" onclick={handleSearch} disabled={isLoading}>
-			{isLoading ? 'Analysing…' : 'Search'}
-		</button>
-
-		<!-- 7. Exosight output -->
-		<div class="search-section">
-			<span class="search-section-label">Exosight says…</span>
-			<div class="exosight-output-box">
-				{#if isLoading}
-					<div class="typing-indicator">
-						<span class="dot"></span>
-						<span class="dot"></span>
-						<span class="dot"></span>
+			<!-- RIGHT: Exosight output -->
+			<div class="search-output-col">
+				<div class="search-section search-output-section">
+					<span class="search-section-label">Exosight says…</span>
+					<div class="exosight-output-box">
+						{#if isLoading}
+							<div class="typing-indicator">
+								<span class="dot"></span>
+								<span class="dot"></span>
+								<span class="dot"></span>
+							</div>
+						{:else if llmOutput}
+							{llmOutput}
+						{:else}
+							<span class="exosight-placeholder"
+								>Fill in the fields above and hit Search to get your observation report</span
+							>
+						{/if}
 					</div>
-				{:else if llmOutput}
-					{llmOutput}
-				{:else}
-					<span class="exosight-placeholder"
-						>Fill in the fields above and hit Search to get your observation report</span
-					>
-				{/if}
+				</div>
 			</div>
 		</div>
 	</main>

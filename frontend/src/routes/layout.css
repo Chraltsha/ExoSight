@@ -237,20 +237,52 @@ body {
    ============================================================ */
 
 .search-new-page {
-	@apply mx-auto flex w-full max-w-[700px] flex-col gap-6 px-4 py-10;
+	@apply mx-auto flex w-full max-w-[1400px] flex-col gap-6 px-6 py-8;
+}
+
+/* TOP ROW: heading left, autocomplete right — side by side */
+.search-top-row {
+	@apply flex items-center justify-between gap-6;
 }
 
 .search-page-heading {
-	@apply text-2xl font-semibold text-text-color;
+	@apply shrink-0 text-lg font-semibold text-text-color;
 }
 
-/* Planet name input — full width inside its section */
+/* Planet name input — fixed width on the right of the top row */
 .planet-autocomplete-wrapper {
-	@apply relative w-full;
+	@apply relative w-full max-w-[420px];
 }
 
 .planet-name-input {
 	@apply w-full;
+}
+
+/* BODY ROW: inputs on left, output on right */
+.search-body-row {
+	@apply flex gap-6;
+}
+
+/* LEFT column: three-col input grid + submit button */
+.search-inputs-col {
+	@apply flex flex-1 flex-col gap-4;
+}
+
+/* Three equal-width input sections side by side */
+.search-three-col {
+	@apply grid gap-4;
+	grid-template-columns: repeat(3, 1fr);
+}
+
+/* RIGHT column: Exosight output — fixed width, full height */
+.search-output-col {
+	width: 360px;
+	flex-shrink: 0;
+}
+
+/* Output section stretches to fill available height */
+.search-output-section {
+	@apply h-full;
 }
 
 /* ============================================================
@@ -258,9 +290,15 @@ body {
    ============================================================ */
 
 .exosight-output-box {
-	@apply min-h-[120px] rounded-xl bg-background px-5 py-4 text-sm leading-relaxed text-text-color;
+	@apply flex-1 rounded-xl bg-background px-5 py-4 text-sm leading-relaxed text-text-color;
 	font-family: 'Iosevka Charon Regular', 'Iosevka Charon', monospace;
 	white-space: pre-wrap;
+	min-height: 120px;
+}
+
+/* Make the section itself a flex column so the output box can grow */
+.search-output-section {
+	@apply flex flex-col;
 }
 
 .exosight-placeholder {

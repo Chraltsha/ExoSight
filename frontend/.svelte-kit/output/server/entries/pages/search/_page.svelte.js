@@ -64,9 +64,9 @@ function _page($$renderer, $$props) {
 		function $$render_inner($$renderer) {
 			PageTransition($$renderer, {
 				children: ($$renderer) => {
-					$$renderer.push(`<main class="search-new-page"><h2 class="search-page-heading">What exoplanet are we looking for?</h2> <div class="search-section"><span class="search-section-label">Exoplanet</span> <div class="planet-autocomplete-wrapper"><input type="text" class="search-field-input planet-name-input" placeholder="e.g. Kepler-22 b"${attr("value", planetName)} autocomplete="off"/> `);
+					$$renderer.push(`<main class="search-new-page"><div class="search-top-row"><h2 class="search-page-heading">What exoplanet are we looking for?</h2> <div class="planet-autocomplete-wrapper"><input type="text" class="search-field-input planet-name-input" placeholder="e.g. Kepler-22 b"${attr("value", planetName)} autocomplete="off"/> `);
 					$$renderer.push("<!--[-1-->");
-					$$renderer.push(`<!--]--></div></div> `);
+					$$renderer.push(`<!--]--></div></div> <div class="search-body-row"><div class="search-inputs-col"><div class="search-three-col">`);
 					TelescopeSettings($$renderer, {
 						get hFov() {
 							return hFov;
@@ -124,10 +124,10 @@ function _page($$renderer, $$props) {
 							$$settled = false;
 						}
 					});
-					$$renderer.push(`<!----> <button class="search-submit-btn"${attr("disabled", isLoading, true)}>${escape_html("Search")}</button> <div class="search-section"><span class="search-section-label">Exosight says…</span> <div class="exosight-output-box">`);
+					$$renderer.push(`<!----></div> <button class="search-submit-btn"${attr("disabled", isLoading, true)}>${escape_html("Search")}</button></div> <div class="search-output-col"><div class="search-section search-output-section"><span class="search-section-label">Exosight says…</span> <div class="exosight-output-box">`);
 					$$renderer.push("<!--[-1-->");
 					$$renderer.push(`<span class="exosight-placeholder">Fill in the fields above and hit Search to get your observation report</span>`);
-					$$renderer.push(`<!--]--></div></div></main>`);
+					$$renderer.push(`<!--]--></div></div></div></div></main>`);
 				},
 				$$slots: { default: true }
 			});
