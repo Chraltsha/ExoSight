@@ -34,9 +34,16 @@
 	}
 
 	function handleKeydown(event) {
-		// Enter selects the first result if available
-		if (event.key === 'Enter' && searchState.results.length > 0) {
+		if (event.key !== 'Enter') return;
+		event.preventDefault(); // stop any native form submission
+
+		if (searchState.results.length > 0) {
+			// Results already loaded — select the first one
 			onSelect(searchState.results[0]);
+		} else if (inputValue.trim().length >= MIN_CHARS) {
+			// No results yet — cancel debounce and search immediately
+			clearTimeout(debounceTimer);
+			searchPlanets(inputValue.trim());
 		}
 	}
 

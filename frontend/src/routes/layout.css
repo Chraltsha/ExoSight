@@ -9,13 +9,34 @@
   --color-accent: #D9A4D9;
 }
 
+@font-face {
+  font-family: 'Iosevka Charon Regular';
+  src: local('Iosevka Charon Regular'), local('IosevkaCharon-Regular');
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Iosevka Charon Light';
+  src: local('Iosevka Charon Light'), local('IosevkaCharon-Light');
+  font-weight: 300;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Iosevka Charon Light Italic';
+  src: local('Iosevka Charon Light Italic'), local('IosevkaCharon-LightItalic');
+  font-weight: 300;
+  font-style: italic;
+}
+
 body {
   /* bg-background kept as fallback while the avif loads */
   @apply text-text-color bg-background overflow-x-hidden h-screen flex flex-col;
 }
 
 .home-content {
-  @apply flex flex-col gap-4 justify-baseline items-baseline text-center ml-96 mt-56;
+  @apply flex flex-col gap-4 justify-baseline items-start ml-96 mt-56;
 }
 
 .home-title {
@@ -24,10 +45,20 @@ body {
 
 .home-subtitle{
   @apply text-2xl;
+  font-family: 'Iosevka Charon Light', 'Iosevka Charon', monospace;
+  display: block;
+  line-height: 1.4;
+  text-align: left;
+}
+
+.subtitle-break {
+  display: block;
 }
 
 .home-searchbar {
   @apply bg-card border-1 rounded-4xl px-4;
+  font-family: 'Iosevka Charon Light Italic', 'Iosevka Charon Light', monospace;
+  font-style: italic;
 }
 
 .navigation-bar {
@@ -37,6 +68,7 @@ body {
 
 .navigation-bar a {
   @apply no-underline text-inherit;
+  font-family: 'Iosevka Charon Regular', 'Iosevka Charon', monospace;
 }
 
 .nav-indicator {
@@ -90,7 +122,7 @@ body {
 
 /* Row that holds the input + inline spinner side by side */
 .search-input-row {
-  @apply relative flex items-center;
+  @apply relative flex items-center w-full;
 }
 
 .search-input-row .idle-searchbar {
@@ -151,8 +183,13 @@ body {
    Search page — chat view
    ============================================================ */
 
+.back-to-search-btn {
+  @apply self-start ml-6 mt-4 mb-2 text-sm text-accent underline underline-offset-4
+         transition-colors duration-200 hover:text-text-color bg-transparent;
+}
+
 .chat-view {
-  @apply flex flex-1 flex-col items-center py-6 px-4 overflow-hidden;
+  @apply flex flex-1 flex-col overflow-hidden;
 }
 
 .chat-window {

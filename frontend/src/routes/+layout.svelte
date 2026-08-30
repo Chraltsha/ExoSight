@@ -15,9 +15,9 @@
 	let { children } = $props();
 
 	const NAV_LINKS = [
-		{ href: '/', label: 'Home' },
-		{ href: '/search', label: 'Search' },
-		{ href: '/about', label: 'About' }
+		{ href: '/', label: 'home' },
+		{ href: '/search', label: 'search' },
+		{ href: '/about', label: 'about' }
 	];
 
 	const resolvedRoutes = NAV_LINKS.map((link) => resolve(link.href));
