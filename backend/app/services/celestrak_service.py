@@ -55,7 +55,14 @@ def load_satellites() -> list[EarthSatellite]:
     Returns:
         list[EarthSatellite]
     """
-    satellites = load.tle_file(ACTIVE_SATELLITES_URL)
+    try:
+        stale = load.days_old('active_satellites.txt') > 3.0
+    except FileNotFoundError:
+        stale = True
+        
+    if stale:
+        load.download(ACTIVE_SATELLITES_URL, filename='active_satellites.txt')
+    satellites = load.tle_file('active_satellites.txt')
     return satellites
 
 
