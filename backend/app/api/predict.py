@@ -1,21 +1,20 @@
 from fastapi import APIRouter
+
 from app.models.prediction import (
     PredictionRequest,
     PredictionResponse,
 )
-from app.services.prediction_service import predict
+from app.services.prediction_service import predict as predict_service
 
 router = APIRouter(
     prefix="/predict",
-    tags=["Prediction"]
+    tags=["Prediction"],
 )
 
-@router.post("/", response_model=PredictionResponse)
-def predict(request: PredictionRequest):
-    """
-    Predict whether any satellites will obstruct
-    the telescope's field of view.
-    """
 
-    result = predict(request)
-    return result
+@router.post(
+    "/",
+    response_model=PredictionResponse,
+)
+def predict(request: PredictionRequest):
+    return predict_service(request)

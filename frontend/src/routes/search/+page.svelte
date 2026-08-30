@@ -1,6 +1,6 @@
 <script>
 	import { tick } from 'svelte';
-	import { chatState, sendToLLM } from '$lib/searchState.svelte.js';
+	import { chatState, sendToLLM, resetChat } from '$lib/searchState.svelte.js';
 	import PageTransition from '$lib/components/PageTransition.svelte';
 	import IdleView from '$lib/components/search/IdleView.svelte';
 	import ChatBubble from '$lib/components/search/ChatBubble.svelte';
@@ -17,8 +17,16 @@
 		}
 	}
 
-	async function startChat(query) {
-		chatState.messages.push({ role: 'user', text: query });
+	/**
+	 * Called when the user clicks a planet in the search results.
+	 * The planet object carries RA/Dec so we never need to re-resolve.
+	 *
+	 * @param {{ name: string, hostname: string, ra: number, dec: number }} planet
+	 */
+	async function handlePlanetSelect(planet) {
+		const query = `Tell me about ${planet.name} (RA: ${planet.ra.toFixed(4)}°, Dec: ${planet.dec.toFixed(4)}°)`;
+
+		chatState.messages.push({ role: 'user', text: `Selected: ${planet.name}` });
 		chatState.chatStarted = true;
 		chatState.isLoading = true;
 		await scrollToBottom();
@@ -49,9 +57,12 @@
 
 		<div class="search-main">
 			{#if !chatState.chatStarted}
-				<IdleView onSubmit={startChat} />
+				<IdleView onSelect={handlePlanetSelect} />
 			{:else}
 				<div class="chat-view">
+					<button class="back-to-search-btn" onclick={resetChat}>
+						← Back to search
+					</button>
 					<div class="chat-window">
 						<div class="message-list" bind:this={messageListEl}>
 							{#each chatState.messages as message (message)}

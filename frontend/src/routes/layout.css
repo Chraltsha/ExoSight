@@ -9,13 +9,38 @@
   --color-accent: #D9A4D9;
 }
 
+@font-face {
+  font-family: 'Iosevka Charon Regular';
+  src: local('Iosevka Charon Regular'), local('IosevkaCharon-Regular');
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Iosevka Charon Light';
+  src: local('Iosevka Charon Light'), local('IosevkaCharon-Light');
+  font-weight: 300;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Iosevka Charon Light Italic';
+  src: local('Iosevka Charon Light Italic'), local('IosevkaCharon-LightItalic');
+  font-weight: 300;
+  font-style: italic;
+}
+
+html {
+  zoom: 80%;
+}
+
 body {
   /* bg-background kept as fallback while the avif loads */
   @apply text-text-color bg-background overflow-x-hidden h-screen flex flex-col;
 }
 
 .home-content {
-  @apply flex flex-col gap-4 justify-baseline items-baseline text-center ml-96 mt-56;
+  @apply flex flex-col gap-0 justify-baseline items-start ml-96 mt-56;
 }
 
 .home-title {
@@ -23,25 +48,58 @@ body {
 }
 
 .home-subtitle{
-  @apply text-2xl;
+  font-size: 28px;
+  font-family: 'Iosevka Charon Light', 'Iosevka Charon', monospace;
+  display: block;
+  line-height: 1.4;
+  text-align: left;
+  margin-top: -20px;
 }
 
-.home-searchbar {
-  @apply bg-card border-1 rounded-4xl px-4;
+.subtitle-break {
+  display: block;
+}
+
+.home-searchbutton {
+  @apply bg-card border-1 rounded-4xl px-4 py-3 cursor-pointer transition-colors duration-200;
+  font-family: 'Iosevka Charon Light Italic', 'Iosevka Charon Light', monospace;
+  font-style: italic;
+  font-size: 18px;
+  margin-top: 100px;
+}
+
+.home-searchbutton:hover {
+  background-color: #FDFDFD;
+  color: #000000;
 }
 
 .navigation-bar {
-  @apply relative flex flex-row justify-center items-center text-3xl gap-24 mt-12 pb-3;
+  @apply relative flex flex-row justify-center items-center gap-24 mt-12 pb-3;
+  font-size: 24px;
+}
 
+.nav-logo {
+  @apply absolute left-90 top-1/2 h-32 w-auto;
+  transform: translateY(-50%);
 }
 
 .navigation-bar a {
   @apply no-underline text-inherit;
+  font-family: 'Iosevka Charon Regular', 'Iosevka Charon', monospace;
 }
 
 .nav-indicator {
   @apply absolute bottom-0 h-[3px] bg-current transition-all duration-300 ease-in-out;
   /* width/position now set inline via measured offsetWidth/offsetLeft, not calc() */
+}
+
+.nav-divider {
+  @apply border-t border-text-color my-4;
+  height: 1px;
+  background-color: #FDFDFD;
+  width: 80%;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 /* ============================================================
@@ -77,19 +135,87 @@ body {
 }
 
 .idle-searchbar {
-  @apply w-full max-w-2xl rounded-4xl border border-card bg-card px-6 py-4 text-2xl text-text-color placeholder-[#888] outline-none focus:border-accent;
+  @apply w-full rounded-4xl border border-card bg-card px-6 py-4 text-2xl text-text-color placeholder-[#888] outline-none focus:border-accent;
 }
 
-.surprise-btn {
-  @apply bg-transparent text-accent underline underline-offset-4 transition-colors duration-200 hover:text-text-color;
+/* ============================================================
+   Search input wrapper + results dropdown
+   ============================================================ */
+
+.search-input-wrapper {
+  @apply relative w-full max-w-2xl flex flex-col;
+}
+
+/* Row that holds the input + inline spinner side by side */
+.search-input-row {
+  @apply relative flex items-center w-full;
+}
+
+.search-input-row .idle-searchbar {
+  @apply flex-1 pr-14; /* make room for the spinner on the right */
+}
+
+/* Spinning ring indicator — sits inside the input on the right */
+.search-spinner {
+  @apply absolute right-5 h-5 w-5 rounded-full border-2 border-[#888] border-t-accent pointer-events-none;
+  animation: spin 0.7s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.search-status--error {
+  @apply mt-2 px-2 text-sm text-red-400;
+}
+
+/* Outer container — flex column so the footer sits below the scroll area */
+.search-results {
+  @apply mt-1 w-full rounded-2xl border border-card bg-card flex flex-col;
+}
+
+/* Scrollable planet list — capped at 5 rows (each row ~48px = 240px) */
+.search-results-list {
+  @apply overflow-y-auto list-none p-0 m-0;
+  max-height: 240px;
+}
+
+/* Sticky footer for Load more — never scrolls away */
+.search-results-footer {
+  @apply border-t border-[#333] flex-shrink-0;
+}
+
+.search-result-item {
+  @apply flex w-full items-center justify-between gap-4 px-5 py-3 text-left
+         text-text-color transition-colors duration-150 hover:bg-accent hover:text-background
+         focus:outline-none focus:bg-accent focus:text-background;
+}
+
+.result-name {
+  @apply font-medium;
+}
+
+.result-host {
+  @apply text-sm text-[#888];
+}
+
+.load-more-btn {
+  @apply w-full px-5 py-3 text-center text-accent transition-colors duration-150
+         hover:bg-accent hover:text-background disabled:opacity-40 disabled:cursor-not-allowed
+         focus:outline-none;
 }
 
 /* ============================================================
    Search page — chat view
    ============================================================ */
 
+.back-to-search-btn {
+  @apply self-start ml-6 mt-4 mb-2 text-sm text-accent underline underline-offset-4
+         transition-colors duration-200 hover:text-text-color bg-transparent;
+}
+
 .chat-view {
-  @apply flex flex-1 flex-col items-center py-6 px-4 overflow-hidden;
+  @apply flex flex-1 flex-col overflow-hidden;
 }
 
 .chat-window {

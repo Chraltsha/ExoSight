@@ -1,6 +1,7 @@
 <script>
 	import './layout.css';
 	import favicon from '$lib/assets/favicon.svg';
+	import logoWhite from '$lib/assets/ExoSight_Logo_White.svg';
 	import { resolve } from '$app/paths';
 	import { page } from '$app/state';
 	import { onNavigate } from '$app/navigation';
@@ -15,12 +16,29 @@
 	let { children } = $props();
 
 	const NAV_LINKS = [
-		{ href: '/', label: 'Home' },
-		{ href: '/search', label: 'Search' },
-		{ href: '/about', label: 'About' }
+		{ href: '/', label: 'home' },
+		{ href: '/search', label: 'search' },
+		{ href: '/about', label: 'about' }
 	];
 
 	const resolvedRoutes = NAV_LINKS.map((link) => resolve(link.href));
+
+	let navIndicator = $state({ width: 0, left: 0 });
+
+	const updateIndicator = () => {
+		setTimeout(() => {
+			const activeLink = document.querySelector('.navigation-bar a.active');
+			if (activeLink) {
+				navIndicator.width = activeLink.offsetWidth;
+				navIndicator.left = activeLink.offsetLeft;
+			}
+		}, 0);
+	};
+
+	$effect(() => {
+		page.url.pathname;
+		updateIndicator();
+	});
 
 	onNavigate(({ from, to }) => {
 		if (!from?.url || !to?.url) return;
@@ -42,14 +60,19 @@
 <StarBackground src="/star-layer3.png"      strength={LAYER_FRONT} zIndex={-1} />
 
 <nav class="navigation-bar">
+	<img src={logoWhite} alt="ExoSight" class="nav-logo" />
 	{#each NAV_LINKS as link (link.href)}
 		<a href={resolve(link.href)} class:active={page.url.pathname === resolve(link.href)}>
 			{link.label}
 		</a>
 	{/each}
+	<div
+		class="nav-indicator"
+		style="width: {navIndicator.width}px; left: {navIndicator.left}px"
+	/>
 </nav>
 
-<hr />
+<!-- <hr class="nav-divider" /> -->
 
 <div class="page-transition-wrapper">
 	{@render children()}

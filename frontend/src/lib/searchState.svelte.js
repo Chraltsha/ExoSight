@@ -10,6 +10,13 @@ export const chatState = $state({
 	isLoading: false
 });
 
+/** Reset the chat back to the idle search state. */
+export function resetChat() {
+	chatState.messages = [];
+	chatState.chatStarted = false;
+	chatState.isLoading = false;
+}
+
 /** Stub: replace with a real API call once the backend is ready. */
 export async function sendToLLM(query) {
 	await new Promise((resolve) => setTimeout(resolve, 1500));

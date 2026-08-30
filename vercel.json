@@ -1,0 +1,27 @@
+{
+    "regions": ["sin1"],
+    "services": {
+        "frontend": {
+            "root": "frontend",
+            "framework": "sveltekit-1"
+        },
+        "backend": {
+            "root": "backend",
+            "entrypoint": "app.main:app"
+        }
+    },
+    "rewrites": [
+        {
+            "source": "/api(/.*)?",
+            "destination": {
+                "service": "backend"
+            }
+        },
+        {
+            "source": "/(.*)",
+            "destination": {
+                "service": "frontend"
+            }
+        }
+    ]
+}
