@@ -61,4 +61,4 @@ class SatellitePrediction(BaseModel):
 class PredictionResponse(BaseModel):
     obstructed: bool
     satellites: list[SatellitePrediction]
-    interpretation: str
+    interpretation: str | None = None

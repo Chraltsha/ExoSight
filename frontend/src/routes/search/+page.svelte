@@ -1,6 +1,6 @@
 <script>
 	import { tick } from 'svelte';
-	import { chatState, sendToLLM } from '$lib/searchState.svelte.js';
+	import { chatState, sendToLLM, resetChat } from '$lib/searchState.svelte.js';
 	import PageTransition from '$lib/components/PageTransition.svelte';
 	import IdleView from '$lib/components/search/IdleView.svelte';
 	import ChatBubble from '$lib/components/search/ChatBubble.svelte';
@@ -60,6 +60,9 @@
 				<IdleView onSelect={handlePlanetSelect} />
 			{:else}
 				<div class="chat-view">
+					<button class="back-to-search-btn" onclick={resetChat}>
+						← Back to search
+					</button>
 					<div class="chat-window">
 						<div class="message-list" bind:this={messageListEl}>
 							{#each chatState.messages as message (message)}
