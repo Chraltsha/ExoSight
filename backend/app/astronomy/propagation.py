@@ -117,8 +117,8 @@ def propagate_satellites(
     positions = []
 
     # Sample the beginning of the exposure and then
-    # every 3 seconds after that.
-    number_of_samples = int(exposure_duration // 3) + 1
+    # every 10 seconds after that.
+    number_of_samples = int(exposure_duration // 10) + 1
 
     for i in range(number_of_samples):
 
