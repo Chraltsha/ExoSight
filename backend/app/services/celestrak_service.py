@@ -51,6 +51,8 @@ ACTIVE_SATELLITES_URL = (
 def load_satellites() -> list[EarthSatellite]:
     """
     Download the latest active satellite TLEs from CelesTrak.
+    Cache the result in active_satellites.txt and re-download
+    only when the file is older than 3 days.
 
     Returns:
         list[EarthSatellite]

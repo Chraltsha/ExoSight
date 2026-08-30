@@ -99,52 +99,53 @@ def propagate_satellite(
     }
 
 
-def propagate_satellites(
-    satellites,
-    observer,
-    observation_time,
-    exposure_duration,
-):
-    print("start of propogation")
-    """
-    Propagate all satellites throughout the observation.
+def propagate_satellites(satellites, observer, observation_time, exposure_duration):
+    from datetime import timedelta
 
-    The exposure is sampled every 3 seconds.
+    # Build all sample times as a Skyfield time array — one call
+    n_samples = int(exposure_duration) + 1
+    sample_times = [
+        observation_time + timedelta(seconds=i)
+        for i in range(n_samples)
+    ]
+    t_array = ts.from_datetimes([
+        t.replace(tzinfo=timezone.utc) if t.tzinfo is None else t
+        for t in sample_times
+    ])
 
-    Returns:
-        list of satellite positions at each sampled time.
-    """
+    observer_sf = wgs84.latlon(
+        observer.latitude,
+        observer.longitude,
+        observer.elevation,
+    )
+
+    observer_astropy = EarthLocation(
+        lat=observer.latitude * u.deg,
+        lon=observer.longitude * u.deg,
+        height=observer.elevation * u.m,
+    )
 
     positions = []
 
-    # Sample the beginning of the exposure and then
-    # every 10 seconds after that.
-    number_of_samples = int(exposure_duration // 10) + 1
+    for satellite in satellites:
+        # One Skyfield call per satellite, but across ALL time steps at once
+        apparent = (satellite - observer_sf).at(t_array)
+        alts, azs, dists = apparent.altaz()
 
-    for i in range(number_of_samples):
+        for i, t in enumerate(sample_times):
+            positions.append({
+                "satellite_name": satellite.name,
+                "time": t,
+                "altitude": alts.degrees[i],
+                "azimuth": azs.degrees[i],
+                "distance": dists.km[i],
+                "coordinate": SkyCoord(
+                    alt=alts.degrees[i] * u.deg,
+                    az=azs.degrees[i] * u.deg,
+                    distance=dists.km[i] * u.km,
+                    frame=AltAz(obstime=t, location=observer_astropy),
+                ),
+                "satellite": satellite,
+            })
 
-        elapsed_seconds = float(i * 3)
-
-        # Do not go beyond the requested exposure duration.
-        if elapsed_seconds > exposure_duration:
-            break
-
-        from datetime import timedelta
-
-        current_time = (
-            observation_time
-            + timedelta(seconds=elapsed_seconds)
-        )
-
-        for satellite in satellites:
-
-            position = propagate_satellite(
-                satellite=satellite,
-                observer=observer,
-                observation_time=current_time,
-            )
-
-            positions.append(position)
-
-    print("----end propagation-------")
     return positions
