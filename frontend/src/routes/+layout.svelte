@@ -38,6 +38,9 @@
 	$effect(() => {
 		page.url.pathname;
 		updateIndicator();
+
+		window.addEventListener('resize', updateIndicator);
+		return () => window.removeEventListener('resize', updateIndicator);
 	});
 
 	onNavigate(({ from, to }) => {

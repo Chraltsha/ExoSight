@@ -34,26 +34,37 @@ html {
 	zoom: 80%;
 }
 
+@media (max-width: 768px) {
+	html {
+		zoom: 100%;
+	}
+}
+
 body {
 	/* bg-background kept as fallback while the avif loads */
 	@apply flex min-h-screen flex-col overflow-x-hidden bg-background text-text-color;
 }
 
 .home-content {
-	@apply mt-56 ml-96 flex flex-col items-start justify-baseline gap-0;
+	@apply mx-auto mt-16 flex w-full max-w-[90vw] flex-col items-start justify-baseline gap-0 px-4;
+	margin-top: clamp(6rem, 22vh, 22rem);
+	padding-left: clamp(1rem, 8vw, 24rem);
 }
 
 .home-title {
-	@apply text-8xl;
+	@apply w-full;
+	/* SVG scales to container width, respecting aspect ratio */
+	max-width: clamp(260px, 70vw, 800px);
+	height: auto;
 }
 
 .home-subtitle {
-	font-size: 28px;
 	font-family: 'Iosevka Charon Light', 'Iosevka Charon', monospace;
+	font-size: clamp(14px, 2.2vw, 28px);
 	display: block;
 	line-height: 1.4;
 	text-align: left;
-	margin-top: -20px;
+	margin-top: -0.5em;
 }
 
 .subtitle-break {
@@ -64,8 +75,8 @@ body {
 	@apply cursor-pointer rounded-4xl border-1 bg-card px-4 py-3 transition-colors duration-200;
 	font-family: 'Iosevka Charon Light Italic', 'Iosevka Charon Light', monospace;
 	font-style: italic;
-	font-size: 18px;
-	margin-top: 100px;
+	font-size: clamp(13px, 1.4vw, 18px);
+	margin-top: clamp(2rem, 6vw, 6.25rem);
 }
 
 .home-searchbutton:hover {
@@ -74,13 +85,19 @@ body {
 }
 
 .navigation-bar {
-	@apply relative mt-12 flex flex-row items-center justify-center gap-24 pb-3;
-	font-size: 24px;
+	@apply relative flex flex-row items-center justify-center pb-3;
+	font-size: clamp(14px, 1.8vw, 24px);
+	margin-top: clamp(0.75rem, 3vw, 3rem);
+	gap: clamp(1rem, 5vw, 6rem);
 }
 
 .nav-logo {
-	@apply absolute top-1/2 left-90 h-32 w-auto;
+	position: absolute;
+	top: 50%;
 	transform: translateY(-50%);
+	left: clamp(0.5rem, 5vw, 5.5rem);
+	height: clamp(3rem, 7vw, 8rem);
+	width: auto;
 }
 
 .navigation-bar a {
@@ -239,12 +256,14 @@ body {
    ============================================================ */
 
 .search-new-page {
-	@apply mx-auto w-full max-w-[1600px] px-8 py-8;
+	@apply mx-auto w-full max-w-[1600px] px-4 py-6;
+	padding-left: clamp(1rem, 4vw, 2rem);
+	padding-right: clamp(1rem, 4vw, 2rem);
 }
 
 .search-page-heading {
 	font-family: 'Iosevka Charon Regular', 'Iosevka Charon', monospace;
-	font-size: 3rem;
+	font-size: clamp(1.4rem, 3.5vw, 3rem);
 	font-weight: 400;
 	line-height: 1.2;
 	@apply mb-1 text-text-color;
@@ -284,14 +303,16 @@ body {
 /* BODY ROW: left col fills remaining space, right col fixed */
 .search-body-row {
 	@apply flex gap-6;
+	flex-wrap: wrap;
 }
 
 /* LEFT column: heading + autocomplete + three panels + button */
 .search-inputs-col {
 	@apply flex min-w-0 flex-1 flex-col gap-4;
+	min-width: min(100%, 400px);
 }
 
-/* Three equal-width input panels */
+/* Three equal-width input panels — collapse to 1 col on narrow screens */
 .search-three-col {
 	@apply grid gap-4;
 	grid-template-columns: repeat(3, 1fr);
@@ -299,7 +320,7 @@ body {
 
 /* RIGHT column: Exosight output */
 .search-output-col {
-	width: 400px;
+	width: clamp(280px, 30vw, 400px);
 	flex-shrink: 0;
 	display: flex;
 	flex-direction: column;
@@ -391,4 +412,67 @@ body {
 	letter-spacing: 0.01em;
 	text-transform: none;
 	@apply text-accent;
+}
+
+/* ============================================================
+   Responsive / mobile overrides  (largest → smallest)
+   ============================================================ */
+
+/* Medium screens: tablets landscape / small laptops ≤ 1024px */
+@media (max-width: 1024px) {
+	.search-three-col {
+		grid-template-columns: repeat(2, 1fr);
+	}
+
+	.search-output-col {
+		width: clamp(260px, 35vw, 400px);
+	}
+}
+
+/* Tablet: ≤ 768px — stack search layout, fix nav */
+@media (max-width: 768px) {
+	.navigation-bar {
+		/* Push links to the right so the absolute logo doesn't overlap them */
+		justify-content: flex-end;
+		padding-right: 1.5rem;
+		gap: clamp(0.75rem, 4vw, 2rem);
+	}
+
+	.search-body-row {
+		flex-direction: column;
+	}
+
+	.search-output-col {
+		width: 100%;
+	}
+
+	.search-three-col {
+		grid-template-columns: 1fr;
+	}
+
+	.search-submit-btn {
+		margin-top: 1rem;
+		margin-bottom: 1rem;
+		font-size: 1.4rem;
+	}
+}
+
+/* Small mobile: ≤ 480px — tighten further */
+@media (max-width: 480px) {
+	.home-content {
+		padding-left: 1rem;
+		margin-top: 5rem;
+	}
+
+	.home-title {
+		max-width: 90vw;
+	}
+
+	.navigation-bar {
+		padding-right: 1rem;
+	}
+
+	.search-page-heading {
+		font-size: 1.2rem;
+	}
 }
