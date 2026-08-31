@@ -46,6 +46,67 @@ FastAPI backend
 | `backend/app/services/`  | HTTPX, OpenAI SDK                              | NASA, CelesTrak, and AI integrations                        |
 | `vercel.json`            | Vercel Services                                | Routes the frontend and Python backend under one deployment |
 
+## How we used IBM Bob
+
+IBM Bob was basically our debugging partner throughout this project. We did not just ask it to
+generate the whole app and call it a day. We used it to investigate problems, understand what the
+code was doing, test possible fixes, and improve parts of ExoSight as the project grew.
+
+### 1. Debugging the NASA TAP API
+
+We used Bob to trace API errors while ExoSight was calling the NASA Exoplanet Archive TAP service.
+It helped us inspect the request flow, understand why some planet searches or exact-name lookups
+failed, and improve the error responses shown to users.
+
+![Bob debugging NASA TAP API](docs/images/bob_debug.png)
+
+### 2. Optimizing the prediction calculations
+
+We used Bob to inspect how the prediction pipeline calculated satellite positions. The original
+version created and stored a heavy coordinate object for every satellite at every second, then
+repeated some of the same coordinate transformations. Bob helped us change that into a vectorized
+flow that calculates the target track once, processes one satellite at a time, and stores only
+the first detected crossing. This kept the one-second checks while making the calculation much
+faster and lighter on memory.
+
+![Bob optimizing prediction API](docs/images/bob_optimize.png)
+
+### 3. Debugging the comet UI
+
+We also used Bob while working on the comet UI feature, especially when debugging how comets were
+spawned, positioned, and moved around the screen. It helped us track down behavior that was hard to
+see from the code alone and made the animation easier to tune.
+
+### 4. Fixing the About page layout
+
+Bob helped us clean up the About page layout, specifically the alignment of the pictures and
+text inside their individual containers. We used it to reason about the container structure,
+spacing, and alignment until the sections looked consistent instead of slightly fighting each
+other.
+
+### 5. Documentation and frontend polish
+
+We also used Bob to help write and organize this README, update the backend and API docs, and
+work through other frontend visual-fidelity issues. It helped us turn scattered implementation
+details into documentation that explains what the project actually does without making it sound
+like a robot wrote it.
+
+### 6. Planning the architecture and system design
+
+Bob helped us think through ExoSight as a complete system instead of one large block of code. We
+used it to compare design options, map how data should move through the application, and decide
+where each responsibility belonged. That helped us keep the SvelteKit frontend focused on the
+user experience, FastAPI responsible for the API contract, service modules responsible for NASA,
+CelesTrak, and OpenAI integrations, and the astronomy modules responsible for the actual orbital
+calculations.
+
+Bob also helped us reason about the full request flow: collect the observation settings, resolve
+the exoplanet, load and filter satellite data, calculate possible crossings, and turn the final
+result into a readable explanation. It gave us another way to challenge our design decisions,
+while our team still made the final calls on what fit the project.
+
+![Bob optimizing prediction API](docs/images/bob_architect.png)
+
 ## Run it locally
 
 ### Backend
