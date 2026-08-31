@@ -30,6 +30,7 @@
 
 	let lat = $state(0);
 	let lon = $state(0);
+	let elevation = $state(0);
 
 	let isLoading = $state(false);
 	let llmOutput = $state('');
@@ -67,20 +68,74 @@
 		return () => window.removeEventListener('click', handleWindowClick);
 	});
 
-	// ── LLM stub ─────────────────────────────────────────────────────────────────
+	// ── prediction pipeline ───────────────────────────────────────────────────────
 
-	// TODO: wire to real endpoint
-	async function sendToLLM(payload) {
-		await new Promise((r) => setTimeout(r, 1500));
-		return `[Stub] Observation analysis for ${payload.planetName} at (${payload.lat.toFixed(2)}, ${payload.lon.toFixed(2)}) on ${payload.date} ${payload.time} for ${payload.observationLength} min. HFOV: ${payload.hFov}°, VFOV: ${payload.vFov}°.`;
-	}
+	// Planet name: letters, digits, spaces, hyphens, dots, +, apostrophes — max 100 chars
+	const PLANET_NAME_RE = /^[\w\s\-.+'']{1,100}$/;
 
 	async function handleSearch() {
+		const trimmed = planetName.trim();
+
+		if (!trimmed) {
+			llmOutput = 'Please enter a planet name.';
+			return;
+		}
+
+		if (!PLANET_NAME_RE.test(trimmed)) {
+			llmOutput = 'Planet name contains invalid characters.';
+			return;
+		}
+
 		isLoading = true;
 		llmOutput = '';
-		const payload = { planetName, hFov, vFov, date, time, observationLength, lat, lon };
-		llmOutput = await sendToLLM(payload);
-		isLoading = false;
+
+		// Build observation_time from the date + time fields (treated as UTC)
+		const observationTime = new Date(`${date}T${time}:00Z`).toISOString();
+
+		// exposure_duration in seconds
+		const exposureDuration = observationLength * 60;
+
+		try {
+			const res = await fetch('/api/predict/', {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify({
+					observer: {
+						latitude: lat,
+						longitude: lon,
+						elevation: elevation,
+					},
+					observation_time: observationTime,
+					exposure_duration: exposureDuration,
+					target: {
+						object_name: trimmed,
+					},
+					fov: {
+						horizontal: hFov,
+						vertical: vFov,
+					},
+				}),
+			});
+
+			if (!res.ok) {
+				const err = await res.json().catch(() => ({ detail: res.statusText }));
+				if (res.status === 404) {
+					llmOutput = `Planet "${trimmed}" was not found in the NASA Exoplanet Archive.`;
+				} else {
+					llmOutput = `Error ${res.status}: ${err.detail ?? 'Unknown error'}`;
+				}
+				return;
+			}
+
+			const data = await res.json();
+			llmOutput = data.interpretation ?? (data.obstructed
+				? `${data.satellites.length} satellite(s) will obstruct your observation.`
+				: 'No satellite interference detected.');
+		} catch (err) {
+			llmOutput = `Network error: ${err.message}`;
+		} finally {
+			isLoading = false;
+		}
 	}
 </script>
 
@@ -161,7 +216,7 @@
 				<div class="search-three-col">
 					<TelescopeSettings bind:hFov bind:vFov />
 					<DateTimeSettings bind:date bind:time bind:observationLength />
-					<LocationSettings bind:lat bind:lon />
+					<LocationSettings bind:lat bind:lon bind:elevation />
 				</div>
 			</div>
 

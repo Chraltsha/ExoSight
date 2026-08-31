@@ -29,9 +29,9 @@ Do not invent information or perform additional astronomical
 calculations.
 """
 
-    response = client.responses.create(
-        model="gpt-5.5",
-        input=prompt,
+    response = client.chat.completions.create(
+        model="gpt-5.6-terra",
+        messages=[{"role": "user", "content": prompt}],
     )
 
-    return response.output_text
+    return response.choices[0].message.content or ""
