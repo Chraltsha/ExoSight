@@ -76,6 +76,7 @@
 
 <svelte:head>
 	<link rel="icon" href={favicon} />
+	<title>Exosight: find your Exoplanet</title>
 </svelte:head>
 
 <StarBackground src="/star-background.jpg" strength={LAYER_BASE} zIndex={-3} />
