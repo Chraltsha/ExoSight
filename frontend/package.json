@@ -36,6 +36,7 @@
 		"vitest": "^4.1.8"
 	},
 	"dependencies": {
-		"leaflet": "^1.9.4"
+		"leaflet": "^1.9.4",
+		"marked": "^18.0.11"
 	}
 }
