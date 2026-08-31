@@ -1,30 +1,44 @@
-# API Reference
+# ExoSight API Reference
 
-Base URL (dev): `http://127.0.0.1:8000`
-All routes are prefixed with `/api`.
-Interactive docs: `http://127.0.0.1:8000/docs`
+The backend is a FastAPI app. All feature routes use the `/api` prefix.
 
----
+| Environment               | Base URL                              |
+| ------------------------- | ------------------------------------- |
+| Local backend             | `http://127.0.0.1:8000`               |
+| Current Vercel deployment | `https://exosight-xs-ight.vercel.app` |
 
-## GET /api/exoplanets/search
+When running locally, interactive docs are available at `/docs` and `/redoc`.
 
-Search for exoplanets by name substring. Uses cursor-based pagination.
-Queries the `pscomppars` table (one composite row per confirmed planet — no duplicates).
+## Quick endpoint list
 
-**Query parameters**
+| Method | Path                     | Purpose                                                 |
+| ------ | ------------------------ | ------------------------------------------------------- |
+| `GET`  | `/api/exoplanets/search` | Search confirmed exoplanets with cursor pagination      |
+| `GET`  | `/api/targets/resolve`   | Resolve one exact planet name to ICRS coordinates       |
+| `POST` | `/api/predict/`          | Run the satellite obstruction prediction pipeline       |
+| `GET`  | `/`                      | Backend health response when FastAPI is served directly |
 
-| Parameter | Type   | Required | Default | Description                              |
-|-----------|--------|----------|---------|------------------------------------------|
-| `q`       | string | yes      | —       | Substring to match against planet names (min 2 chars) |
-| `limit`   | int    | no       | 20      | Results per page (1–100)                 |
-| `cursor`  | string | no       | null    | `next_cursor` value from a previous response |
+## `GET /api/exoplanets/search`
 
-**Example request**
+Searches confirmed planet names through the NASA Exoplanet Archive `pscomppars` table.
+Matching is case-insensitive and results are ordered by planet name.
+
+### Query parameters
+
+| Parameter | Type    | Required | Default | Rules                                     |
+| --------- | ------- | -------: | ------: | ----------------------------------------- |
+| `q`       | string  |      Yes |       - | Minimum 2 characters                      |
+| `limit`   | integer |       No |    `20` | From 1 to 100                             |
+| `cursor`  | string  |       No |  `null` | Use the previous response's `next_cursor` |
+
+The frontend explicitly requests `limit=5` for both the first page and every Load more click.
+
+### Example
+
+```http
+GET /api/exoplanets/search?q=kepler&limit=5
 ```
-GET /api/exoplanets/search?q=kepler&limit=20
-```
 
-**200 OK**
 ```json
 {
   "items": [
@@ -35,44 +49,49 @@ GET /api/exoplanets/search?q=kepler&limit=20
       "dec": 50.241
     }
   ],
-  "next_cursor": "Kepler-19 c",
+  "next_cursor": "Kepler-10 b",
   "has_more": true
 }
 ```
 
-**Pagination**
+### How pagination works
 
-Pass `next_cursor` from the previous response as `cursor` to get the next page.
-When `has_more` is `false`, you are on the last page.
-`cursor` values are planet names — do not construct them manually.
+The backend fetches `limit + 1` rows. The extra row is only used to decide whether another page
+exists and is not returned.
 
-**Error responses**
+If another page exists:
 
-| Status | Reason                                     |
-|--------|--------------------------------------------|
-| 422    | `q` is missing or shorter than 2 characters |
-| 502    | NASA TAP service returned an error         |
+- `has_more` is `true`.
+- `next_cursor` is the name of the last planet returned on the current page.
+- The next request adds `pl_name > cursor` and continues in alphabetical order.
 
----
+Pass the cursor back exactly as returned. Do not build one manually.
 
-## GET /api/targets/resolve
+### Errors
 
-Resolves an exoplanet name to sky coordinates by querying the
-[NASA Exoplanet Archive TAP service](https://exoplanetarchive.ipac.caltech.edu/docs/TAP/usingTAP.html).
-Use this before submitting a prediction if you only have a planet name.
+| Status | Meaning                                                        |
+| -----: | -------------------------------------------------------------- |
+|  `422` | Missing `q`, `q` shorter than 2 characters, or invalid `limit` |
+|  `502` | NASA returned a non-success HTTP status                        |
+|  `500` | Unhandled connection, parsing, or backend runtime failure      |
 
-**Query parameters**
+## `GET /api/targets/resolve`
 
-| Parameter | Type   | Required | Description                          |
-|-----------|--------|----------|--------------------------------------|
-| `name`    | string | yes      | Exact planet name e.g. `Kepler-22 b` |
+Resolves an exact exoplanet name through NASA and returns its ICRS right ascension and
+declination in decimal degrees.
 
-**Example request**
-```
+### Query parameters
+
+| Parameter | Type   | Required | Example       |
+| --------- | ------ | -------: | ------------- |
+| `name`    | string |      Yes | `Kepler-22 b` |
+
+### Example
+
+```http
 GET /api/targets/resolve?name=Kepler-22%20b
 ```
 
-**200 OK**
 ```json
 {
   "name": "Kepler-22 b",
@@ -81,39 +100,36 @@ GET /api/targets/resolve?name=Kepler-22%20b
 }
 ```
 
-All coordinates are decimal degrees, ICRS frame.
+### Errors
 
-**Error responses**
+| Status | Meaning                                                   |
+| -----: | --------------------------------------------------------- |
+|  `404` | NASA returned no exact match                              |
+|  `422` | `name` was not supplied                                   |
+|  `502` | NASA returned a non-success HTTP status                   |
+|  `500` | Unhandled connection, parsing, or backend runtime failure |
 
-| Status | Reason                                  |
-|--------|-----------------------------------------|
-| 404    | No planet found with that exact name    |
-| 502    | NASA TAP service returned an error      |
+## `POST /api/predict/`
 
----
+Predicts whether an active satellite enters a rectangular telescope FoV during an observation,
+then asks OpenAI for a plain-language explanation.
 
-## POST /api/predict/
+The trailing slash is part of the declared route. FastAPI will normally redirect
+`/api/predict` to `/api/predict/`.
 
-Predicts whether any active satellites will pass through a telescope's
-field of view during an observation window. The target can be supplied
-as explicit RA/Dec coordinates or as an exoplanet name — if a name is
-given, the backend resolves it via NASA TAP automatically.
-
-**Request body**
+### Request body using a planet name
 
 ```json
 {
   "observer": {
-    "latitude":  14.5995,
+    "latitude": 14.5995,
     "longitude": 120.9842,
     "elevation": 20
   },
-  "observation_time": "2025-08-29T22:00:00Z",
-  "exposure_duration": 30,
+  "observation_time": "2026-09-01T14:00:00Z",
+  "exposure_duration": 60,
   "target": {
-    "ra": 285.6794,
-    "dec": 47.8989,
-    "object_name": null
+    "object_name": "Kepler-22 b"
   },
   "fov": {
     "horizontal": 1.0,
@@ -122,70 +138,106 @@ given, the backend resolves it via NASA TAP automatically.
 }
 ```
 
-**Fields**
+### Request body using coordinates
 
-| Field                       | Type           | Unit         | Required | Notes                                      |
-|-----------------------------|----------------|--------------|----------|--------------------------------------------|
-| `observer.latitude`         | float          | degrees      | yes      | −90 to +90                                 |
-| `observer.longitude`        | float          | degrees      | yes      | −180 to +180                               |
-| `observer.elevation`        | float          | metres       | yes      |                                            |
-| `observation_time`          | ISO 8601 string| UTC          | yes      | Start of the exposure window               |
-| `exposure_duration`         | float          | seconds      | yes      | Length of the observation                  |
-| `target.ra`                 | float          | degrees ICRS | either   | Required if `object_name` is not supplied  |
-| `target.dec`                | float          | degrees ICRS | either   | Required if `object_name` is not supplied  |
-| `target.object_name`        | string         | —            | either   | Exact NASA exoplanet name; backend resolves to RA/Dec |
-| `fov.horizontal`            | float          | degrees      | yes      | Full angular width of the telescope frame  |
-| `fov.vertical`              | float          | degrees      | yes      | Full angular height of the telescope frame |
+```json
+{
+  "observer": {
+    "latitude": 14.5995,
+    "longitude": 120.9842,
+    "elevation": 20
+  },
+  "observation_time": "2026-09-01T14:00:00Z",
+  "exposure_duration": 60,
+  "target": {
+    "ra": 285.6794,
+    "dec": 47.8989
+  },
+  "fov": {
+    "horizontal": 1.0,
+    "vertical": 1.0
+  }
+}
+```
 
-Supply either `ra` + `dec` **or** `object_name` — not both. If `object_name`
-is given, `ra` and `dec` are ignored.
+### Request fields
 
-**200 OK**
+| Field                | Type              | Unit         |    Required | Current behavior                                      |
+| -------------------- | ----------------- | ------------ | ----------: | ----------------------------------------------------- |
+| `observer.latitude`  | number            | degrees      |         Yes | Intended range is -90 to 90                           |
+| `observer.longitude` | number            | degrees      |         Yes | Intended range is -180 to 180                         |
+| `observer.elevation` | number            | metres       |         Yes | Passed to Astropy and Skyfield                        |
+| `observation_time`   | ISO 8601 datetime | -            |         Yes | Naive datetimes are treated as UTC by Skyfield code   |
+| `exposure_duration`  | number            | seconds      |         Yes | Positions are sampled at whole-second intervals       |
+| `target.ra`          | number or `null`  | ICRS degrees | Conditional | Must be supplied together with `target.dec`           |
+| `target.dec`         | number or `null`  | ICRS degrees | Conditional | Must be supplied together with `target.ra`            |
+| `target.object_name` | string or `null`  | -            | Conditional | Exact NASA planet name; trimmed and character-checked |
+| `fov.horizontal`     | number            | degrees      |         Yes | Full rectangular width; code compares against half    |
+| `fov.vertical`       | number            | degrees      |         Yes | Full rectangular height; code compares against half   |
+
+Use either RA and Dec together or an object name. If complete RA/Dec and an object name are all
+provided, the current implementation uses RA/Dec and does not resolve the name.
+
+The backend models currently enforce types, required fields, and planet-name characters, but do
+not enforce all of the numeric ranges shown above. The frontend inputs do enforce several of
+those intended ranges.
+
+Allowed object-name characters are letters, digits, whitespace, hyphens, periods, plus signs,
+and apostrophes, with a maximum length of 100 characters.
+
+### Success response
+
 ```json
 {
   "obstructed": true,
   "satellites": [
     {
       "satellite_name": "STARLINK-1234",
-      "crossing_time": "2025-08-29T22:00:14Z",
+      "crossing_time": "2026-09-01T14:00:14Z",
       "altitude": 32.4,
       "azimuth": 214.7,
       "brightness": null
     }
   ],
-  "interpretation": "One satellite (STARLINK-1234) is predicted to cross your field of view approximately 14 seconds into the exposure..."
+  "interpretation": "One satellite is predicted to cross the telescope's field of view during the observation."
 }
 ```
 
-**Response fields**
+### Response fields
 
-| Field                          | Type    | Unit    | Notes                                      |
-|--------------------------------|---------|---------|--------------------------------------------|
-| `obstructed`                   | bool    | —       | `true` if any satellite intersects the FoV |
-| `satellites`                   | array   | —       | Empty if no obstructions                   |
-| `satellites[].satellite_name`  | string  | —       | NORAD catalogue name                       |
-| `satellites[].crossing_time`   | string  | UTC ISO | Moment of closest approach within the FoV |
-| `satellites[].altitude`        | float   | degrees | Elevation above horizon at crossing time   |
-| `satellites[].azimuth`         | float   | degrees | Compass bearing at crossing time (N = 0)   |
-| `satellites[].brightness`      | float?  | mag     | Visual magnitude — `null` until implemented|
-| `interpretation`               | string  | —       | GPT plain-language summary of the result   |
+| Field                         | Type             | Unit      | Meaning                                                                   |
+| ----------------------------- | ---------------- | --------- | ------------------------------------------------------------------------- |
+| `obstructed`                  | boolean          | -         | Whether at least one sampled position entered the FoV                     |
+| `satellites`                  | array            | -         | One result per obstructing satellite                                      |
+| `satellites[].satellite_name` | string           | -         | Name from the CelesTrak TLE record                                        |
+| `satellites[].crossing_time`  | datetime         | UTC       | First sampled time inside the FoV                                         |
+| `satellites[].altitude`       | number           | degrees   | Apparent elevation above the observer's horizon                           |
+| `satellites[].azimuth`        | number           | degrees   | Apparent compass bearing, with north at 0 degrees                         |
+| `satellites[].brightness`     | number or `null` | magnitude | Always `null` in the current implementation                               |
+| `interpretation`              | string or `null` | -         | OpenAI-generated explanation; current service returns a string on success |
 
-**Error responses**
+### Errors
 
-| Status | Reason                                                      |
-|--------|-------------------------------------------------------------|
-| 422    | Request body failed validation (missing or wrong-type field)|
-| 404    | `object_name` was given but NASA returned no match          |
-| 502    | NASA TAP unreachable while resolving `object_name`          |
-| 500    | Internal error (e.g. OpenAI API failure)                    |
+| Status | Meaning                                                                  |
+| -----: | ------------------------------------------------------------------------ |
+|  `400` | Invalid target combination, such as only RA or only Dec                  |
+|  `404` | Friendly error when the supplied planet does not exist in NASA's archive |
+|  `422` | JSON body does not match the Pydantic request model                      |
+|  `502` | NASA returned a non-success HTTP status while resolving a target         |
+|  `500` | Unhandled CelesTrak, OpenAI, network, coordinate, or runtime failure     |
 
----
+Example unknown-planet response:
 
-## GET /
+```json
+{
+  "detail": "We couldn't find an exoplanet named 'Definitely Not A Planet'. Please check the spelling and try again."
+}
+```
 
-Health check.
+## `GET /`
 
-**200 OK**
+When FastAPI is served directly, its root returns:
+
 ```json
 {
   "message": "Satellite Obstruction Prediction API",
@@ -193,20 +245,29 @@ Health check.
 }
 ```
 
----
+In the combined Vercel deployment, `/` is routed to the SvelteKit frontend, so this backend root
+is mainly useful during local development or when the backend is deployed separately.
 
-## Coordinate system
+## Coordinate and timing notes
 
-All sky positions throughout the API are **decimal degrees, ICRS frame**.
+- Target RA/Dec is ICRS in decimal degrees, not hours.
+- Satellite altitude and azimuth are topocentric values for the supplied observer.
+- The target is transformed from ICRS into Alt/Az separately at every sample time.
+- The observation is sampled once per second from the start through
+  `int(exposure_duration)`, inclusive.
+- The candidate filter checks the observation start only and uses a 10-degree radius.
+- The obstruction test uses a rectangular FoV, not a circular angular-separation threshold.
 
-- RA: 0 – 360 (not hours)
-- Dec: −90 to +90
-- Same format NASA TAP returns, same format Astropy/Skyfield consume — no conversion needed at any layer.
+## External services
 
-## Data sources
+| Service                    | Current use                                          |
+| -------------------------- | ---------------------------------------------------- |
+| NASA Exoplanet Archive TAP | Planet search and exact-name coordinate resolution   |
+| CelesTrak GP feed          | Active satellite TLE data                            |
+| OpenAI Chat Completions    | Plain-language interpretation of obstruction results |
 
-| Source | Used for |
-|--------|----------|
-| [CelesTrak active TLE feed](https://celestrak.org/NORAD/elements/gp.php?GROUP=active&FORMAT=tle) | Current satellite positions (fetched live, cached by Skyfield) |
-| [NASA Exoplanet Archive TAP](https://exoplanetarchive.ipac.caltech.edu/TAP/sync) | Resolving exoplanet names to RA/Dec |
-| OpenAI Chat Completions | Plain-language interpretation of prediction results |
+## Deployment note
+
+`OPENAI_API_KEY` must currently exist before the FastAPI app imports because `gpt_service.py`
+creates its client at module load time. If it is missing on Vercel, the function can fail before
+any route runs, including `/api/exoplanets/search`.
