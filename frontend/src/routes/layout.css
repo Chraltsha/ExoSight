@@ -488,10 +488,21 @@ body {
 	color: #efeef1;
 }
 
-.about-meta span {
+.about-meta span,
+.about-meta-link {
 	display: inline-flex;
 	align-items: center;
 	gap: 8px;
+}
+
+.about-meta-link {
+	color: inherit;
+	text-decoration: none;
+	transition: color 0.15s;
+}
+
+.about-meta-link:hover {
+	@apply text-accent;
 }
 
 .about-meta svg {
