@@ -43,12 +43,36 @@ html {
 body {
 	/* bg-background kept as fallback while the avif loads */
 	@apply flex min-h-screen flex-col overflow-x-hidden bg-background text-text-color;
+	/* telescope-cursor.png is a 32×32 resized copy — browsers reject cursors >128px */
+	cursor:
+		url('/telescope-cursor.png') 16 16,
+		auto;
 }
 
 .home-content {
 	@apply mx-auto mt-16 flex w-full max-w-[90vw] flex-col items-start justify-baseline gap-0 px-4;
 	margin-top: clamp(6rem, 22vh, 22rem);
 	padding-left: clamp(1rem, 8vw, 24rem);
+}
+
+.home-credits {
+	position: fixed;
+	bottom: 0.75rem;
+	right: 1rem;
+	font-family: 'Iosevka Charon Light', 'Iosevka Charon', monospace;
+	font-size: 0.7rem;
+	color: #555;
+	margin: 0;
+	z-index: 10;
+}
+
+.home-credits a {
+	color: inherit;
+	text-decoration: none;
+}
+
+.home-credits a:hover {
+	color: #888;
 }
 
 .home-title {

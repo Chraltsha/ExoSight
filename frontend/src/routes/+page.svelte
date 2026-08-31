@@ -21,4 +21,15 @@
 			</button>
 		</div>
 	</div>
+
+	<p class="home-credits">
+		<a
+			href="https://www.flaticon.com/free-icons/telescope"
+			title="telescope icons"
+			target="_blank"
+			rel="noopener noreferrer"
+		>
+			Telescope icons created by Mayor Icons – Flaticon
+		</a>
+	</p>
 </PageTransition>
