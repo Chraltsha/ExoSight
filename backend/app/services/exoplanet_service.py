@@ -16,7 +16,7 @@ class ExoplanetNotFoundError(ValueError):
 _RESOLVE_QUERY = (
     "SELECT pl_name, ra, dec "
     "FROM ps "
-    "WHERE pl_name = '{name}' "
+    "WHERE lower(pl_name) = lower('{name}') "
     "AND default_flag = 1"
 )
 

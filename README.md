@@ -96,9 +96,9 @@ This is a working challenge prototype, not an observatory-grade scheduling syste
 - Brightness is not calculated yet; `brightness` is always `null`.
 - CelesTrak data is cached in `/tmp` for up to three days. Serverless instances do not share
   that cache, so a cold instance may download the feed again.
-- The OpenAI client is created when the backend starts. A missing `OPENAI_API_KEY` can currently
-  stop the whole API from starting, including endpoints that do not use AI.
-- There are no automated backend tests in the repository yet.
+- If OpenAI is unavailable, the calculated result still returns with `interpretation: null` and
+  the frontend displays its built-in summary.
+- The backend includes regression tests for full-duration sampling and first-crossing detection.
 
 ## Docs
 

@@ -1,16 +1,25 @@
+import logging
+import os
+from collections.abc import Sequence
 from pathlib import Path
 
 from dotenv import load_dotenv
-from openai import OpenAI
+from openai import OpenAI, OpenAIError
 
-BACKEND_DIR = Path(__file__).resolve().parents[2] # backend dir
-load_dotenv(BACKEND_DIR / ".env") # only load .env of backend, specify
+BACKEND_DIR = Path(__file__).resolve().parents[2]
+load_dotenv(BACKEND_DIR / ".env")
 
-client = OpenAI() # automatic read of openai_api_key
+logger = logging.getLogger(__name__)
 
 
-def interpret_prediction(satellites: list[object]) -> str:
-    print("pre gpt")
+def interpret_prediction(satellites: Sequence[object]) -> str | None:
+    """Explain a prediction, or return None when AI is unavailable."""
+
+    api_key = os.getenv("OPENAI_API_KEY")
+    if not api_key:
+        logger.warning("Skipping AI interpretation because OPENAI_API_KEY is not set.")
+        return None
+
     prompt = f"""
 You are an astronomy assistant.
 
@@ -41,9 +50,16 @@ astronomical calculations. Only interpret and explain the information
 provided.
 """
 
-    response = client.chat.completions.create(
-        model="gpt-5.6-terra",
-        messages=[{"role": "user", "content": prompt}],
-    )
-    print("post gpt")
-    return response.choices[0].message.content or ""
+    try:
+        client = OpenAI(api_key=api_key, timeout=20.0, max_retries=1)
+        response = client.chat.completions.create(
+            model="gpt-5.6-terra",
+            messages=[{"role": "user", "content": prompt}],
+            reasoning_effort="none",
+            max_completion_tokens=250,
+        )
+    except OpenAIError:
+        logger.exception("OpenAI interpretation failed; returning the computed result without it.")
+        return None
+
+    return response.choices[0].message.content or None

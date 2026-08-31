@@ -1,32 +1,29 @@
+from datetime import datetime
+
+from astropy.coordinates import SkyCoord
+
 from app.astronomy.filtering import filter_satellites
-from app.astronomy.propagation import propagate_satellites
+from app.astronomy.obstructions import find_satellite_crossings
+from app.models.prediction import (
+    ObserverLocation,
+    TelescopeFieldOfView,
+)
 from app.services.celestrak_service import load_satellites
 
 
-def get_satellite_positions(
-    observer,
-    target,
-    observation_time,
-    exposure_duration,
-):
+def get_satellite_obstructions(
+    observer: ObserverLocation,
+    target: SkyCoord,
+    observation_time: datetime,
+    exposure_duration: float,
+    fov: TelescopeFieldOfView,
+) -> list[dict[str, object]]:
     """
-    Load active satellites, filter out satellites that
-    cannot possibly be relevant, and propagate the
-    remaining candidates throughout the exposure.
+    Load and filter active satellites, then find FoV crossings without
+    materializing every intermediate position.
     """
 
     satellites = load_satellites()
-
-    # ------------------------------------------------
-    # TESTING LIMIT
-    # ------------------------------------------------
-
-    # Only use the first 100 satellites for now.
-    # satellites = satellites[:100]
-
-    # ------------------------------------------------
-    # PRELIMINARY FILTER
-    # ------------------------------------------------
 
     candidates = filter_satellites(
         satellites=satellites,
@@ -35,15 +32,11 @@ def get_satellite_positions(
         observation_time=observation_time,
     )
 
-    # ------------------------------------------------
-    # FULL EXPOSURE PROPAGATION
-    # ------------------------------------------------
-
-    positions = propagate_satellites(
+    return find_satellite_crossings(
         satellites=candidates,
+        target=target,
+        fov=fov,
         observer=observer,
         observation_time=observation_time,
         exposure_duration=exposure_duration,
     )
-
-    return positions
