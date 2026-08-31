@@ -40,6 +40,10 @@ html {
 	}
 }
 
+img {
+	user-select: none;
+}
+
 body {
 	/* bg-background kept as fallback while the avif loads */
 	@apply flex min-h-screen flex-col overflow-x-hidden bg-background text-text-color;
