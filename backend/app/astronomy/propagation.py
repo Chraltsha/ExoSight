@@ -101,7 +101,7 @@ def propagate_satellite(
 
 def propagate_satellites(satellites, observer, observation_time, exposure_duration):
     from datetime import timedelta
-    print("starting propogation")
+    print("---------starting propogation-----")
     # Build all sample times as a Skyfield time array — one call
     n_samples = int(exposure_duration//10) + 1
     sample_times = [
