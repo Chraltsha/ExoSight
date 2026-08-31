@@ -1,5 +1,6 @@
 <script>
 	import { onMount } from 'svelte';
+	import { marked } from 'marked';
 	import PageTransition from '$lib/components/PageTransition.svelte';
 	import TelescopeSettings from '$lib/components/TelescopeSettings.svelte';
 	import DateTimeSettings from '$lib/components/DateTimeSettings.svelte';
@@ -33,6 +34,8 @@
 
 	let isLoading = $state(false);
 	let llmOutput = $state('');
+
+	const parsedOutput = $derived(llmOutput ? marked.parse(llmOutput) : '');
 
 	// ── autocomplete handlers ────────────────────────────────────────────────────
 	function handlePlanetInput() {
@@ -187,7 +190,7 @@
 				</button>
 				<div class="search-section search-output-section">
 					<span class="exosight-label">Exosight says…</span>
-					<div class="exosight-output-box">
+					<div class="exosight-output-box exosight-output-prose">
 						{#if isLoading}
 							<div class="typing-indicator">
 								<span class="dot"></span>
@@ -195,7 +198,8 @@
 								<span class="dot"></span>
 							</div>
 						{:else if llmOutput}
-							{llmOutput}
+							<!-- eslint-disable-next-line svelte/no-at-html-tags -->
+							{@html parsedOutput}
 						{:else}
 							<span class="exosight-placeholder"
 								>Fill in the fields above and hit Search to get your observation report</span

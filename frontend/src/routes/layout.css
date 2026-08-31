@@ -350,8 +350,107 @@ body {
 	background-color: #2c2c2c;
 	font-family: 'Iosevka Charon Regular', 'Iosevka Charon', monospace;
 	font-size: 1.05rem;
-	white-space: pre-wrap;
 	min-height: 120px;
+	overflow-y: auto;
+}
+
+/* Markdown rendered inside the output box */
+.exosight-output-prose p {
+	margin-top: 0.6em;
+	margin-bottom: 0.6em;
+}
+
+.exosight-output-prose p:first-child {
+	margin-top: 0;
+}
+
+.exosight-output-prose strong {
+	color: #fdfdfd;
+	font-weight: 700;
+}
+
+.exosight-output-prose em {
+	font-family: 'Iosevka Charon Light Italic', 'Iosevka Charon Light', monospace;
+	font-style: italic;
+	color: #d9a4d9;
+}
+
+.exosight-output-prose h1,
+.exosight-output-prose h2,
+.exosight-output-prose h3 {
+	font-family: 'Iosevka Charon Regular', 'Iosevka Charon', monospace;
+	font-weight: 400;
+	color: #d9a4d9;
+	margin-top: 1em;
+	margin-bottom: 0.3em;
+	line-height: 1.3;
+}
+
+.exosight-output-prose h1 {
+	font-size: 1.4rem;
+}
+
+.exosight-output-prose h2 {
+	font-size: 1.2rem;
+}
+
+.exosight-output-prose h3 {
+	font-size: 1.05rem;
+}
+
+.exosight-output-prose ul,
+.exosight-output-prose ol {
+	padding-left: 1.4em;
+	margin-top: 0.4em;
+	margin-bottom: 0.4em;
+}
+
+.exosight-output-prose ul {
+	list-style-type: disc;
+}
+
+.exosight-output-prose ol {
+	list-style-type: decimal;
+}
+
+.exosight-output-prose li {
+	margin-top: 0.2em;
+	margin-bottom: 0.2em;
+}
+
+.exosight-output-prose code {
+	font-family: 'Iosevka Charon Regular', 'Iosevka Charon', monospace;
+	font-size: 0.92em;
+	background-color: #1a1c20;
+	color: #d9a4d9;
+	padding: 0.1em 0.35em;
+	border-radius: 4px;
+}
+
+.exosight-output-prose pre {
+	background-color: #1a1c20;
+	border-radius: 8px;
+	padding: 0.75em 1em;
+	overflow-x: auto;
+	margin-top: 0.6em;
+	margin-bottom: 0.6em;
+}
+
+.exosight-output-prose pre code {
+	background: none;
+	padding: 0;
+	color: #fdfdfd;
+}
+
+.exosight-output-prose hr {
+	border: none;
+	border-top: 1px solid #444;
+	margin: 0.8em 0;
+}
+
+.exosight-output-prose a {
+	color: #d9a4d9;
+	text-decoration: underline;
 }
 
 /* Make the output section a flex column so the box grows to fill it */
