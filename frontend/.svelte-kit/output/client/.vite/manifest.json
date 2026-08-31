@@ -1,11 +1,12 @@
 {
   ".svelte-kit/generated/client-optimized/app.js": {
-    "file": "_app/immutable/entry/app.B1Sv90ZX.js",
+    "file": "_app/immutable/entry/app.DWuVicwd.js",
     "name": "entry/app",
     "src": ".svelte-kit/generated/client-optimized/app.js",
     "isEntry": true,
     "imports": [
-      "_CgE1EFKT.js",
+      "_CCT0pYQH.js",
+      "_HclGiUj8.js",
       "_xihTtKlq.js"
     ],
     "dynamicImports": [
@@ -18,66 +19,76 @@
     ]
   },
   ".svelte-kit/generated/client-optimized/nodes/0.js": {
-    "file": "_app/immutable/nodes/0.DC1ZPOjy.js",
+    "file": "_app/immutable/nodes/0.Bo-uPbBZ.js",
     "name": "nodes/0",
     "src": ".svelte-kit/generated/client-optimized/nodes/0.js",
     "isEntry": true,
     "imports": [
-      "_CgE1EFKT.js",
-      "_jKHNQcEV.js",
+      "_CCT0pYQH.js",
+      "_DUe5Sd0z.js",
       "_xihTtKlq.js",
-      "_BGO47VxN.js",
-      "_D09BzEaL.js"
+      "_o6Geo_rG.js",
+      "_CKszHoE5.js",
+      "_CS3UNDLJ.js"
     ],
     "css": [
-      "_app/immutable/assets/0.ChGhHBiW.css"
+      "_app/immutable/assets/0.LpSKhGQx.css"
+    ],
+    "assets": [
+      "_app/immutable/assets/ExoSight_Logo_White.DnRkYyPV.svg"
     ]
   },
   ".svelte-kit/generated/client-optimized/nodes/1.js": {
-    "file": "_app/immutable/nodes/1.ex6zdw6z.js",
+    "file": "_app/immutable/nodes/1.BodvHXIp.js",
     "name": "nodes/1",
     "src": ".svelte-kit/generated/client-optimized/nodes/1.js",
     "isEntry": true,
     "imports": [
-      "_CgE1EFKT.js",
+      "_CCT0pYQH.js",
       "_xihTtKlq.js",
-      "_BGO47VxN.js"
+      "_o6Geo_rG.js"
     ]
   },
   ".svelte-kit/generated/client-optimized/nodes/2.js": {
-    "file": "_app/immutable/nodes/2.C60FpYp7.js",
+    "file": "_app/immutable/nodes/2.DtPICReJ.js",
     "name": "nodes/2",
     "src": ".svelte-kit/generated/client-optimized/nodes/2.js",
     "isEntry": true,
     "imports": [
-      "_CgE1EFKT.js",
+      "_CCT0pYQH.js",
+      "_DUe5Sd0z.js",
       "_xihTtKlq.js",
-      "_CrGuOX4b.js"
+      "_CKszHoE5.js",
+      "_DKhKpaZz.js"
     ],
     "assets": [
-      "_app/immutable/assets/ExoSight_HomePage.Deqo8-YQ.svg"
+      "_app/immutable/assets/ExoSight_HomePage.CEWTj95M.svg"
     ]
   },
   ".svelte-kit/generated/client-optimized/nodes/3.js": {
-    "file": "_app/immutable/nodes/3.D4AuREVl.js",
+    "file": "_app/immutable/nodes/3.C6kXYZ2R.js",
     "name": "nodes/3",
     "src": ".svelte-kit/generated/client-optimized/nodes/3.js",
     "isEntry": true,
     "imports": [
-      "_CgE1EFKT.js",
+      "_CCT0pYQH.js",
       "_xihTtKlq.js",
-      "_CrGuOX4b.js"
+      "_DKhKpaZz.js"
     ]
   },
   ".svelte-kit/generated/client-optimized/nodes/4.js": {
-    "file": "_app/immutable/nodes/4.CZSxCqKt.js",
+    "file": "_app/immutable/nodes/4.DLfysCNW.js",
     "name": "nodes/4",
     "src": ".svelte-kit/generated/client-optimized/nodes/4.js",
     "isEntry": true,
     "imports": [
-      "_CgE1EFKT.js",
+      "_CCT0pYQH.js",
+      "_HclGiUj8.js",
       "_xihTtKlq.js",
-      "_CrGuOX4b.js"
+      "_DKhKpaZz.js"
+    ],
+    "dynamicImports": [
+      "node_modules/leaflet/dist/leaflet-src.js"
     ]
   },
   ".svelte-kit/generated/shared/error-template.js": {
@@ -86,39 +97,50 @@
     "src": ".svelte-kit/generated/shared/error-template.js",
     "isDynamicEntry": true
   },
-  "_BGO47VxN.js": {
-    "file": "_app/immutable/chunks/BGO47VxN.js",
-    "name": "state",
-    "imports": [
-      "_CgE1EFKT.js",
-      "_jKHNQcEV.js"
-    ]
-  },
-  "_CgE1EFKT.js": {
-    "file": "_app/immutable/chunks/CgE1EFKT.js",
+  "_CCT0pYQH.js": {
+    "file": "_app/immutable/chunks/CCT0pYQH.js",
     "name": "index-client"
   },
-  "_CrGuOX4b.js": {
-    "file": "_app/immutable/chunks/CrGuOX4b.js",
-    "name": "PageTransition",
+  "_CKszHoE5.js": {
+    "file": "_app/immutable/chunks/CKszHoE5.js",
+    "name": "navigation",
     "imports": [
-      "_CgE1EFKT.js",
-      "_xihTtKlq.js",
-      "_D09BzEaL.js"
+      "_DUe5Sd0z.js"
     ]
   },
-  "_D09BzEaL.js": {
-    "file": "_app/immutable/chunks/D09BzEaL.js",
+  "_CS3UNDLJ.js": {
+    "file": "_app/immutable/chunks/CS3UNDLJ.js",
     "name": "transitionState.svelte",
     "imports": [
-      "_CgE1EFKT.js"
+      "_CCT0pYQH.js"
     ]
   },
-  "_jKHNQcEV.js": {
-    "file": "_app/immutable/chunks/jKHNQcEV.js",
+  "_DKhKpaZz.js": {
+    "file": "_app/immutable/chunks/DKhKpaZz.js",
+    "name": "PageTransition",
+    "imports": [
+      "_CCT0pYQH.js",
+      "_xihTtKlq.js",
+      "_CS3UNDLJ.js"
+    ]
+  },
+  "_DUe5Sd0z.js": {
+    "file": "_app/immutable/chunks/DUe5Sd0z.js",
     "name": "client",
     "imports": [
-      "_CgE1EFKT.js"
+      "_CCT0pYQH.js"
+    ]
+  },
+  "_HclGiUj8.js": {
+    "file": "_app/immutable/chunks/HclGiUj8.js",
+    "name": "preload-helper"
+  },
+  "_o6Geo_rG.js": {
+    "file": "_app/immutable/chunks/o6Geo_rG.js",
+    "name": "state",
+    "imports": [
+      "_CCT0pYQH.js",
+      "_DUe5Sd0z.js"
     ]
   },
   "_xihTtKlq.js": {
@@ -126,16 +148,33 @@
     "name": "disclose-version"
   },
   "node_modules/@sveltejs/kit/src/runtime/client/entry.js": {
-    "file": "_app/immutable/entry/start.Bqlg2Xdf.js",
+    "file": "_app/immutable/entry/start.B2tsRzPA.js",
     "name": "entry/start",
     "src": "node_modules/@sveltejs/kit/src/runtime/client/entry.js",
     "isEntry": true,
     "imports": [
-      "_jKHNQcEV.js"
+      "_DUe5Sd0z.js"
     ]
   },
+  "node_modules/leaflet/dist/leaflet-src.js": {
+    "file": "_app/immutable/chunks/Dn6VO3MM.js",
+    "name": "leaflet-src",
+    "src": "node_modules/leaflet/dist/leaflet-src.js",
+    "isDynamicEntry": true,
+    "imports": [
+      "_CCT0pYQH.js"
+    ]
+  },
+  "node_modules/leaflet/dist/leaflet.css": {
+    "file": "_app/immutable/assets/leaflet.vh-t_kPv.css",
+    "src": "node_modules/leaflet/dist/leaflet.css"
+  },
   "src/lib/assets/ExoSight_HomePage.svg": {
-    "file": "_app/immutable/assets/ExoSight_HomePage.Deqo8-YQ.svg",
+    "file": "_app/immutable/assets/ExoSight_HomePage.CEWTj95M.svg",
     "src": "src/lib/assets/ExoSight_HomePage.svg"
+  },
+  "src/lib/assets/ExoSight_Logo_White.svg": {
+    "file": "_app/immutable/assets/ExoSight_Logo_White.DnRkYyPV.svg",
+    "src": "src/lib/assets/ExoSight_Logo_White.svg"
   }
 }

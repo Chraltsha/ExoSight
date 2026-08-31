@@ -1,1 +1,0 @@
-import{b as e,v as t}from"../chunks/CgE1EFKT.js";import"../chunks/xihTtKlq.js";import{t as n}from"../chunks/CrGuOX4b.js";var r=e(`<h1>About us</h1>`);function i(e){n(e,{children:(e,n)=>{var i=r();t(e,i)},$$slots:{default:!0}})}export{i as component};

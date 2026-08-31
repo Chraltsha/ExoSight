@@ -1,83 +1,209 @@
 <script>
-	import { tick } from 'svelte';
-	import { chatState, sendToLLM, resetChat } from '$lib/searchState.svelte.js';
+	import { onMount } from 'svelte';
 	import PageTransition from '$lib/components/PageTransition.svelte';
-	import IdleView from '$lib/components/search/IdleView.svelte';
-	import ChatBubble from '$lib/components/search/ChatBubble.svelte';
-	import TypingIndicator from '$lib/components/search/TypingIndicator.svelte';
-	import MessageInput from '$lib/components/search/MessageInput.svelte';
-	import Sidebar from '$lib/components/search/Sidebar.svelte';
+	import TelescopeSettings from '$lib/components/TelescopeSettings.svelte';
+	import DateTimeSettings from '$lib/components/DateTimeSettings.svelte';
+	import LocationSettings from '$lib/components/LocationSettings.svelte';
+	import { searchState, searchPlanets, loadMorePlanets } from '$lib/exoplanetSearchState.svelte.js';
 
-	let messageListEl = $state(null);
+	// ── helpers for default date/time ───────────────────────────────────────────
+	function todayDate() {
+		const d = new Date();
+		return d.toISOString().slice(0, 10);
+	}
 
-	async function scrollToBottom() {
-		await tick();
-		if (messageListEl) {
-			messageListEl.scrollTop = messageListEl.scrollHeight;
+	function currentTime() {
+		const d = new Date();
+		return d.toTimeString().slice(0, 5);
+	}
+
+	// ── local page state ─────────────────────────────────────────────────────────
+	let planetName = $state('');
+	let showDropdown = $state(false);
+
+	let hFov = $state(10);
+	let vFov = $state(7);
+
+	let date = $state(todayDate());
+	let time = $state(currentTime());
+	let observationLength = $state(60);
+
+	let lat = $state(0);
+	let lon = $state(0);
+
+	let isLoading = $state(false);
+	let llmOutput = $state('');
+
+	// ── autocomplete handlers ────────────────────────────────────────────────────
+	function handlePlanetInput() {
+		if (planetName.length >= 2) {
+			searchPlanets(planetName);
+			showDropdown = true;
+		} else {
+			searchState.results = [];
+			searchState.hasMore = false;
+			showDropdown = false;
 		}
 	}
 
-	/**
-	 * Called when the user clicks a planet in the search results.
-	 * The planet object carries RA/Dec so we never need to re-resolve.
-	 *
-	 * @param {{ name: string, hostname: string, ra: number, dec: number }} planet
-	 */
-	async function handlePlanetSelect(planet) {
-		const query = `Tell me about ${planet.name} (RA: ${planet.ra.toFixed(4)}°, Dec: ${planet.dec.toFixed(4)}°)`;
-
-		chatState.messages.push({ role: 'user', text: `Selected: ${planet.name}` });
-		chatState.chatStarted = true;
-		chatState.isLoading = true;
-		await scrollToBottom();
-
-		const reply = await sendToLLM(query);
-
-		chatState.messages.push({ role: 'bot', text: reply });
-		chatState.isLoading = false;
-		await scrollToBottom();
+	function selectResult(item) {
+		planetName = item.name;
+		showDropdown = false;
 	}
 
-	async function handleUserMessage(text) {
-		chatState.messages.push({ role: 'user', text });
-		chatState.isLoading = true;
-		await scrollToBottom();
+	function handleLoadMore() {
+		loadMorePlanets(planetName);
+	}
 
-		const reply = await sendToLLM(text);
+	// Close dropdown when clicking outside
+	function handleWindowClick(e) {
+		if (!e.target.closest('.planet-autocomplete-wrapper')) {
+			showDropdown = false;
+		}
+	}
 
-		chatState.messages.push({ role: 'bot', text: reply });
-		chatState.isLoading = false;
-		await scrollToBottom();
+	onMount(() => {
+		window.addEventListener('click', handleWindowClick);
+		return () => window.removeEventListener('click', handleWindowClick);
+	});
+
+	// ── LLM stub ─────────────────────────────────────────────────────────────────
+
+	// TODO: wire to real endpoint
+	async function sendToLLM(payload) {
+		await new Promise((r) => setTimeout(r, 1500));
+		return `[Stub] Observation analysis for ${payload.planetName} at (${payload.lat.toFixed(2)}, ${payload.lon.toFixed(2)}) on ${payload.date} ${payload.time} for ${payload.observationLength} min. HFOV: ${payload.hFov}°, VFOV: ${payload.vFov}°.`;
+	}
+
+	async function handleSearch() {
+		isLoading = true;
+		llmOutput = '';
+		const payload = { planetName, hFov, vFov, date, time, observationLength, lat, lon };
+		llmOutput = await sendToLLM(payload);
+		isLoading = false;
 	}
 </script>
 
 <PageTransition>
-	<div class="search-page">
-		<Sidebar />
+	<main class="search-new-page">
+		<!-- BODY ROW: left column (heading + autocomplete + 3 panels + button) + right output -->
+		<div class="search-body-row">
+			<!-- LEFT column -->
+			<div class="search-inputs-col">
+				<!-- Heading + autocomplete stacked at top of left col -->
+				<h2 class="search-page-heading">What exoplanet are we looking for?</h2>
 
-		<div class="search-main">
-			{#if !chatState.chatStarted}
-				<IdleView onSelect={handlePlanetSelect} />
-			{:else}
-				<div class="chat-view">
-					<button class="back-to-search-btn" onclick={resetChat}>
-						← Back to search
-					</button>
-					<div class="chat-window">
-						<div class="message-list" bind:this={messageListEl}>
-							{#each chatState.messages as message (message)}
-								<ChatBubble role={message.role} text={message.text} />
-							{/each}
+				<div class="planet-autocomplete-wrapper">
+					<!-- input row: icon stays anchored to just the input, not the dropdown -->
+					<div class="planet-input-row">
+						<svg
+							class="planet-search-icon"
+							xmlns="http://www.w3.org/2000/svg"
+							viewBox="0 0 24 24"
+							fill="none"
+							stroke="currentColor"
+							stroke-width="2"
+							stroke-linecap="round"
+							stroke-linejoin="round"
+							aria-hidden="true"
+						>
+							<circle cx="11" cy="11" r="7" />
+							<line x1="16.5" y1="16.5" x2="22" y2="22" />
+						</svg>
+						<input
+							type="text"
+							class="search-field-input planet-name-input"
+							placeholder="e.g. Kepler-22 b"
+							bind:value={planetName}
+							oninput={handlePlanetInput}
+							onfocus={() => {
+								if (searchState.results.length > 0) {
+									showDropdown = true;
+								}
+							}}
+							autocomplete="off"
+						/>
+					</div>
 
-							{#if chatState.isLoading}
-								<TypingIndicator />
+					{#if showDropdown && (searchState.results.length > 0 || searchState.isLoading)}
+						<div class="search-results">
+							<ul class="search-results-list">
+								{#if searchState.isLoading && searchState.results.length === 0}
+									<li class="search-result-item" style="cursor: default; pointer-events: none;">
+										<span class="result-name">Searching…</span>
+									</li>
+								{/if}
+								{#each searchState.results as item (item.name)}
+									<li>
+										<button class="search-result-item" onclick={() => selectResult(item)}>
+											<span class="result-name">{item.name}</span>
+											<span class="result-host">{item.hostname}</span>
+										</button>
+									</li>
+								{/each}
+							</ul>
+							{#if searchState.hasMore}
+								<div class="search-results-footer">
+									<button
+										class="load-more-btn"
+										onclick={handleLoadMore}
+										disabled={searchState.isLoading}
+									>
+										{searchState.isLoading ? 'Loading…' : 'Load more'}
+									</button>
+								</div>
 							{/if}
 						</div>
+					{/if}
+				</div>
 
-						<MessageInput onSend={handleUserMessage} disabled={chatState.isLoading} />
+				<!-- Three settings panels -->
+				<div class="search-three-col">
+					<TelescopeSettings bind:hFov bind:vFov />
+					<DateTimeSettings bind:date bind:time bind:observationLength />
+					<LocationSettings bind:lat bind:lon />
+				</div>
+			</div>
+
+			<!-- RIGHT: Exosight output (search button on top) -->
+			<div class="search-output-col">
+				<button class="search-submit-btn" onclick={handleSearch} disabled={isLoading}>
+					<!-- planet/orbit icon -->
+					<svg
+						class="search-btn-icon"
+						xmlns="http://www.w3.org/2000/svg"
+						viewBox="0 0 24 24"
+						fill="none"
+						stroke="currentColor"
+						stroke-width="1.5"
+						stroke-linecap="round"
+						stroke-linejoin="round"
+						aria-hidden="true"
+					>
+						<circle cx="12" cy="12" r="4" />
+						<ellipse cx="12" cy="12" rx="11" ry="4.5" transform="rotate(-30 12 12)" />
+					</svg>
+					{isLoading ? 'Analysing…' : 'Search'}
+				</button>
+				<div class="search-section search-output-section">
+					<span class="exosight-label">Exosight says…</span>
+					<div class="exosight-output-box">
+						{#if isLoading}
+							<div class="typing-indicator">
+								<span class="dot"></span>
+								<span class="dot"></span>
+								<span class="dot"></span>
+							</div>
+						{:else if llmOutput}
+							{llmOutput}
+						{:else}
+							<span class="exosight-placeholder"
+								>Fill in the fields above and hit Search to get your observation report</span
+							>
+						{/if}
 					</div>
 				</div>
-			{/if}
+			</div>
 		</div>
-	</div>
+	</main>
 </PageTransition>

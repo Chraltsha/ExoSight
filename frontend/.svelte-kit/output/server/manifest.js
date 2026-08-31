@@ -10,7 +10,7 @@ return {
 	assets: new Set(["robots.txt","star-background.jpg","star-layer2.png","star-layer3.png"]),
 	mimeTypes: {".txt":"text/plain",".jpg":"image/jpeg",".png":"image/png"},
 	_: {
-		client: {start:"_app/immutable/entry/start.Bqlg2Xdf.js",app:"_app/immutable/entry/app.B1Sv90ZX.js",imports:["_app/immutable/entry/start.Bqlg2Xdf.js","_app/immutable/chunks/jKHNQcEV.js","_app/immutable/chunks/CgE1EFKT.js","_app/immutable/entry/app.B1Sv90ZX.js","_app/immutable/chunks/CgE1EFKT.js","_app/immutable/chunks/xihTtKlq.js"],stylesheets:[],fonts:[],uses_env_dynamic_public:false},
+		client: {start:"_app/immutable/entry/start.B2tsRzPA.js",app:"_app/immutable/entry/app.DWuVicwd.js",imports:["_app/immutable/entry/start.B2tsRzPA.js","_app/immutable/chunks/DUe5Sd0z.js","_app/immutable/chunks/CCT0pYQH.js","_app/immutable/entry/app.DWuVicwd.js","_app/immutable/chunks/CCT0pYQH.js","_app/immutable/chunks/HclGiUj8.js","_app/immutable/chunks/xihTtKlq.js"],stylesheets:[],fonts:[],uses_env_dynamic_public:false},
 		nodes: [
 			__memo(() => import('./nodes/0.js')),
 			__memo(() => import('./nodes/1.js')),

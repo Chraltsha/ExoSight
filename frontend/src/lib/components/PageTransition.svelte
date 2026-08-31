@@ -5,7 +5,7 @@
 
 	let { children } = $props();
 
-	const inOpts  = (x) => ({ x, duration: 220, easing: cubicOut, delay: 30 });
+	const inOpts = (x) => ({ x, duration: 220, easing: cubicOut, delay: 30 });
 	const outOpts = (x) => ({ x, duration: 220, easing: cubicOut });
 </script>
 

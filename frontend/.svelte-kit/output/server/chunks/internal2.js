@@ -1,6 +1,6 @@
 import "./index-server.js";
 import "./internal.js";
-import { A as component_root, B as component_context, D as get, E as active_reaction, F as init_operations, G as hydrating, H as push, I as mutable_source, J as hydration_mismatch, K as set_hydrate_node, L as set, M as create_text, N as get_first_child, O as set_active_effect, P as get_next_sibling, Q as hydration_failed, R as flushSync, S as is_passive_event, T as active_effect, U as async_mode_flag, V as pop, W as hydrate_node, Z as HYDRATION_ERROR, et as LEGACY_PROPS, j as clear_text_content, k as set_active_reaction, m as setContext, nt as array_from, o as render, q as set_hydrating, r as derived, rt as define_property, z as boundary } from "./server.js";
+import { $ as hydration_failed, A as set_active_reaction, B as boundary, C as is_passive_event, D as active_reaction, E as active_effect, F as get_next_sibling, G as hydrate_node, H as pop, I as init_operations, J as set_hydrating, K as hydrating, L as mutable_source, M as clear_text_content, N as create_text, O as get, P as get_first_child, Q as HYDRATION_ERROR, R as set, U as push, V as component_context, W as async_mode_flag, Y as hydration_mismatch, h as setContext, i as derived, it as define_property, j as component_root, k as set_active_effect, q as set_hydrate_node, rt as array_from, s as render, tt as LEGACY_PROPS, z as flushSync } from "./server.js";
 /**
 * `$env/dynamic/public`
 * @type {Record<string, string>}
@@ -580,10 +580,10 @@ var options = {
 	service_worker_options: void 0,
 	server_error_boundaries: false,
 	templates: {
-		app: ({ head, body, assets, nonce, env }) => "<!doctype html>\r\n<html lang=\"en\">\r\n	<head>\r\n		<meta charset=\"utf-8\" />\r\n		<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\" />\r\n		<meta name=\"text-scale\" content=\"scale\" />\r\n		" + head + "\r\n	</head>\r\n	<body data-sveltekit-preload-data=\"hover\">\r\n		<div style=\"display: contents\">" + body + "</div>\r\n	</body>\r\n</html>\r\n",
+		app: ({ head, body, assets, nonce, env }) => "<!doctype html>\n<html lang=\"en\">\n	<head>\n		<meta charset=\"utf-8\" />\n		<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\" />\n		<meta name=\"text-scale\" content=\"scale\" />\n		" + head + "\n	</head>\n	<body data-sveltekit-preload-data=\"hover\">\n		<div style=\"display: contents\">" + body + "</div>\n	</body>\n</html>\n",
 		error: error_template_default
 	},
-	version_hash: "1jzhud8"
+	version_hash: "2j7t4l"
 };
 async function get_hooks() {
 	let handle;

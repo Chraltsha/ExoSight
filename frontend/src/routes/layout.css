@@ -3,103 +3,103 @@
 @plugin '@tailwindcss/typography';
 
 @theme {
-  --color-background: #1A1C20;
-  --color-card: #222222;
-  --color-text-color: #FDFDFD;
-  --color-accent: #D9A4D9;
+	--color-background: #1a1c20;
+	--color-card: #222222;
+	--color-text-color: #fdfdfd;
+	--color-accent: #d9a4d9;
 }
 
 @font-face {
-  font-family: 'Iosevka Charon Regular';
-  src: local('Iosevka Charon Regular'), local('IosevkaCharon-Regular');
-  font-weight: 400;
-  font-style: normal;
+	font-family: 'Iosevka Charon Regular';
+	src: local('Iosevka Charon Regular'), local('IosevkaCharon-Regular');
+	font-weight: 400;
+	font-style: normal;
 }
 
 @font-face {
-  font-family: 'Iosevka Charon Light';
-  src: local('Iosevka Charon Light'), local('IosevkaCharon-Light');
-  font-weight: 300;
-  font-style: normal;
+	font-family: 'Iosevka Charon Light';
+	src: local('Iosevka Charon Light'), local('IosevkaCharon-Light');
+	font-weight: 300;
+	font-style: normal;
 }
 
 @font-face {
-  font-family: 'Iosevka Charon Light Italic';
-  src: local('Iosevka Charon Light Italic'), local('IosevkaCharon-LightItalic');
-  font-weight: 300;
-  font-style: italic;
+	font-family: 'Iosevka Charon Light Italic';
+	src: local('Iosevka Charon Light Italic'), local('IosevkaCharon-LightItalic');
+	font-weight: 300;
+	font-style: italic;
 }
 
 html {
-  zoom: 80%;
+	zoom: 80%;
 }
 
 body {
-  /* bg-background kept as fallback while the avif loads */
-  @apply text-text-color bg-background overflow-x-hidden h-screen flex flex-col;
+	/* bg-background kept as fallback while the avif loads */
+	@apply flex min-h-screen flex-col overflow-x-hidden bg-background text-text-color;
 }
 
 .home-content {
-  @apply flex flex-col gap-0 justify-baseline items-start ml-96 mt-56;
+	@apply mt-56 ml-96 flex flex-col items-start justify-baseline gap-0;
 }
 
 .home-title {
-  @apply text-8xl
+	@apply text-8xl;
 }
 
-.home-subtitle{
-  font-size: 28px;
-  font-family: 'Iosevka Charon Light', 'Iosevka Charon', monospace;
-  display: block;
-  line-height: 1.4;
-  text-align: left;
-  margin-top: -20px;
+.home-subtitle {
+	font-size: 28px;
+	font-family: 'Iosevka Charon Light', 'Iosevka Charon', monospace;
+	display: block;
+	line-height: 1.4;
+	text-align: left;
+	margin-top: -20px;
 }
 
 .subtitle-break {
-  display: block;
+	display: block;
 }
 
 .home-searchbutton {
-  @apply bg-card border-1 rounded-4xl px-4 py-3 cursor-pointer transition-colors duration-200;
-  font-family: 'Iosevka Charon Light Italic', 'Iosevka Charon Light', monospace;
-  font-style: italic;
-  font-size: 18px;
-  margin-top: 100px;
+	@apply cursor-pointer rounded-4xl border-1 bg-card px-4 py-3 transition-colors duration-200;
+	font-family: 'Iosevka Charon Light Italic', 'Iosevka Charon Light', monospace;
+	font-style: italic;
+	font-size: 18px;
+	margin-top: 100px;
 }
 
 .home-searchbutton:hover {
-  background-color: #FDFDFD;
-  color: #000000;
+	background-color: #fdfdfd;
+	color: #000000;
 }
 
 .navigation-bar {
-  @apply relative flex flex-row justify-center items-center gap-24 mt-12 pb-3;
-  font-size: 24px;
+	@apply relative mt-12 flex flex-row items-center justify-center gap-24 pb-3;
+	font-size: 24px;
 }
 
 .nav-logo {
-  @apply absolute left-90 top-1/2 h-32 w-auto;
-  transform: translateY(-50%);
+	@apply absolute top-1/2 left-90 h-32 w-auto;
+	transform: translateY(-50%);
 }
 
 .navigation-bar a {
-  @apply no-underline text-inherit;
-  font-family: 'Iosevka Charon Regular', 'Iosevka Charon', monospace;
+	@apply text-inherit no-underline;
+	font-family: 'Iosevka Charon Regular', 'Iosevka Charon', monospace;
 }
 
 .nav-indicator {
-  @apply absolute bottom-0 h-[3px] bg-current transition-all duration-300 ease-in-out;
-  /* width/position now set inline via measured offsetWidth/offsetLeft, not calc() */
+	@apply absolute bottom-0 h-[3px] bg-current transition-all duration-300 ease-in-out;
+	/* width/position now set inline via measured offsetWidth/offsetLeft, not calc() */
 }
 
 .nav-divider {
-  @apply border-t border-text-color my-4;
-  height: 1px;
-  background-color: #FDFDFD;
-  width: 80%;
-  margin-left: auto;
-  margin-right: auto;
+	@apply my-4 border-t border-text-color;
+	height: 1px;
+	background-color: #fdfdfd;
+	width: 80%;
+	margin-left: auto;
+	margin-right: auto;
 }
 
 /* ============================================================
@@ -107,151 +107,47 @@ body {
    ============================================================ */
 
 .page-transition-wrapper {
-  @apply relative flex-1 overflow-hidden;
-}
-
-/* ============================================================
-   Search page — layout
-   ============================================================ */
-
-.search-page {
-  @apply relative flex h-full overflow-hidden;
-}
-
-.search-main {
-  @apply flex flex-1 flex-col overflow-hidden;
-}
-
-/* ============================================================
-   Search page — idle state
-   ============================================================ */
-
-.idle-view {
-  @apply flex flex-1 flex-col items-center justify-center gap-6 px-8;
-}
-
-.idle-heading {
-  @apply text-8xl text-text-color;
-}
-
-.idle-searchbar {
-  @apply w-full rounded-4xl border border-card bg-card px-6 py-4 text-2xl text-text-color placeholder-[#888] outline-none focus:border-accent;
+	@apply relative flex-1 overflow-x-hidden overflow-y-auto;
 }
 
 /* ============================================================
    Search input wrapper + results dropdown
    ============================================================ */
 
-.search-input-wrapper {
-  @apply relative w-full max-w-2xl flex flex-col;
-}
-
-/* Row that holds the input + inline spinner side by side */
-.search-input-row {
-  @apply relative flex items-center w-full;
-}
-
-.search-input-row .idle-searchbar {
-  @apply flex-1 pr-14; /* make room for the spinner on the right */
-}
-
-/* Spinning ring indicator — sits inside the input on the right */
-.search-spinner {
-  @apply absolute right-5 h-5 w-5 rounded-full border-2 border-[#888] border-t-accent pointer-events-none;
-  animation: spin 0.7s linear infinite;
-}
-
-@keyframes spin {
-  to { transform: rotate(360deg); }
-}
-
 .search-status--error {
-  @apply mt-2 px-2 text-sm text-red-400;
+	@apply mt-2 px-2 text-sm text-red-400;
 }
 
 /* Outer container — flex column so the footer sits below the scroll area */
 .search-results {
-  @apply mt-1 w-full rounded-2xl border border-card bg-card flex flex-col;
+	@apply mt-1 flex w-full flex-col rounded-2xl border border-card bg-card;
 }
 
 /* Scrollable planet list — capped at 5 rows (each row ~48px = 240px) */
 .search-results-list {
-  @apply overflow-y-auto list-none p-0 m-0;
-  max-height: 240px;
+	@apply m-0 list-none overflow-y-auto p-0;
+	max-height: 240px;
 }
 
 /* Sticky footer for Load more — never scrolls away */
 .search-results-footer {
-  @apply border-t border-[#333] flex-shrink-0;
+	@apply flex-shrink-0 border-t border-[#333];
 }
 
 .search-result-item {
-  @apply flex w-full items-center justify-between gap-4 px-5 py-3 text-left
-         text-text-color transition-colors duration-150 hover:bg-accent hover:text-background
-         focus:outline-none focus:bg-accent focus:text-background;
+	@apply flex w-full items-center justify-between gap-4 px-5 py-3 text-left text-text-color transition-colors duration-150 hover:bg-accent hover:text-background focus:bg-accent focus:text-background focus:outline-none;
 }
 
 .result-name {
-  @apply font-medium;
+	@apply font-medium;
 }
 
 .result-host {
-  @apply text-sm text-[#888];
+	@apply text-sm text-[#888];
 }
 
 .load-more-btn {
-  @apply w-full px-5 py-3 text-center text-accent transition-colors duration-150
-         hover:bg-accent hover:text-background disabled:opacity-40 disabled:cursor-not-allowed
-         focus:outline-none;
-}
-
-/* ============================================================
-   Search page — chat view
-   ============================================================ */
-
-.back-to-search-btn {
-  @apply self-start ml-6 mt-4 mb-2 text-sm text-accent underline underline-offset-4
-         transition-colors duration-200 hover:text-text-color bg-transparent;
-}
-
-.chat-view {
-  @apply flex flex-1 flex-col overflow-hidden;
-}
-
-.chat-window {
-  @apply flex flex-col w-full max-w-2xl flex-1 overflow-hidden rounded-2xl border border-card bg-card;
-}
-
-.message-list {
-  @apply flex flex-1 flex-col gap-3 overflow-y-auto px-6 py-4;
-}
-
-/* ============================================================
-   Chat bubbles
-   ============================================================ */
-
-.bubble-row {
-  @apply flex w-full;
-}
-
-.bubble-row--user {
-  @apply justify-end;
-}
-
-.bubble-row--bot {
-  @apply justify-start;
-}
-
-.bubble {
-  @apply max-w-[70%] rounded-2xl px-4 py-2 text-sm leading-relaxed;
-}
-
-.bubble--user {
-  @apply bg-accent text-background;
-}
-
-.bubble--bot {
-  @apply bg-card text-text-color;
+	@apply w-full px-5 py-3 text-center text-accent transition-colors duration-150 hover:bg-accent hover:text-background focus:outline-none disabled:cursor-not-allowed disabled:opacity-40;
 }
 
 /* ============================================================
@@ -259,79 +155,240 @@ body {
    ============================================================ */
 
 .typing-indicator {
-  @apply flex items-center gap-1 py-3;
+	@apply flex items-center gap-1 py-3;
 }
 
 .dot {
-  @apply h-2 w-2 rounded-full bg-text-color opacity-40;
-  animation: pulse-dot 1.2s ease-in-out infinite;
+	@apply h-2 w-2 rounded-full bg-text-color opacity-40;
+	animation: pulse-dot 1.2s ease-in-out infinite;
 }
 
 .dot:nth-child(2) {
-  animation-delay: 0.2s;
+	animation-delay: 0.2s;
 }
 
 .dot:nth-child(3) {
-  animation-delay: 0.4s;
+	animation-delay: 0.4s;
 }
 
 @keyframes pulse-dot {
-  0%, 80%, 100% { opacity: 0.2; transform: scale(0.9); }
-  40%           { opacity: 1;   transform: scale(1.2); }
+	0%,
+	80%,
+	100% {
+		opacity: 0.2;
+		transform: scale(0.9);
+	}
+	40% {
+		opacity: 1;
+		transform: scale(1.2);
+	}
 }
 
 /* ============================================================
-   Message input bar
+   New search page — shared section components
    ============================================================ */
 
-.message-input-bar {
-  @apply flex items-center gap-3 border-t border-card bg-card px-6 py-3 rounded-b-2xl;
+.search-section {
+	@apply flex flex-col gap-4 rounded-2xl border border-card bg-card px-6 py-5;
 }
 
-.message-input {
-  @apply flex-1 rounded-4xl border border-card bg-card px-5 py-2 text-text-color placeholder-[#888] outline-none focus:border-accent disabled:opacity-50;
+.search-section-fields {
+	@apply flex flex-wrap gap-4;
 }
 
-.send-btn {
-  @apply rounded-full border border-accent bg-transparent px-5 py-2 text-accent transition-colors duration-200 hover:bg-accent hover:text-background disabled:cursor-not-allowed disabled:opacity-40;
+.search-field-label {
+	@apply flex flex-col gap-2 text-text-color;
+	font-family: 'Iosevka Charon Light', 'Iosevka Charon', monospace;
+	font-size: 1rem;
+}
+
+.search-field-input {
+	@apply rounded-lg border border-[#333] px-4 py-3 text-text-color transition-colors duration-150 outline-none focus:border-accent;
+	background-color: #2c2c2c;
+	font-family: 'Iosevka Charon Regular', 'Iosevka Charon', monospace;
+	font-size: 1rem;
+	min-width: 0;
+	width: 100%;
+}
+
+/* Dark-theme overrides for native date / time / number pickers */
+.search-field-input[type='date'],
+.search-field-input[type='time'],
+.search-field-input[type='number'] {
+	color-scheme: dark;
+	background-color: #2c2c2c;
+	color: #fdfdfd;
+}
+
+/* Remove the default light tint on the calendar/clock picker icon */
+.search-field-input[type='date']::-webkit-calendar-picker-indicator,
+.search-field-input[type='time']::-webkit-calendar-picker-indicator {
+	filter: invert(1);
+	cursor: pointer;
+}
+
+/* Map container inside LocationSettings */
+.location-map {
+	height: 350px;
+	width: 100%;
+	@apply overflow-hidden rounded-xl border border-card;
 }
 
 /* ============================================================
-   Sidebar
+   New search page — top-level container
    ============================================================ */
 
-.sidebar-hover-zone {
-  @apply fixed left-0 top-0 z-40 flex h-full w-10 cursor-pointer items-center justify-start;
+.search-new-page {
+	@apply mx-auto w-full max-w-[1600px] px-8 py-8;
 }
 
-.pull-tab {
-  @apply flex h-20 w-7 items-center justify-center rounded-r-xl bg-card text-text-color transition-transform duration-200;
+.search-page-heading {
+	font-family: 'Iosevka Charon Regular', 'Iosevka Charon', monospace;
+	font-size: 3rem;
+	font-weight: 400;
+	line-height: 1.2;
+	@apply mb-1 text-text-color;
 }
 
-.sidebar-hover-zone:hover .pull-tab {
-  @apply translate-x-2 bg-accent text-background;
+/* Planet name input — full width under the heading, taller, with icon */
+.planet-autocomplete-wrapper {
+	@apply relative w-full;
 }
 
-.sidebar-panel {
-  @apply fixed left-0 top-0 z-50 flex h-full w-72 flex-col border-r border-card bg-background pt-24 shadow-lg;
+/* Input + icon wrapper — icon stays fixed to just this row, not the dropdown */
+.planet-input-row {
+	position: relative;
+	width: 100%;
 }
 
-.sidebar-header {
-  @apply flex items-center justify-between border-b border-card px-5 pb-4;
+/* Magnifying glass icon — anchored inside .planet-input-row, not the full wrapper */
+.planet-search-icon {
+	position: absolute;
+	left: 1.1rem;
+	top: 50%;
+	transform: translateY(-50%);
+	width: 1.4rem;
+	height: 1.4rem;
+	color: #888;
+	pointer-events: none;
+	z-index: 1;
 }
 
-.sidebar-title {
-  @apply text-lg font-semibold text-text-color;
+.planet-name-input {
+	@apply w-full;
+	border-radius: 9999px !important;
+	font-size: 1.25rem !important;
+	padding: 0.9rem 1.2rem 0.9rem 3.2rem !important;
 }
 
-.sidebar-close {
-  @apply text-2xl leading-none text-[#888] transition-colors hover:text-text-color;
+/* BODY ROW: left col fills remaining space, right col fixed */
+.search-body-row {
+	@apply flex gap-6;
 }
 
-.sidebar-content {
-  @apply flex-1 overflow-y-auto px-5 py-4;
+/* LEFT column: heading + autocomplete + three panels + button */
+.search-inputs-col {
+	@apply flex min-w-0 flex-1 flex-col gap-4;
 }
 
-.sidebar-placeholder {
-  @apply text-sm text-[#888];
+/* Three equal-width input panels */
+.search-three-col {
+	@apply grid gap-4;
+	grid-template-columns: repeat(3, 1fr);
+}
+
+/* RIGHT column: Exosight output */
+.search-output-col {
+	width: 400px;
+	flex-shrink: 0;
+	display: flex;
+	flex-direction: column;
+}
+
+/* Output section fills the right column height */
+.search-output-section {
+	flex: 1;
+}
+
+/* ============================================================
+   Exosight output box
+   ============================================================ */
+
+/* "Exosight says…" — big, emphatic, light italic */
+.exosight-label {
+	font-family: 'Iosevka Charon Light Italic', 'Iosevka Charon Light', monospace;
+	font-style: italic;
+	font-size: 1.6rem;
+	font-weight: 300;
+	@apply text-accent;
+}
+
+.exosight-output-box {
+	flex: 1;
+	@apply rounded-xl px-5 py-4 leading-relaxed text-text-color;
+	background-color: #2c2c2c;
+	font-family: 'Iosevka Charon Regular', 'Iosevka Charon', monospace;
+	font-size: 1.05rem;
+	white-space: pre-wrap;
+	min-height: 120px;
+}
+
+/* Make the output section a flex column so the box grows to fill it */
+.search-output-section {
+	@apply flex flex-col;
+	height: 100%;
+}
+
+.exosight-placeholder {
+	font-family: 'Iosevka Charon Light Italic', 'Iosevka Charon Light', monospace;
+	font-style: italic;
+	font-size: 1rem;
+	@apply text-[#888];
+}
+
+/* ============================================================
+   Search submit button
+   ============================================================ */
+
+.search-submit-btn {
+	@apply w-full cursor-pointer transition-colors duration-200 disabled:cursor-not-allowed disabled:opacity-50;
+	border: none;
+	border-radius: 9999px;
+	background-color: #2e2234;
+	color: #d9a4d9;
+	padding-top: 1rem;
+	padding-bottom: 1rem;
+	padding-left: 2rem;
+	padding-right: 2rem;
+	margin-top: 2rem;
+	margin-bottom: 2rem;
+	font-family: 'Iosevka Charon Regular', 'Iosevka Charon', monospace;
+	font-size: 2rem;
+	font-weight: 400;
+	flex-shrink: 0;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 0.6rem;
+}
+
+.search-submit-btn:hover:not(:disabled) {
+	background-color: #3d2d4a;
+	color: #f0d0f0;
+}
+
+.search-btn-icon {
+	width: 1.4rem;
+	height: 1.4rem;
+	flex-shrink: 0;
+}
+
+/* Section header label — larger, Title Case, not all-caps */
+.search-section-label {
+	font-family: 'Iosevka Charon Regular', 'Iosevka Charon', monospace;
+	font-size: 1.2rem;
+	font-weight: 400;
+	letter-spacing: 0.01em;
+	text-transform: none;
+	@apply text-accent;
 }

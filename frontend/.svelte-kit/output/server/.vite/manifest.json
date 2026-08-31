@@ -17,6 +17,18 @@
       "_transitionState.svelte.js"
     ]
   },
+  "_client.js": {
+    "file": "chunks/client.js",
+    "name": "client",
+    "imports": [
+      "_index-server.js",
+      "_shared.js",
+      "_internal.js",
+      "_internal2.js",
+      "_exports.js",
+      "_server.js"
+    ]
+  },
   "_env.js": {
     "file": "chunks/env.js",
     "name": "env"
@@ -48,6 +60,13 @@
       "_server.js"
     ]
   },
+  "_navigation.js": {
+    "file": "chunks/navigation.js",
+    "name": "navigation",
+    "imports": [
+      "_client.js"
+    ]
+  },
   "_server.js": {
     "file": "chunks/server.js",
     "name": "server"
@@ -61,11 +80,8 @@
     "name": "state",
     "imports": [
       "_index-server.js",
-      "_shared.js",
-      "_internal.js",
-      "_internal2.js",
-      "_exports.js",
-      "_server.js"
+      "_server.js",
+      "_client.js"
     ]
   },
   "_transitionState.svelte.js": {
@@ -119,8 +135,12 @@
     ]
   },
   "src/lib/assets/ExoSight_HomePage.svg": {
-    "file": "_app/immutable/assets/ExoSight_HomePage.Deqo8-YQ.svg",
+    "file": "_app/immutable/assets/ExoSight_HomePage.CEWTj95M.svg",
     "src": "src/lib/assets/ExoSight_HomePage.svg"
+  },
+  "src/lib/assets/ExoSight_Logo_White.svg": {
+    "file": "_app/immutable/assets/ExoSight_Logo_White.DnRkYyPV.svg",
+    "src": "src/lib/assets/ExoSight_Logo_White.svg"
   },
   "src/routes/+layout.svelte": {
     "file": "entries/pages/_layout.svelte.js",
@@ -129,11 +149,16 @@
     "isEntry": true,
     "imports": [
       "_server.js",
+      "_client.js",
       "_state.js",
+      "_navigation.js",
       "_transitionState.svelte.js"
     ],
     "css": [
-      "_app/immutable/assets/_layout.DcsJOY5V.css"
+      "_app/immutable/assets/_layout.BBNtNWxH.css"
+    ],
+    "assets": [
+      "_app/immutable/assets/ExoSight_Logo_White.DnRkYyPV.svg"
     ]
   },
   "src/routes/+page.svelte": {
@@ -143,10 +168,11 @@
     "isEntry": true,
     "imports": [
       "_server.js",
+      "_navigation.js",
       "_PageTransition.js"
     ],
     "assets": [
-      "_app/immutable/assets/ExoSight_HomePage.Deqo8-YQ.svg"
+      "_app/immutable/assets/ExoSight_HomePage.CEWTj95M.svg"
     ]
   },
   "src/routes/about/+page.svelte": {

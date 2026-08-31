@@ -47,10 +47,9 @@ export async function searchPlanets(q) {
 	searchState.hasMore = false;
 
 	try {
-		const res = await fetch(
-			`/api/exoplanets/search?q=${encodeURIComponent(q)}&limit=5`,
-			{ signal: activeController.signal },
-		);
+		const res = await fetch(`/api/exoplanets/search?q=${encodeURIComponent(q)}&limit=5`, {
+			signal: activeController.signal,
+		});
 
 		if (!res.ok) {
 			throw new Error(`Search failed (${res.status})`);
