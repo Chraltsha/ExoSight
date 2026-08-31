@@ -21,7 +21,7 @@
 
 import re
 from datetime import datetime
-from pydantic import BaseModel, field_validator
+from pydantic import BaseModel, Field, field_validator
 
 # Allowed characters in a planet name:
 # letters, digits, spaces, hyphens, dots, plus signs, single quotes
@@ -30,14 +30,14 @@ _PLANET_NAME_RE = re.compile(r"^[\w\s\-\.\+\']{1,100}$")
 
 
 class ObserverLocation(BaseModel):
-    latitude: float
-    longitude: float
-    elevation: float
+    latitude: float = Field(ge=-90, le=90, allow_inf_nan=False)
+    longitude: float = Field(ge=-180, le=180, allow_inf_nan=False)
+    elevation: float = Field(ge=-500, le=10_000, allow_inf_nan=False)
 
 
 class ObservationTarget(BaseModel):
-    ra: float | None = None
-    dec: float | None = None
+    ra: float | None = Field(default=None, ge=0, le=360, allow_inf_nan=False)
+    dec: float | None = Field(default=None, ge=-90, le=90, allow_inf_nan=False)
     object_name: str | None = None
 
     @field_validator("object_name", mode="before")
@@ -60,14 +60,14 @@ class ObservationTarget(BaseModel):
 
 
 class TelescopeFieldOfView(BaseModel):
-    horizontal: float
-    vertical: float
+    horizontal: float = Field(gt=0, le=360, allow_inf_nan=False)
+    vertical: float = Field(gt=0, le=180, allow_inf_nan=False)
 
 
 class PredictionRequest(BaseModel):
     observer: ObserverLocation
     observation_time: datetime
-    exposure_duration: float # in seconds
+    exposure_duration: float = Field(gt=0, le=3_600, allow_inf_nan=False)
     target: ObservationTarget
     fov: TelescopeFieldOfView
 

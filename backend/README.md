@@ -41,10 +41,10 @@ app/main.py
 2. `load_satellites()` loads the active CelesTrak TLE catalog.
 3. `filter_satellites()` removes objects below the horizon and more than 10 degrees from the
    target at the observation start.
-4. `propagate_satellites()` calculates each candidate's apparent position once per second for
-   the whole exposure.
-5. `satellites_in_fov()` transforms the target into Alt/Az at every sample and checks the
-   rectangular horizontal and vertical FoV.
+4. `find_satellite_crossings()` transforms the target track once, then propagates one candidate
+   at a time across the whole exposure using vectorized arrays.
+5. NumPy compares each satellite track with the rectangular horizontal and vertical FoV without
+   creating or retaining a `SkyCoord` object for every sample.
 6. The first detected crossing for each satellite becomes a result.
 7. `interpret_prediction()` sends that structured list to OpenAI and returns the explanation.
 
@@ -81,13 +81,13 @@ Useful URLs:
 
 ## Environment variables
 
-| Variable         | Required now? | Used for                                                        |
-| ---------------- | ------------: | --------------------------------------------------------------- |
-| `OPENAI_API_KEY` |           Yes | Creating the OpenAI client and generating the final explanation |
+| Variable         | Required now? | Used for                               |
+| ---------------- | ------------: | -------------------------------------- |
+| `OPENAI_API_KEY` |            No | Generating the optional AI explanation |
 
-The OpenAI client is currently created at import time. That means a missing key can crash the
-entire FastAPI function before routing begins, even if the request only needs planet search.
-For Vercel, add the key in Project Settings -> Environment Variables and redeploy.
+The OpenAI client is created only when a prediction needs an explanation. If the key is missing,
+the request still returns its calculated result with `interpretation: null`. For AI explanations
+on Vercel, add the key in Project Settings -> Environment Variables and redeploy.
 
 ## External data and caching
 
@@ -110,9 +110,9 @@ instances. Expect cold instances to fetch the catalog again.
 - Unknown planet during prediction: friendly `404`.
 - Invalid target combination, such as only RA without Dec: `400`.
 - NASA non-success HTTP response: `502`.
+- NASA connection or CelesTrak catalog failure: `503` with a retry-friendly message.
 - Pydantic request validation failure: `422`.
-- Network failures from NASA/CelesTrak and OpenAI errors are not fully normalized yet and can
-  surface as `500` errors.
+- OpenAI failures do not discard the calculation; `interpretation` becomes `null`.
 
 See [API.md](API.md) for every request and response shape.
 
@@ -120,7 +120,5 @@ See [API.md](API.md) for every request and response shape.
 
 - No brightness or visual magnitude calculation yet.
 - One-second sampling can miss a very fast crossing.
-- No backend test suite yet.
-- Numeric astronomy ranges are not comprehensively validated by Pydantic yet.
 - The TLE cache is local to one runtime instance, not a shared Redis cache.
 - Prediction latency grows with the exposure duration and number of candidate satellites.

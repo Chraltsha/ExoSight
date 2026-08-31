@@ -77,8 +77,8 @@ Pass the cursor back exactly as returned. Do not build one manually.
 
 ## `GET /api/targets/resolve`
 
-Resolves an exact exoplanet name through NASA and returns its ICRS right ascension and
-declination in decimal degrees.
+Resolves an exoplanet name through a case-insensitive exact match in NASA and returns its ICRS
+right ascension and declination in decimal degrees.
 
 ### Query parameters
 
@@ -164,23 +164,22 @@ The trailing slash is part of the declared route. FastAPI will normally redirect
 
 | Field                | Type              | Unit         |    Required | Current behavior                                      |
 | -------------------- | ----------------- | ------------ | ----------: | ----------------------------------------------------- |
-| `observer.latitude`  | number            | degrees      |         Yes | Intended range is -90 to 90                           |
-| `observer.longitude` | number            | degrees      |         Yes | Intended range is -180 to 180                         |
-| `observer.elevation` | number            | metres       |         Yes | Passed to Astropy and Skyfield                        |
+| `observer.latitude`  | number            | degrees      |         Yes | Enforced range is -90 to 90                           |
+| `observer.longitude` | number            | degrees      |         Yes | Enforced range is -180 to 180                         |
+| `observer.elevation` | number            | metres       |         Yes | Enforced range is -500 to 10,000                      |
 | `observation_time`   | ISO 8601 datetime | -            |         Yes | Naive datetimes are treated as UTC by Skyfield code   |
-| `exposure_duration`  | number            | seconds      |         Yes | Positions are sampled at whole-second intervals       |
-| `target.ra`          | number or `null`  | ICRS degrees | Conditional | Must be supplied together with `target.dec`           |
-| `target.dec`         | number or `null`  | ICRS degrees | Conditional | Must be supplied together with `target.ra`            |
+| `exposure_duration`  | number            | seconds      |         Yes | Greater than 0, at most 3,600; sampled every second   |
+| `target.ra`          | number or `null`  | ICRS degrees | Conditional | Range 0 to 360; supply with `target.dec`              |
+| `target.dec`         | number or `null`  | ICRS degrees | Conditional | Range -90 to 90; supply with `target.ra`              |
 | `target.object_name` | string or `null`  | -            | Conditional | Exact NASA planet name; trimmed and character-checked |
-| `fov.horizontal`     | number            | degrees      |         Yes | Full rectangular width; code compares against half    |
-| `fov.vertical`       | number            | degrees      |         Yes | Full rectangular height; code compares against half   |
+| `fov.horizontal`     | number            | degrees      |         Yes | Greater than 0, at most 360                           |
+| `fov.vertical`       | number            | degrees      |         Yes | Greater than 0, at most 180                           |
 
 Use either RA and Dec together or an object name. If complete RA/Dec and an object name are all
 provided, the current implementation uses RA/Dec and does not resolve the name.
 
-The backend models currently enforce types, required fields, and planet-name characters, but do
-not enforce all of the numeric ranges shown above. The frontend inputs do enforce several of
-those intended ranges.
+The backend models enforce the types and numeric ranges shown above. Invalid values return a
+`422` response before the calculation begins.
 
 Allowed object-name characters are letters, digits, whitespace, hyphens, periods, plus signs,
 and apostrophes, with a maximum length of 100 characters.
@@ -205,16 +204,16 @@ and apostrophes, with a maximum length of 100 characters.
 
 ### Response fields
 
-| Field                         | Type             | Unit      | Meaning                                                                   |
-| ----------------------------- | ---------------- | --------- | ------------------------------------------------------------------------- |
-| `obstructed`                  | boolean          | -         | Whether at least one sampled position entered the FoV                     |
-| `satellites`                  | array            | -         | One result per obstructing satellite                                      |
-| `satellites[].satellite_name` | string           | -         | Name from the CelesTrak TLE record                                        |
-| `satellites[].crossing_time`  | datetime         | UTC       | First sampled time inside the FoV                                         |
-| `satellites[].altitude`       | number           | degrees   | Apparent elevation above the observer's horizon                           |
-| `satellites[].azimuth`        | number           | degrees   | Apparent compass bearing, with north at 0 degrees                         |
-| `satellites[].brightness`     | number or `null` | magnitude | Always `null` in the current implementation                               |
-| `interpretation`              | string or `null` | -         | OpenAI-generated explanation; current service returns a string on success |
+| Field                         | Type             | Unit      | Meaning                                               |
+| ----------------------------- | ---------------- | --------- | ----------------------------------------------------- |
+| `obstructed`                  | boolean          | -         | Whether at least one sampled position entered the FoV |
+| `satellites`                  | array            | -         | One result per obstructing satellite                  |
+| `satellites[].satellite_name` | string           | -         | Name from the CelesTrak TLE record                    |
+| `satellites[].crossing_time`  | datetime         | UTC       | First sampled time inside the FoV                     |
+| `satellites[].altitude`       | number           | degrees   | Apparent elevation above the observer's horizon       |
+| `satellites[].azimuth`        | number           | degrees   | Apparent compass bearing, with north at 0 degrees     |
+| `satellites[].brightness`     | number or `null` | magnitude | Always `null` in the current implementation           |
+| `interpretation`              | string or `null` | -         | OpenAI explanation, or `null` when AI is unavailable  |
 
 ### Errors
 
@@ -224,7 +223,8 @@ and apostrophes, with a maximum length of 100 characters.
 |  `404` | Friendly error when the supplied planet does not exist in NASA's archive |
 |  `422` | JSON body does not match the Pydantic request model                      |
 |  `502` | NASA returned a non-success HTTP status while resolving a target         |
-|  `500` | Unhandled CelesTrak, OpenAI, network, coordinate, or runtime failure     |
+|  `503` | NASA connection or active satellite catalog is temporarily unavailable   |
+|  `500` | Unexpected coordinate or backend runtime failure                         |
 
 Example unknown-planet response:
 
@@ -252,7 +252,7 @@ is mainly useful during local development or when the backend is deployed separa
 
 - Target RA/Dec is ICRS in decimal degrees, not hours.
 - Satellite altitude and azimuth are topocentric values for the supplied observer.
-- The target is transformed from ICRS into Alt/Az separately at every sample time.
+- The complete target track is transformed from ICRS into Alt/Az once per request.
 - The observation is sampled once per second from the start through
   `int(exposure_duration)`, inclusive.
 - The candidate filter checks the observation start only and uses a 10-degree radius.
@@ -268,6 +268,6 @@ is mainly useful during local development or when the backend is deployed separa
 
 ## Deployment note
 
-`OPENAI_API_KEY` must currently exist before the FastAPI app imports because `gpt_service.py`
-creates its client at module load time. If it is missing on Vercel, the function can fail before
-any route runs, including `/api/exoplanets/search`.
+`OPENAI_API_KEY` is optional for calculation. The backend creates the client lazily; a missing
+key, timeout, rate limit, or API error produces `interpretation: null` instead of failing the
+prediction. The frontend already has a non-AI fallback summary for that case.

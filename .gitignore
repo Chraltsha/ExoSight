@@ -44,3 +44,6 @@ vite.config.ts.timestamp-*
 
 # testing files
 active_satellites.txt
+
+.svelte-kit/
+build/

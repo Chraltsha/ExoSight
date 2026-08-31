@@ -7,11 +7,29 @@
 	import { onNavigate } from '$app/navigation';
 	import { transitionState } from '$lib/transitionState.svelte.js';
 	import StarBackground from '$lib/components/StarBackground.svelte';
+	import CometLayer from '$lib/components/CometLayer.svelte';
 
 	// Parallax strengths increase per layer — background is subtle, foreground layers pop more
 	const LAYER_BASE = 6; // star-background.jpg  (furthest back)
 	const LAYER_MID = 14; // star-layer2.png
 	const LAYER_FRONT = 24; // star-layer3.png      (closest)
+
+	// ── Comet frequency ────────────────────────────────────────────────────────
+	// Adjust these two values to control how often comets appear (in milliseconds)
+	const COMET_MIN_DELAY = 1000; // shortest gap between comets
+	const COMET_MAX_DELAY = 5000; // longest gap between comets
+
+	// ── Comet fade GIF position tuning ─────────────────────────────────────────
+	// COMET_FADE_ZOOM_SCALE — multiplies the computed GIF position.
+	//   1.0 = default (no change).  Try values like 0.8 or 1.25 if the GIF
+	//   appears consistently too close to the top-left or too far away.
+	const COMET_FADE_ZOOM_SCALE = 1.0;
+
+	// COMET_FADE_OFFSET_X/Y — shifts the GIF after the scale is applied (CSS px).
+	// Positive X = further right, negative X = further left.
+	// Positive Y = further down,  negative Y = further up.
+	const COMET_FADE_OFFSET_X = -200; // px
+	const COMET_FADE_OFFSET_Y = -240; // px
 
 	let { children } = $props();
 
@@ -38,6 +56,9 @@
 	$effect(() => {
 		page.url.pathname;
 		updateIndicator();
+
+		window.addEventListener('resize', updateIndicator);
+		return () => window.removeEventListener('resize', updateIndicator);
 	});
 
 	onNavigate(({ from, to }) => {
@@ -60,6 +81,13 @@
 <StarBackground src="/star-background.jpg" strength={LAYER_BASE} zIndex={-3} />
 <StarBackground src="/star-layer2.png" strength={LAYER_MID} zIndex={-2} />
 <StarBackground src="/star-layer3.png" strength={LAYER_FRONT} zIndex={-1} />
+<CometLayer
+	minDelay={COMET_MIN_DELAY}
+	maxDelay={COMET_MAX_DELAY}
+	fadeOffsetX={COMET_FADE_OFFSET_X}
+	fadeOffsetY={COMET_FADE_OFFSET_Y}
+	fadeZoomScale={COMET_FADE_ZOOM_SCALE}
+/>
 
 <nav class="navigation-bar">
 	<img src={logoWhite} alt="ExoSight" class="nav-logo" />

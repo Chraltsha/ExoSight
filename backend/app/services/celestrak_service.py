@@ -48,6 +48,10 @@ ACTIVE_SATELLITES_URL = (
 )
 
 
+class SatelliteDataError(RuntimeError):
+    """Raised when the active satellite catalog cannot be loaded."""
+
+
 def load_satellites() -> list[EarthSatellite]:
     """
     Download the latest active satellite TLEs from CelesTrak.
@@ -57,17 +61,22 @@ def load_satellites() -> list[EarthSatellite]:
     Returns:
         list[EarthSatellite]
     """
-    load = Loader('/tmp')
-    
     try:
-        stale = load.days_old('active_satellites.txt') > 3.0
-    except FileNotFoundError:
-        stale = True
-        
-    if stale:
-        load.download(ACTIVE_SATELLITES_URL, filename='active_satellites.txt')
-    satellites = load.tle_file('active_satellites.txt')
-    return satellites
+        load = Loader("/tmp")
+
+        try:
+            stale = load.days_old("active_satellites.txt") > 3.0
+        except FileNotFoundError:
+            stale = True
+
+        if stale:
+            load.download(ACTIVE_SATELLITES_URL, filename="active_satellites.txt")
+
+        return load.tle_file("active_satellites.txt")
+    except Exception as exc:
+        raise SatelliteDataError(
+            "The active satellite catalog is temporarily unavailable."
+        ) from exc
 
 
 if __name__ == "__main__":

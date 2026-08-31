@@ -34,26 +34,61 @@ html {
 	zoom: 80%;
 }
 
+@media (max-width: 768px) {
+	html {
+		zoom: 100%;
+	}
+}
+
 body {
 	/* bg-background kept as fallback while the avif loads */
 	@apply flex min-h-screen flex-col overflow-x-hidden bg-background text-text-color;
+	/* telescope-cursor.png is a 32×32 resized copy — browsers reject cursors >128px */
+	cursor:
+		url('/telescope-cursor.png') 16 16,
+		auto;
 }
 
 .home-content {
-	@apply mt-56 ml-96 flex flex-col items-start justify-baseline gap-0;
+	@apply mx-auto mt-16 flex w-full max-w-[90vw] flex-col items-start justify-baseline gap-0 px-4;
+	margin-top: clamp(6rem, 22vh, 22rem);
+	padding-left: clamp(1rem, 8vw, 24rem);
+}
+
+.home-credits {
+	position: fixed;
+	bottom: 0.75rem;
+	right: 1rem;
+	font-family: 'Iosevka Charon Light', 'Iosevka Charon', monospace;
+	font-size: 0.7rem;
+	color: #555;
+	margin: 0;
+	z-index: 10;
+}
+
+.home-credits a {
+	color: inherit;
+	text-decoration: none;
+}
+
+.home-credits a:hover {
+	color: #888;
 }
 
 .home-title {
-	@apply text-8xl;
+	@apply w-full;
+	/* SVG scales to container width, respecting aspect ratio */
+	max-width: clamp(260px, 70vw, 800px);
+	height: auto;
 }
 
 .home-subtitle {
-	font-size: 28px;
 	font-family: 'Iosevka Charon Light', 'Iosevka Charon', monospace;
+	font-size: clamp(14px, 2.2vw, 28px);
 	display: block;
 	line-height: 1.4;
 	text-align: left;
-	margin-top: -20px;
+	margin-top: -0.5em;
 }
 
 .subtitle-break {
@@ -64,8 +99,8 @@ body {
 	@apply cursor-pointer rounded-4xl border-1 bg-card px-4 py-3 transition-colors duration-200;
 	font-family: 'Iosevka Charon Light Italic', 'Iosevka Charon Light', monospace;
 	font-style: italic;
-	font-size: 18px;
-	margin-top: 100px;
+	font-size: clamp(13px, 1.4vw, 18px);
+	margin-top: clamp(2rem, 6vw, 6.25rem);
 }
 
 .home-searchbutton:hover {
@@ -74,13 +109,19 @@ body {
 }
 
 .navigation-bar {
-	@apply relative mt-12 flex flex-row items-center justify-center gap-24 pb-3;
-	font-size: 24px;
+	@apply relative flex flex-row items-center justify-center pb-3;
+	font-size: clamp(14px, 1.8vw, 24px);
+	margin-top: clamp(0.75rem, 3vw, 3rem);
+	gap: clamp(1rem, 5vw, 6rem);
 }
 
 .nav-logo {
-	@apply absolute top-1/2 left-90 h-32 w-auto;
+	position: absolute;
+	top: 50%;
 	transform: translateY(-50%);
+	left: clamp(0.5rem, 5vw, 5.5rem);
+	height: clamp(3rem, 7vw, 8rem);
+	width: auto;
 }
 
 .navigation-bar a {
@@ -239,12 +280,14 @@ body {
    ============================================================ */
 
 .search-new-page {
-	@apply mx-auto w-full max-w-[1600px] px-8 py-8;
+	@apply mx-auto w-full max-w-[1600px] px-4 py-6;
+	padding-left: clamp(1rem, 4vw, 2rem);
+	padding-right: clamp(1rem, 4vw, 2rem);
 }
 
 .search-page-heading {
 	font-family: 'Iosevka Charon Regular', 'Iosevka Charon', monospace;
-	font-size: 3rem;
+	font-size: clamp(1.4rem, 3.5vw, 3rem);
 	font-weight: 400;
 	line-height: 1.2;
 	@apply mb-1 text-text-color;
@@ -284,14 +327,16 @@ body {
 /* BODY ROW: left col fills remaining space, right col fixed */
 .search-body-row {
 	@apply flex gap-6;
+	flex-wrap: wrap;
 }
 
 /* LEFT column: heading + autocomplete + three panels + button */
 .search-inputs-col {
 	@apply flex min-w-0 flex-1 flex-col gap-4;
+	min-width: min(100%, 400px);
 }
 
-/* Three equal-width input panels */
+/* Three equal-width input panels — collapse to 1 col on narrow screens */
 .search-three-col {
 	@apply grid gap-4;
 	grid-template-columns: repeat(3, 1fr);
@@ -299,7 +344,7 @@ body {
 
 /* RIGHT column: Exosight output */
 .search-output-col {
-	width: 400px;
+	width: clamp(280px, 30vw, 400px);
 	flex-shrink: 0;
 	display: flex;
 	flex-direction: column;
@@ -329,8 +374,107 @@ body {
 	background-color: #2c2c2c;
 	font-family: 'Iosevka Charon Regular', 'Iosevka Charon', monospace;
 	font-size: 1.05rem;
-	white-space: pre-wrap;
 	min-height: 120px;
+	overflow-y: auto;
+}
+
+/* Markdown rendered inside the output box */
+.exosight-output-prose p {
+	margin-top: 0.6em;
+	margin-bottom: 0.6em;
+}
+
+.exosight-output-prose p:first-child {
+	margin-top: 0;
+}
+
+.exosight-output-prose strong {
+	color: #fdfdfd;
+	font-weight: 700;
+}
+
+.exosight-output-prose em {
+	font-family: 'Iosevka Charon Light Italic', 'Iosevka Charon Light', monospace;
+	font-style: italic;
+	color: #d9a4d9;
+}
+
+.exosight-output-prose h1,
+.exosight-output-prose h2,
+.exosight-output-prose h3 {
+	font-family: 'Iosevka Charon Regular', 'Iosevka Charon', monospace;
+	font-weight: 400;
+	color: #d9a4d9;
+	margin-top: 1em;
+	margin-bottom: 0.3em;
+	line-height: 1.3;
+}
+
+.exosight-output-prose h1 {
+	font-size: 1.4rem;
+}
+
+.exosight-output-prose h2 {
+	font-size: 1.2rem;
+}
+
+.exosight-output-prose h3 {
+	font-size: 1.05rem;
+}
+
+.exosight-output-prose ul,
+.exosight-output-prose ol {
+	padding-left: 1.4em;
+	margin-top: 0.4em;
+	margin-bottom: 0.4em;
+}
+
+.exosight-output-prose ul {
+	list-style-type: disc;
+}
+
+.exosight-output-prose ol {
+	list-style-type: decimal;
+}
+
+.exosight-output-prose li {
+	margin-top: 0.2em;
+	margin-bottom: 0.2em;
+}
+
+.exosight-output-prose code {
+	font-family: 'Iosevka Charon Regular', 'Iosevka Charon', monospace;
+	font-size: 0.92em;
+	background-color: #1a1c20;
+	color: #d9a4d9;
+	padding: 0.1em 0.35em;
+	border-radius: 4px;
+}
+
+.exosight-output-prose pre {
+	background-color: #1a1c20;
+	border-radius: 8px;
+	padding: 0.75em 1em;
+	overflow-x: auto;
+	margin-top: 0.6em;
+	margin-bottom: 0.6em;
+}
+
+.exosight-output-prose pre code {
+	background: none;
+	padding: 0;
+	color: #fdfdfd;
+}
+
+.exosight-output-prose hr {
+	border: none;
+	border-top: 1px solid #444;
+	margin: 0.8em 0;
+}
+
+.exosight-output-prose a {
+	color: #d9a4d9;
+	text-decoration: underline;
 }
 
 /* Make the output section a flex column so the box grows to fill it */
@@ -391,4 +535,213 @@ body {
 	letter-spacing: 0.01em;
 	text-transform: none;
 	@apply text-accent;
+}
+
+/* ============================================================
+   Responsive / mobile overrides  (largest → smallest)
+   ============================================================ */
+
+/* Medium screens: tablets landscape / small laptops ≤ 1024px */
+@media (max-width: 1024px) {
+	.search-three-col {
+		grid-template-columns: repeat(2, 1fr);
+	}
+
+	.search-output-col {
+		width: clamp(260px, 35vw, 400px);
+	}
+}
+
+/* Tablet: ≤ 768px — stack search layout, fix nav */
+@media (max-width: 768px) {
+	.navigation-bar {
+		/* Push links to the right so the absolute logo doesn't overlap them */
+		justify-content: flex-end;
+		padding-right: 1.5rem;
+		gap: clamp(0.75rem, 4vw, 2rem);
+	}
+
+	.search-body-row {
+		flex-direction: column;
+	}
+
+	.search-output-col {
+		width: 100%;
+	}
+
+	.search-three-col {
+		grid-template-columns: 1fr;
+	}
+
+	.search-submit-btn {
+		margin-top: 1rem;
+		margin-bottom: 1rem;
+		font-size: 1.4rem;
+	}
+}
+
+/* Small mobile: ≤ 480px — tighten further */
+@media (max-width: 480px) {
+	.home-content {
+		padding-left: 1rem;
+		margin-top: 5rem;
+	}
+
+	.home-title {
+		max-width: 90vw;
+	}
+
+	.navigation-bar {
+		padding-right: 1rem;
+	}
+
+	.search-page-heading {
+		font-size: 1.2rem;
+	}
+}
+/* ============================================================
+   About page — team members grid
+   ============================================================ */
+
+.about-main {
+	max-width: 1200px;
+	margin: 0 auto;
+	padding: 70px 48px 100px;
+	display: flex;
+	flex-direction: column;
+	gap: 60px;
+	font-family: 'Iosevka Charon Light', 'Iosevka Charon', monospace;
+}
+
+.about-row {
+	position: relative;
+	display: flex;
+	align-items: center;
+}
+
+.about-row.right {
+	justify-content: flex-end;
+}
+
+.about-card {
+	background-color: rgba(255, 255, 255, 0.1);
+	backdrop-filter: blur(10px);
+	border-radius: 16px;
+	padding: 28px 40px;
+	width: 100%;
+	color: #f5f4f7;
+}
+
+.about-row.left .about-card {
+	padding-left: 190px;
+}
+.about-row.right .about-card {
+	padding-right: 205px;
+	text-align: right;
+}
+
+.about-row.right .about-meta {
+	justify-content: flex-end;
+}
+
+.about-avatar {
+	position: absolute;
+	width: 200px;
+	height: 200px;
+	bottom: 0;
+	z-index: 2;
+	overflow: hidden;
+}
+
+.about-row.left .about-avatar {
+	left: 0;
+}
+.about-row.right .about-avatar {
+	right: 0;
+}
+
+.about-avatar svg {
+	width: 100%;
+	height: 100%;
+	display: block;
+	/* Use CSS custom property from inline var(--ink) in HTML */
+}
+
+.about-avatar img {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	object-position: top;
+	display: block;
+}
+
+.about-name {
+	font-family: 'Iosevka Charon Regular', 'Iosevka Charon', monospace;
+	font-weight: 700;
+	font-size: 1.7rem;
+	margin: 0 0 12px;
+	letter-spacing: 0.3px;
+	@apply text-accent;
+}
+
+.about-meta {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 26px;
+	font-size: 1.05rem;
+	font-weight: 300;
+	font-family: 'Iosevka Charon Light', 'Iosevka Charon', monospace;
+	color: #efeef1;
+}
+
+.about-meta span,
+.about-meta-link {
+	display: inline-flex;
+	align-items: center;
+	gap: 8px;
+}
+
+.about-meta-link {
+	color: inherit;
+	text-decoration: none;
+	transition: color 0.15s;
+}
+
+.about-meta-link:hover {
+	@apply text-accent;
+}
+
+.about-meta svg {
+	width: 18px;
+	height: 18px;
+	flex-shrink: 0;
+}
+
+@media (max-width: 720px) {
+	.about-main {
+		padding: 40px 20px 60px;
+		gap: 90px;
+	}
+	.about-avatar {
+		width: 90px;
+		height: 90px;
+		bottom: 0;
+	}
+	.about-row.left .about-avatar {
+		left: 10px;
+	}
+	.about-row.right .about-avatar {
+		right: 10px;
+	}
+	.about-row.left .about-card,
+	.about-row.right .about-card {
+		padding: 60px 20px 24px;
+	}
+	.about-name {
+		font-size: 1.25rem;
+	}
+	.about-meta {
+		font-size: 0.9rem;
+		gap: 14px;
+	}
 }

@@ -6,6 +6,7 @@ from app.models.prediction import (
     PredictionRequest,
     PredictionResponse,
 )
+from app.services.celestrak_service import SatelliteDataError
 from app.services.exoplanet_service import ExoplanetNotFoundError
 from app.services.prediction_service import predict as predict_service
 
@@ -34,8 +35,17 @@ def predict(request: PredictionRequest):
         # Invalid target combinations, such as providing only RA or only Dec.
         raise HTTPException(status_code=400, detail=str(exc)) from exc
     except httpx.HTTPStatusError as exc:
-        # NASA TAP or CelesTrak returned a bad response
         raise HTTPException(
             status_code=502,
             detail=f"Upstream error from NASA: {exc.response.status_code}",
+        ) from exc
+    except httpx.RequestError as exc:
+        raise HTTPException(
+            status_code=503,
+            detail="The NASA Exoplanet Archive is temporarily unavailable. Please try again.",
+        ) from exc
+    except SatelliteDataError as exc:
+        raise HTTPException(
+            status_code=503,
+            detail="Satellite data is temporarily unavailable. Please try again.",
         ) from exc

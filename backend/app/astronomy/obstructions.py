@@ -1,8 +1,107 @@
-from astropy.coordinates import AltAz, EarthLocation
+from datetime import datetime, timedelta, timezone
+from typing import cast
 
 import astropy.units as u
+import numpy as np
+from astropy.coordinates import AltAz, Angle, EarthLocation, SkyCoord
+from astropy.time import Time
+from skyfield.api import EarthSatellite, wgs84
 
 from app.astronomy.fov import inside_fov
+from app.astronomy.propagation import ts
+from app.models.prediction import ObserverLocation, TelescopeFieldOfView
+
+
+def find_satellite_crossings(
+    satellites: list[EarthSatellite],
+    target: SkyCoord,
+    fov: TelescopeFieldOfView,
+    observer: ObserverLocation,
+    observation_time: datetime,
+    exposure_duration: float,
+) -> list[dict[str, object]]:
+    """Propagate candidates and return their first sampled FoV crossing.
+
+    The target track is transformed once for the entire observation. Each
+    satellite is then propagated as a vector and discarded after its first
+    crossing is recorded, keeping memory proportional to the exposure rather
+    than satellites multiplied by exposure samples.
+    """
+
+    if not satellites:
+        return []
+
+    sample_count = int(exposure_duration) + 1
+    sample_times = [
+        observation_time + timedelta(seconds=offset)
+        for offset in range(sample_count)
+    ]
+    utc_times = [
+        sample_time.replace(tzinfo=timezone.utc)
+        if sample_time.tzinfo is None
+        else sample_time.astimezone(timezone.utc)
+        for sample_time in sample_times
+    ]
+
+    observer_astropy = EarthLocation(
+        lat=observer.latitude * u.deg,
+        lon=observer.longitude * u.deg,
+        height=observer.elevation * u.m,
+    )
+    target_track = target.transform_to(
+        AltAz(
+            obstime=Time(utc_times),
+            location=observer_astropy,
+        )
+    )
+    target_altitude_angles = cast(Angle, target_track.alt)
+    target_azimuth_angles = cast(Angle, target_track.az)
+    target_altitudes = np.atleast_1d(
+        np.asarray(target_altitude_angles.degree, dtype=np.float64)
+    )
+    target_azimuths = np.atleast_1d(
+        np.asarray(target_azimuth_angles.degree, dtype=np.float64)
+    )
+
+    skyfield_times = ts.from_datetimes(utc_times)
+    observer_skyfield = wgs84.latlon(
+        latitude_degrees=observer.latitude,
+        longitude_degrees=observer.longitude,
+        elevation_m=observer.elevation,
+    )
+
+    obstructing: list[dict[str, object]] = []
+
+    for satellite in satellites:
+        apparent = (satellite - observer_skyfield).at(skyfield_times)
+        altitudes, azimuths, _ = apparent.altaz()
+        satellite_altitudes = np.atleast_1d(cast(np.ndarray, altitudes.degrees))
+        satellite_azimuths = np.atleast_1d(cast(np.ndarray, azimuths.degrees))
+
+        horizontal_difference = np.abs(
+            (satellite_azimuths - target_azimuths + 180.0) % 360.0 - 180.0
+        )
+        vertical_difference = np.abs(satellite_altitudes - target_altitudes)
+        crossing_indices = np.flatnonzero(
+            (horizontal_difference <= fov.horizontal / 2.0)
+            & (vertical_difference <= fov.vertical / 2.0)
+        )
+
+        if crossing_indices.size == 0:
+            continue
+
+        crossing_index = int(crossing_indices[0])
+        obstructing.append(
+            {
+                "satellite_name": satellite.name,
+                "crossing_time": sample_times[crossing_index],
+                "altitude": float(satellite_altitudes[crossing_index]),
+                "azimuth": float(satellite_azimuths[crossing_index]),
+                "brightness": None,
+            }
+        )
+
+    return obstructing
 
 
 def _get_target_at_time(
