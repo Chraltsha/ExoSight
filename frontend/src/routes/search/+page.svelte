@@ -35,6 +35,7 @@
 
 	let isLoading = $state(false);
 	let llmOutput = $state('');
+	let outputExpanded = $state(false);
 
 	const parsedOutput = $derived(llmOutput ? marked.parse(llmOutput) : '');
 
@@ -131,9 +132,11 @@
 			}
 
 			const data = await res.json();
-			llmOutput = data.interpretation ?? (data.obstructed
-				? `${data.satellites.length} satellite(s) will obstruct your observation.`
-				: 'No satellite interference detected.');
+			llmOutput =
+				data.interpretation ??
+				(data.obstructed
+					? `${data.satellites.length} satellite(s) will obstruct your observation.`
+					: 'No satellite interference detected.');
 		} catch (err) {
 			llmOutput = `Network error: ${err.message}`;
 		} finally {
@@ -244,7 +247,33 @@
 					{isLoading ? 'Analysing…' : 'Search'}
 				</button>
 				<div class="search-section search-output-section">
-					<span class="exosight-label">Exosight says…</span>
+					<div class="exosight-output-header">
+						<span class="exosight-label">Exosight says…</span>
+						{#if llmOutput && !isLoading}
+							<button
+								class="exosight-expand-btn"
+								onclick={() => (outputExpanded = true)}
+								aria-label="Expand output"
+								title="Expand"
+							>
+								<svg
+									xmlns="http://www.w3.org/2000/svg"
+									viewBox="0 0 24 24"
+									fill="none"
+									stroke="currentColor"
+									stroke-width="2"
+									stroke-linecap="round"
+									stroke-linejoin="round"
+									aria-hidden="true"
+								>
+									<polyline points="15 3 21 3 21 9" />
+									<polyline points="9 21 3 21 3 15" />
+									<line x1="21" y1="3" x2="14" y2="10" />
+									<line x1="3" y1="21" x2="10" y2="14" />
+								</svg>
+							</button>
+						{/if}
+					</div>
 					<div class="exosight-output-box exosight-output-prose">
 						{#if isLoading}
 							<div class="typing-indicator">
@@ -262,6 +291,49 @@
 						{/if}
 					</div>
 				</div>
+
+				<!-- Expanded overlay modal -->
+				{#if outputExpanded}
+					<!-- svelte-ignore a11y_click_events_have_key_events -->
+					<div
+						class="exosight-overlay-backdrop"
+						role="presentation"
+						onclick={() => (outputExpanded = false)}
+					></div>
+					<div
+						class="exosight-overlay-panel"
+						role="dialog"
+						aria-modal="true"
+						aria-label="Exosight output"
+					>
+						<div class="exosight-overlay-header">
+							<span class="exosight-label">Exosight says…</span>
+							<button
+								class="exosight-close-btn"
+								onclick={() => (outputExpanded = false)}
+								aria-label="Close expanded view"
+							>
+								<svg
+									xmlns="http://www.w3.org/2000/svg"
+									viewBox="0 0 24 24"
+									fill="none"
+									stroke="currentColor"
+									stroke-width="2"
+									stroke-linecap="round"
+									stroke-linejoin="round"
+									aria-hidden="true"
+								>
+									<line x1="18" y1="6" x2="6" y2="18" />
+									<line x1="6" y1="6" x2="18" y2="18" />
+								</svg>
+							</button>
+						</div>
+						<div class="exosight-overlay-body exosight-output-prose">
+							<!-- eslint-disable-next-line svelte/no-at-html-tags -->
+							{@html parsedOutput}
+						</div>
+					</div>
+				{/if}
 			</div>
 		</div>
 	</main>

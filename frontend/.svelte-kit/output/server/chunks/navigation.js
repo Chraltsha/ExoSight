@@ -1,2 +1,2 @@
-import "./client.js";
+import './client.js';
 export {};

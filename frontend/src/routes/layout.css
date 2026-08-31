@@ -368,6 +368,14 @@ body {
 	@apply text-accent;
 }
 
+.exosight-output-header {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 0.5rem;
+	margin-bottom: 0.5rem;
+}
+
 .exosight-output-box {
 	flex: 1;
 	@apply rounded-xl px-5 py-4 leading-relaxed text-text-color;
@@ -375,7 +383,108 @@ body {
 	font-family: 'Iosevka Charon Regular', 'Iosevka Charon', monospace;
 	font-size: 1.05rem;
 	min-height: 120px;
+	max-height: calc(100vh - 220px);
 	overflow-y: auto;
+	scrollbar-width: thin;
+	scrollbar-color: #4a3a54 #2c2c2c;
+}
+
+.exosight-expand-btn {
+	flex-shrink: 0;
+	width: 1.9rem;
+	height: 1.9rem;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	border: 1px solid #4a3a54;
+	border-radius: 6px;
+	background: transparent;
+	color: #d9a4d9;
+	cursor: pointer;
+	padding: 0.25rem;
+	transition:
+		background-color 0.15s,
+		color 0.15s;
+}
+
+.exosight-expand-btn:hover {
+	background-color: #3d2d4a;
+	color: #f0d0f0;
+}
+
+.exosight-expand-btn svg {
+	width: 100%;
+	height: 100%;
+}
+
+/* ── Expanded overlay ────────────────────────────────────────── */
+
+.exosight-overlay-backdrop {
+	position: fixed;
+	inset: 0;
+	background-color: rgba(0, 0, 0, 0.65);
+	z-index: 700;
+}
+
+.exosight-overlay-panel {
+	position: fixed;
+	inset: 4vh 4vw;
+	z-index: 9999;
+	background-color: #222222;
+	border: 1px solid #4a3a54;
+	border-radius: 16px;
+	display: flex;
+	flex-direction: column;
+	overflow: hidden;
+}
+
+.exosight-overlay-header {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding: 1rem 1.4rem 0.75rem;
+	border-bottom: 1px solid #3a2e44;
+	flex-shrink: 0;
+}
+
+.exosight-overlay-body {
+	flex: 1;
+	overflow-y: auto;
+	padding: 1.2rem 1.4rem;
+	scrollbar-width: thin;
+	scrollbar-color: #4a3a54 #222222;
+	font-family: 'Iosevka Charon Regular', 'Iosevka Charon', monospace;
+	font-size: 1.05rem;
+	line-height: 1.65;
+	@apply text-text-color;
+}
+
+.exosight-close-btn {
+	flex-shrink: 0;
+	width: 2rem;
+	height: 2rem;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	border: 1px solid #4a3a54;
+	border-radius: 6px;
+	background: transparent;
+	color: #d9a4d9;
+	cursor: pointer;
+	padding: 0.25rem;
+	transition:
+		background-color 0.15s,
+		color 0.15s;
+}
+
+.exosight-close-btn:hover {
+	background-color: #3d2d4a;
+	color: #f0d0f0;
+}
+
+.exosight-close-btn svg {
+	width: 100%;
+	height: 100%;
 }
 
 /* Markdown rendered inside the output box */
@@ -481,6 +590,7 @@ body {
 .search-output-section {
 	@apply flex flex-col;
 	height: 100%;
+	position: relative;
 }
 
 .exosight-placeholder {

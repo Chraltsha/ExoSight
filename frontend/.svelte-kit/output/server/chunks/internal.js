@@ -1,19 +1,19 @@
 //#region node_modules/@sveltejs/kit/src/runtime/app/paths/internal/server.js
-var base = "";
+var base = '';
 var assets = base;
-var app_dir = "_app";
+var app_dir = '_app';
 var initial = {
 	base,
-	assets
+	assets,
 };
 /**
-* `base` could be overridden during rendering to be relative;
-* this one's the original non-relative base path
-*/
+ * `base` could be overridden during rendering to be relative;
+ * this one's the original non-relative base path
+ */
 var initial_base = initial.base;
 /**
-* @param {{ base: string, assets: string }} paths
-*/
+ * @param {{ base: string, assets: string }} paths
+ */
 function override(paths) {
 	base = paths.base;
 	assets = paths.assets;
@@ -28,11 +28,23 @@ function set_assets(path) {
 }
 //#endregion
 //#region node_modules/@sveltejs/kit/src/runtime/app/env/internal.js
-var version = "1788108429716";
+var version = '1788108429716';
 var prerendering = false;
 function set_building() {}
 function set_prerendering() {
 	prerendering = true;
 }
 //#endregion
-export { app_dir as a, initial_base as c, set_assets as d, version as i, override as l, set_building as n, assets as o, set_prerendering as r, base as s, prerendering as t, reset as u };
+export {
+	app_dir as a,
+	initial_base as c,
+	set_assets as d,
+	version as i,
+	override as l,
+	set_building as n,
+	assets as o,
+	set_prerendering as r,
+	base as s,
+	prerendering as t,
+	reset as u,
+};

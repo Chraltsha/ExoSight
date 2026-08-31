@@ -1,27 +1,43 @@
-import { W as async_mode_flag, at as noop, b as getAbortSignal, d as createContext, et as experimental_async_required, f as getAllContexts, g as ssr_context, h as setContext, m as hasContext, ot as run, p as getContext, u as get_render_context, v as hydratable_serialization_failed, y as lifecycle_function_unavailable } from "./server.js";
-import * as devalue from "devalue";
+import {
+	W as async_mode_flag,
+	at as noop,
+	b as getAbortSignal,
+	d as createContext,
+	et as experimental_async_required,
+	f as getAllContexts,
+	g as ssr_context,
+	h as setContext,
+	m as hasContext,
+	ot as run,
+	p as getContext,
+	u as get_render_context,
+	v as hydratable_serialization_failed,
+	y as lifecycle_function_unavailable,
+} from './server.js';
+import * as devalue from 'devalue';
 //#region \0rolldown/runtime.js
 var __defProp = Object.defineProperty;
 var __exportAll = (all, no_symbols) => {
 	let target = {};
-	for (var name in all) __defProp(target, name, {
-		get: all[name],
-		enumerable: true
-	});
-	if (!no_symbols) __defProp(target, Symbol.toStringTag, { value: "Module" });
+	for (var name in all)
+		__defProp(target, name, {
+			get: all[name],
+			enumerable: true,
+		});
+	if (!no_symbols) __defProp(target, Symbol.toStringTag, { value: 'Module' });
 	return target;
 };
 //#endregion
 //#region node_modules/svelte/src/internal/server/hydratable.js
 /** @import { HydratableLookupEntry } from '#server' */
 /**
-* @template T
-* @param {string} key
-* @param {() => T} fn
-* @returns {T}
-*/
+ * @template T
+ * @param {string} key
+ * @param {() => T} fn
+ * @returns {T}
+ */
 function hydratable(key, fn) {
-	if (!async_mode_flag) experimental_async_required("hydratable");
+	if (!async_mode_flag) experimental_async_required('hydratable');
 	const { hydratable } = get_render_context();
 	let entry = hydratable.lookup.get(key);
 	if (entry !== void 0) return entry.value;
@@ -31,23 +47,30 @@ function hydratable(key, fn) {
 	return value;
 }
 /**
-* @param {string} key
-* @param {any} value
-* @param {Map<Promise<any>, string>} [unresolved]
-*/
+ * @param {string} key
+ * @param {any} value
+ * @param {Map<Promise<any>, string>} [unresolved]
+ */
 function encode(key, value, unresolved) {
 	/** @type {HydratableLookupEntry} */
 	const entry = {
 		value,
-		serialized: ""
+		serialized: '',
 	};
 	let uid = 1;
 	entry.serialized = devalue.uneval(entry.value, (value, uneval) => {
 		if (is_promise(value)) {
 			const placeholder = `"${uid++}"`;
-			const p = value.then((v) => {
-				entry.serialized = entry.serialized.replace(placeholder, () => `r(${uneval(v)})`);
-			}).catch((devalue_error) => hydratable_serialization_failed(key, serialization_stack(entry.stack, devalue_error?.stack)));
+			const p = value
+				.then((v) => {
+					entry.serialized = entry.serialized.replace(placeholder, () => `r(${uneval(v)})`);
+				})
+				.catch((devalue_error) =>
+					hydratable_serialization_failed(
+						key,
+						serialization_stack(entry.stack, devalue_error?.stack),
+					),
+				);
 			unresolved?.set(p, key);
 			p.catch(() => {}).finally(() => unresolved?.delete(p));
 			(entry.promises ??= []).push(p);
@@ -57,21 +80,21 @@ function encode(key, value, unresolved) {
 	return entry;
 }
 /**
-* @param {any} value
-* @returns {value is Promise<any>}
-*/
+ * @param {any} value
+ * @returns {value is Promise<any>}
+ */
 function is_promise(value) {
-	return Object.prototype.toString.call(value) === "[object Promise]";
+	return Object.prototype.toString.call(value) === '[object Promise]';
 }
 /**
-* @param {string | undefined} root_stack
-* @param {string | undefined} uneval_stack
-*/
+ * @param {string | undefined} root_stack
+ * @param {string | undefined} uneval_stack
+ */
 function serialization_stack(root_stack, uneval_stack) {
-	let out = "";
-	if (root_stack) out += root_stack + "\n";
-	if (uneval_stack) out += "Caused by:\n" + uneval_stack + "\n";
-	return out || "<missing stack trace>";
+	let out = '';
+	if (root_stack) out += root_stack + '\n';
+	if (uneval_stack) out += 'Caused by:\n' + uneval_stack + '\n';
+	return out || '<missing stack trace>';
 }
 //#endregion
 //#region node_modules/svelte/src/internal/server/blocks/snippet.js
@@ -79,18 +102,22 @@ function serialization_stack(root_stack, uneval_stack) {
 /** @import { Renderer } from '../renderer' */
 /** @import { Getters } from '#shared' */
 /**
-* Create a snippet programmatically
-* @template {unknown[]} Params
-* @param {(...params: Getters<Params>) => {
-*   render: () => string
-*   setup?: (element: Element) => void | (() => void)
-* }} fn
-* @returns {Snippet<Params>}
-*/
+ * Create a snippet programmatically
+ * @template {unknown[]} Params
+ * @param {(...params: Getters<Params>) => {
+ *   render: () => string
+ *   setup?: (element: Element) => void | (() => void)
+ * }} fn
+ * @returns {Snippet<Params>}
+ */
 function createRawSnippet(fn) {
 	return (renderer, ...args) => {
 		var getters = args.map((value) => () => value);
-		renderer.push(fn(...getters).render().trim());
+		renderer.push(
+			fn(...getters)
+				.render()
+				.trim(),
+		);
 	};
 }
 //#endregion
@@ -118,7 +145,7 @@ var index_server_exports = /* @__PURE__ */ __exportAll({
 	settled: () => settled,
 	tick: () => tick,
 	unmount: () => unmount,
-	untrack: () => run
+	untrack: () => run,
 });
 /** @param {() => void} fn */
 function onDestroy(fn) {
@@ -128,16 +155,16 @@ function createEventDispatcher() {
 	return noop;
 }
 function mount() {
-	lifecycle_function_unavailable("mount");
+	lifecycle_function_unavailable('mount');
 }
 function hydrate() {
-	lifecycle_function_unavailable("hydrate");
+	lifecycle_function_unavailable('hydrate');
 }
 function unmount() {
-	lifecycle_function_unavailable("unmount");
+	lifecycle_function_unavailable('unmount');
 }
 function fork() {
-	lifecycle_function_unavailable("fork");
+	lifecycle_function_unavailable('fork');
 }
 async function tick() {}
 async function settled() {}
