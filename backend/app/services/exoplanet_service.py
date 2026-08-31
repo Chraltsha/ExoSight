@@ -4,6 +4,14 @@ from app.models.exoplanet import ExoplanetTarget, ExoplanetSearchResult, Exoplan
 
 NASA_TAP_URL = "https://exoplanetarchive.ipac.caltech.edu/TAP/sync"
 
+
+class ExoplanetNotFoundError(ValueError):
+    """Raised when an exoplanet cannot be found in the NASA archive."""
+
+    def __init__(self, name: str) -> None:
+        self.name = name
+        super().__init__(f"No exoplanet found with name '{name}'.")
+
 # Exact-match lookup against the per-publication table (one default row per planet)
 _RESOLVE_QUERY = (
     "SELECT pl_name, ra, dec "
@@ -31,7 +39,7 @@ def resolve_exoplanet(name: str) -> ExoplanetTarget:
     and return its sky coordinates.
 
     Raises:
-        ValueError: if the planet is not found.
+        ExoplanetNotFoundError: if the planet is not found.
         httpx.HTTPStatusError: if NASA TAP returns a non-200 response.
     """
 
@@ -47,7 +55,7 @@ def resolve_exoplanet(name: str) -> ExoplanetTarget:
     rows = response.json()
 
     if not rows:
-        raise ValueError(f"No exoplanet found with name '{name}'.")
+        raise ExoplanetNotFoundError(name)
 
     row = rows[0]
 

@@ -35,15 +35,6 @@ def get_satellite_positions(
         observation_time=observation_time,
     )
 
-    print(
-        f"Loaded {len(satellites)} satellites."
-    )
-
-    print(
-        f"{len(candidates)} satellites passed "
-        f"the preliminary filter."
-    )
-
     # ------------------------------------------------
     # FULL EXPOSURE PROPAGATION
     # ------------------------------------------------

@@ -87,7 +87,7 @@ export async function loadMorePlanets(q) {
 	try {
 		const url =
 			`/api/exoplanets/search?q=${encodeURIComponent(q)}` +
-			`&limit=20&cursor=${encodeURIComponent(searchState.nextCursor ?? '')}`;
+			`&limit=5&cursor=${encodeURIComponent(searchState.nextCursor ?? '')}`;
 
 		const res = await fetch(url);
 

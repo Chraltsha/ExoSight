@@ -41,3 +41,6 @@ vite.config.ts.timestamp-*
 # venv
 .venv/
 .bob/
+
+# testing files
+active_satellites.txt

@@ -39,7 +39,7 @@
 
 
 
-from skyfield.api import EarthSatellite, load
+from skyfield.api import EarthSatellite, Loader
 
 ACTIVE_SATELLITES_URL = (
     "https://celestrak.org/NORAD/elements/gp.php"
@@ -51,11 +51,22 @@ ACTIVE_SATELLITES_URL = (
 def load_satellites() -> list[EarthSatellite]:
     """
     Download the latest active satellite TLEs from CelesTrak.
+    Cache the result in active_satellites.txt and re-download
+    only when the file is older than 3 days.
 
     Returns:
         list[EarthSatellite]
     """
-    satellites = load.tle_file(ACTIVE_SATELLITES_URL)
+    load = Loader('/tmp')
+    
+    try:
+        stale = load.days_old('active_satellites.txt') > 3.0
+    except FileNotFoundError:
+        stale = True
+        
+    if stale:
+        load.download(ACTIVE_SATELLITES_URL, filename='active_satellites.txt')
+    satellites = load.tle_file('active_satellites.txt')
     return satellites
 
 

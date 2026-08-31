@@ -1,8 +1,9 @@
 <script>
+	import 'leaflet/dist/leaflet.css';
 	import { onMount } from 'svelte';
 
-	/** @type {{ lat: number, lon: number }} */
-	let { lat = $bindable(0), lon = $bindable(0) } = $props();
+	/** @type {{ lat: number, lon: number, elevation: number }} */
+	let { lat = $bindable(0), lon = $bindable(0), elevation = $bindable(0) } = $props();
 
 	/** @type {HTMLDivElement | null} */
 	let mapEl = $state(null);
@@ -17,11 +18,8 @@
 	let marker = null;
 
 	onMount(async () => {
-		// Dynamically import Leaflet (browser only, SSR-safe)
-		const [{ default: L }] = await Promise.all([
-			import('leaflet'),
-			import('leaflet/dist/leaflet.css'),
-		]);
+		// Dynamically import Leaflet JS (browser only, SSR-safe)
+		const { default: L } = await import('leaflet');
 
 		// 1. Attempt geolocation; fall back to random coords on error/denial
 		const position = await new Promise((resolve) => {
@@ -111,6 +109,17 @@
 				max="180"
 				step="0.000001"
 				bind:value={lon}
+			/>
+		</label>
+		<label class="search-field-label">
+			Elevation (m)
+			<input
+				class="search-field-input"
+				type="number"
+				min="-500"
+				max="8849"
+				step="1"
+				bind:value={elevation}
 			/>
 		</label>
 	</div>
