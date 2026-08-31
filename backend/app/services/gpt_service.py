@@ -10,7 +10,7 @@ client = OpenAI() # automatic read of openai_api_key
 
 
 def interpret_prediction(satellites: list[object]) -> str:
-
+    print("pre gpt")
     prompt = f"""
 You are an astronomy assistant.
 
@@ -45,5 +45,5 @@ provided.
         model="gpt-5.6-terra",
         messages=[{"role": "user", "content": prompt}],
     )
-
+    print("post gpt")
     return response.choices[0].message.content or ""
