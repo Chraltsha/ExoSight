@@ -8,10 +8,10 @@
 	   ============================================================ */
 
 	let people = [
-		{ name: 'Justin Kenneth Co', email: 'justinkennethco@gmail.com', linkedin: 'linkedin.com/justin-kenneth-co', github: 'github.com/Chraltsha', image: '/team/kenneth.png' },
-		{ name: 'Martin Darius Alba', email: 'albamartindarius@gmail.com', linkedin: 'linkedin.com/martin-darius-alba', github: 'github.com/LegitAgent', image: '/team/alba.png' },
-		{ name: 'Kolleen Geri Aguilar', email: 'kolleenaguilar@gmail.com', linkedin: 'linkedin.com/kolleen-geri-aguilar', github: 'github.com/kolleengeri', image: '/team/kolleen.png' },
-		{ name: 'Jerold Luther Aquino', email: 'lutherjerold@gmail.com', linkedin: 'linkedin.com/aquino-jerold', github: 'github.com/DyloreAquino', image: '/team/jerold.png' },
+		{ name: 'Justin Kenneth Co', email: 'justinkennethco@gmail.com', linkedin: 'linkedin.com/in/justin-kenneth-co', github: 'github.com/Chraltsha', image: '/team/kenneth.png' },
+		{ name: 'Martin Darius Alba', email: 'albamartindarius@gmail.com', linkedin: 'linkedin.com/in/martin-darius-alba', github: 'github.com/LegitAgent', image: '/team/alba.png' },
+		{ name: 'Kolleen Geri Aguilar', email: 'kolleenaguilar@gmail.com', linkedin: 'linkedin.com/in/kolleen-geri-aguilar', github: 'github.com/kolleengeri', image: '/team/kolleen.png' },
+		{ name: 'Jerold Luther Aquino', email: 'lutherjerold@gmail.com', linkedin: 'linkedin.com/in/aquino-jerold', github: 'github.com/DyloreAquino', image: '/team/jerold.png' },
 	];
 </script>
 
