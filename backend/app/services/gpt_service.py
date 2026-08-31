@@ -56,7 +56,7 @@ provided.
             model="gpt-5.6-terra",
             messages=[{"role": "user", "content": prompt}],
             reasoning_effort="none",
-            max_completion_tokens=250,
+            max_completion_tokens=1000,
         )
     except OpenAIError:
         logger.exception("OpenAI interpretation failed; returning the computed result without it.")
