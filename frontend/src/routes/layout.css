@@ -302,10 +302,19 @@ body {
 	@apply relative w-full;
 }
 
-/* Input + icon wrapper — icon stays fixed to just this row, not the dropdown */
+/* Input + icon wrapper — flex row holding the inner input wrapper and random button */
 .planet-input-row {
-	position: relative;
+	display: flex;
+	align-items: center;
+	gap: 0.75rem;
 	width: 100%;
+}
+
+/* Inner wrapper keeps the absolute-positioned icon anchored to the input only */
+.planet-input-inner {
+	position: relative;
+	flex: 1;
+	min-width: 0;
 }
 
 /* Magnifying glass icon — anchored inside .planet-input-row, not the full wrapper */
@@ -326,6 +335,32 @@ body {
 	border-radius: 9999px !important;
 	font-size: 1.25rem !important;
 	padding: 0.9rem 1.2rem 0.9rem 3.2rem !important;
+}
+
+.random-planet-btn {
+	border-radius: 9999px;
+	border: 1.5px solid #d9a4d9;
+	color: #d9a4d9;
+	background: transparent;
+	padding: 0.5rem 1.1rem;
+	font-family: 'Iosevka Charon Regular', 'Iosevka Charon', monospace;
+	font-size: 0.95rem;
+	white-space: nowrap;
+	flex-shrink: 0;
+	cursor: pointer;
+	transition:
+		background-color 0.2s,
+		color 0.2s;
+}
+
+.random-planet-btn:hover:not(:disabled) {
+	background-color: #d9a4d9;
+	color: #1a1c20;
+}
+
+.random-planet-btn:disabled {
+	opacity: 0.5;
+	cursor: not-allowed;
 }
 
 /* BODY ROW: left col fills remaining space, right col fixed */

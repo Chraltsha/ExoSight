@@ -36,6 +36,7 @@
 	let isLoading = $state(false);
 	let llmOutput = $state('');
 	let outputExpanded = $state(false);
+	let isPickingRandom = $state(false);
 
 	const parsedOutput = $derived(llmOutput ? marked.parse(llmOutput) : '');
 
@@ -58,6 +59,29 @@
 
 	function handleLoadMore() {
 		loadMorePlanets(planetName);
+	}
+
+	// ── random exoplanet picker ───────────────────────────────────────────────────
+	async function pickRandomPlanet() {
+		if (isPickingRandom) return;
+		isPickingRandom = true;
+		try {
+			for (let attempt = 0; attempt < 3; attempt++) {
+					const a = String.fromCharCode(97 + Math.floor(Math.random() * 26));
+					const b = String.fromCharCode(97 + Math.floor(Math.random() * 26));
+					const res = await fetch(`/api/exoplanets/search?q=${a + b}&limit=20`);
+				if (!res.ok) continue;
+				const data = await res.json();
+				if (data.items && data.items.length > 0) {
+					const item = data.items[Math.floor(Math.random() * data.items.length)];
+					planetName = item.name;
+					showDropdown = false;
+					break;
+				}
+			}
+		} finally {
+			isPickingRandom = false;
+		}
 	}
 
 	// Close dropdown when clicking outside
@@ -157,33 +181,38 @@
 				<div class="planet-autocomplete-wrapper">
 					<!-- input row: icon stays anchored to just the input, not the dropdown -->
 					<div class="planet-input-row">
-						<svg
-							class="planet-search-icon"
-							xmlns="http://www.w3.org/2000/svg"
-							viewBox="0 0 24 24"
-							fill="none"
-							stroke="currentColor"
-							stroke-width="2"
-							stroke-linecap="round"
-							stroke-linejoin="round"
-							aria-hidden="true"
-						>
-							<circle cx="11" cy="11" r="7" />
-							<line x1="16.5" y1="16.5" x2="22" y2="22" />
-						</svg>
-						<input
-							type="text"
-							class="search-field-input planet-name-input"
-							placeholder="e.g. Kepler-22 b"
-							bind:value={planetName}
-							oninput={handlePlanetInput}
-							onfocus={() => {
-								if (searchState.results.length > 0) {
-									showDropdown = true;
-								}
-							}}
-							autocomplete="off"
-						/>
+						<div class="planet-input-inner">
+							<svg
+								class="planet-search-icon"
+								xmlns="http://www.w3.org/2000/svg"
+								viewBox="0 0 24 24"
+								fill="none"
+								stroke="currentColor"
+								stroke-width="2"
+								stroke-linecap="round"
+								stroke-linejoin="round"
+								aria-hidden="true"
+							>
+								<circle cx="11" cy="11" r="7" />
+								<line x1="16.5" y1="16.5" x2="22" y2="22" />
+							</svg>
+							<input
+								type="text"
+								class="search-field-input planet-name-input"
+								placeholder="e.g. Kepler-22 b"
+								bind:value={planetName}
+								oninput={handlePlanetInput}
+								onfocus={() => {
+									if (searchState.results.length > 0) {
+										showDropdown = true;
+									}
+								}}
+								autocomplete="off"
+							/>
+						</div>
+						<button class="random-planet-btn" onclick={pickRandomPlanet} disabled={isPickingRandom}>
+							{isPickingRandom ? 'Picking…' : 'Pick random exoplanet'}
+						</button>
 					</div>
 
 					{#if showDropdown && (searchState.results.length > 0 || searchState.isLoading)}
